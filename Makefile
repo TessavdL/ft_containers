@@ -6,7 +6,7 @@
 #    By: tevan-de <tevan-de@student.codam.nl>         +#+                      #
 #                                                    +#+                       #
 #    Created: 2021/05/24 11:37:21 by tevan-de      #+#    #+#                  #
-#    Updated: 2021/07/20 15:35:36 by tevan-de      ########   odam.nl          #
+#    Updated: 2021/08/19 14:10:47 by tevan-de      ########   odam.nl          #
 #                                                                              #
 # **************************************************************************** #
 
@@ -16,11 +16,11 @@ CFLAGS		=	-Wall -Werror -Wextra -std=c++98
 
 NAME		=	ft_containers
 
-SRCS_PATH	=	./srcs/
+SRCS		=	main_map.cpp
 
-SRCS		=	$(SRCS_PATH)main.cpp
+SRCS_DIR	=	./srcs/
 
-OFILES		=	$(SRCS:%.cpp=%.o)
+OFILES		=	$(addprefix $(SRCS_DIR), $(SRCS:%.cpp=%.o))
 
 INCLUDES	=	-I ./includes/
 
