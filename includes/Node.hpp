@@ -6,7 +6,7 @@
 /*   By: tevan-de <tevan-de@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/08/20 16:45:32 by tevan-de      #+#    #+#                 */
-/*   Updated: 2021/08/25 16:22:28 by tevan-de      ########   odam.nl         */
+/*   Updated: 2021/10/10 17:23:16 by tevan-de      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,7 +49,7 @@ class Node
 			this->left = nullptr;
 			this->parent = nullptr;
 			this->right = nullptr;
-			// std::cout << "Parameter constructor" << std::endl;
+			std::cout << "Parameter constructor" << std::endl;
 			return ;
 		}
 		Node(Node* p, const value_type& val)
@@ -58,13 +58,13 @@ class Node
 			this->left = nullptr;
 			this->parent = p;
 			this->right = nullptr;
-			// std::cout << "Parameter constructor 2" << std::endl;
+			std::cout << "Parameter constructor parent" << std::endl;
 			return ;
 		}
 		Node(const Node& other)
 		{
 			*this = other;
-			// std::cout << "Copy constructor" << std::endl;
+			std::cout << "Copy constructor" << std::endl;
 			return ;
 		}
 
@@ -80,11 +80,11 @@ class Node
 			if (this != &other)
 			{
 				this->_data = other._data;
-				this->left = nullptr;
+				this->left = other.left;
 				this->parent = other.parent;
-				this->right = nullptr;
+				this->right = other.right;
 			}
-			// std::cout << "Assigment operator" << std::endl;
+			std::cout << "Assigment operator" << std::endl;
 			return (*this);
 		}
 

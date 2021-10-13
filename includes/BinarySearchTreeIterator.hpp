@@ -6,7 +6,7 @@
 /*   By: tevan-de <tevan-de@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/08/26 11:30:29 by tevan-de      #+#    #+#                 */
-/*   Updated: 2021/08/26 11:56:08 by tevan-de      ########   odam.nl         */
+/*   Updated: 2021/10/13 22:59:22 by tevan-de      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,108 +18,129 @@
 # include <utility>		// for std::pair, should include own pair later
 # include <memory>		// for std::allocator
 
-# include </home/tevan-de/ft_containers/includes/Node.hpp>
+# include "../temp.hpp"
+// # include "./RandomAccessIterator.hpp"
+# include "./Pair.hpp"
 
-template <class Pair = std::pair<class Key, class T>>
+namespace ft {
+template<typename, typename>
+class pair;
+}
+
+namespace ft {
+template<typename>
+class node;
+}
+
+template <class T = ft::pair<class T1, class T2>>
 class BinarySearchTreeIterator
 {
 	public:
 	// ~~~~~~~~~~~~~~~~~~~~~~~~~~~PUBLIC MEMBER TYPES~~~~~~~~~~~~~~~~~~~~~~~~~~~
-		typedef std::pair<class Key, class T>	value_type;
-		typedef value_type*						pointer;
-		typedef value_type&						reference;
-		typedef std::ptrdiff_t					difference_type;
+		typedef T					value_type;
+		typedef value_type*			pointer;
+		typedef value_type&			reference;
 
 	// ~~~~~~~~~~~~~~~~~~~~~~~~~PUBLIC MEMBER FUNCTIONS~~~~~~~~~~~~~~~~~~~~~~~~~
 		// ----------------------------CONSTRUCTORS-----------------------------
 		// default
-		BinarySearchTreeIterator(void) : RandomAccessIterator<value_type>()
+		BinarySearchTreeIterator(void) : _ptr(nullptr), _node(nullptr)
 		{
-			std::cout << "Default Constructor of BI called" << std::endl;
+			// std::cout << "Default Constructor of BSTI called" << std::endl;
 			return ;
 		}
 		// parameter
-		BinarySearchTreeIterator(pointer ptr) : RandomAccessIterator<value_type>(ptr)
+		BinarySearchTreeIterator(pointer val, ft::node<value_type>* n) : _ptr(val), _node(n)
 		{
-			std::cout << "Parameter Constructor of BI called" << std::endl;
+			// std::cout << "Parameter Constructor of BSTI called" << std::endl;
 			return ;
 		}
 		// copy
-		BinarySearchTreeIterator(const BinarySearchTreeIterator& other) : RandomAccessIterator<value_type>(other)
+		BinarySearchTreeIterator(const BinarySearchTreeIterator& other)
 		{
-			std::cout << "Copy Constructor of BI called" << std::endl;
+			*this = other;
+			// std::cout << "Copy Constructor of BSTI called" << std::endl;
 			return ;
 		}
 
 		// -----------------------------DESTRUCTOR------------------------------
 		~BinarySearchTreeIterator(void)
 		{
-			std::cout << "Destructor of BI called" << std::endl;
+			// std::cout << "Destructor of BSTI called" << std::endl;
 			return ;
 		}
 
 		// ------------------------ASSIGNMENT OPERATOR--------------------------
 		BinarySearchTreeIterator&	operator=(const BinarySearchTreeIterator& other)
 		{
-			RandomAccessIterator<value_type>::operator=(other);
-			std::cout << "Assignment Operator of BI called" << std::endl;
+			if (this != &other)
+			{
+				this->_ptr = other._ptr;
+				this->_node = other._node;
+			}
+			// std::cout << "Assignment Operator of BSTI called" << std::endl;
 			return (*this);
-
 		}
 
 		// -------------------DECREMENT AND INCREMENT OPERATORS-----------------
 		// prefix decrement
 		BinarySearchTreeIterator&	operator--(void)
 		{
-			RandomAccessIterator<value_type>::operator--();
+			this->_node = this->_node->previous();
 			return (*this);
 		}
 		// postfix decrement
 		BinarySearchTreeIterator	operator--(int n)
 		{
-			RandomAccessIterator<value_type>::operator--(n);
-			return (*this);
+			BinarySearchTreeIterator	bsti = (*this);
+
+			this->_node = this->_node->previous();
+			return (bsti);
 		}
 		// prefix increment
 		BinarySearchTreeIterator&	operator++(void)
 		{
-			RandomAccessIterator<value_type>::operator++();
+			this->_node = this->_node->next();
 			return (*this);
 		}
 		// postfix increment
 		BinarySearchTreeIterator	operator++(int n)
 		{
-			RandomAccessIterator<value_type>::operator++(n);
-			return (*this);
+			BinarySearchTreeIterator	bsti = (*this);
+	
+			this->_node = this->_node->next();
+			return (bsti);
 		}
 
 		// ------------------------MEMBER ACCESS OPERATORS----------------------
 		// arrow operator
 		pointer	operator->(void)
 		{
-			return (RandomAccessIterator<value_type>::operator->());
+			return (this->_node->data);
 		}
 		// dereference operator
 		reference	operator*(void)
 		{
-			return (RandomAccessIterator<value_type>::operator*());
+			return (*this->_node->data);
 		}
 
 		// -------------------------RELATIONAL OPERATORS------------------------
 		// == operator, is equal to
 		bool	operator==(const BinarySearchTreeIterator& other) const
 		{
-			return (RandomAccessIterator<value_type>::operator==(other));
+			return (this->_ptr == other._ptr);
 		}
 		// != operator, is not equal to
 		bool	operator!=(const BinarySearchTreeIterator& other) const
 		{
-			return (RandomAccessIterator<value_type>::operator!=(other));
+			return (!(*this == other));
 		}
 
 	private:
 	// ~~~~~~~~~~~~~~~~~~~~~~~~~~~PRIVATE MEMBER TYPE~~~~~~~~~~~~~~~~~~~~~~~~~~~
-		value_type*	_ptr;
+		pointer					_ptr;
+		ft::node<value_type>*	_node;
+
 };
 
 #endif

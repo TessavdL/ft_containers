@@ -6,15 +6,16 @@
 /*   By: tevan-de <tevan-de@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/08/20 17:09:30 by tevan-de      #+#    #+#                 */
-/*   Updated: 2021/08/21 16:19:10 by tevan-de      ########   odam.nl         */
+/*   Updated: 2021/10/13 17:05:06 by tevan-de      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef PAIR_HPP
 # define PAIR_HPP
 
+namespace ft {
 template <class T1, class T2>
-class Pair
+class pair
 {
 	public:
 	// ~~~~~~~~~~~~~~~~~~~~~~~~~~~PUBLIC MEMBER TYPES~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -27,34 +28,30 @@ class Pair
 
 	// ~~~~~~~~~~~~~~~~~~~~~~~~~PUBLIC MEMBER FUNCTIONS~~~~~~~~~~~~~~~~~~~~~~~~~
 		// ----------------------------CONSTRUCTORS-----------------------------
-		Pair(void)
+		pair(void) : first(), second()
 		{
 			return ;
 		}
-		Pair(const first_type& a, const second_type& b)
+		pair(const first_type& a, const second_type& b) : first(a), second(b)
 		{
-			this->first = a;
-			this->second = b;
 			return ;
 		}
-		template<class U, class v>
-		Pair(const Pair<U, V>& pr)
+		template<class U, class V>
+		pair(const pair<U, V>& pr) : first(pr.first), second(pr.second)
 		{
-			this->first = pr.first;
-			this->second = pr.second;
 			return ;
 		}
 
 		// -----------------------------DESTRUCTOR------------------------------
-		~Pair(void)
+		~pair(void)
 		{
 			return ;
 		}
 
 		// -------------------------ASSIGNMENT OPERATOR-------------------------
-		Pair&	operator=(const Pair& pr)
+		pair&	operator=(const pair& pr)
 		{
-			if (this != &other)
+			if (this != &pr)
 			{
 				this->first = pr.first;
 				this->second = pr.second;
@@ -63,11 +60,9 @@ class Pair
 		}
 };
 
-
-
 // ~~~~~~~~~~~~~~~~~~~~~~~~NON-MEMBER FUNCTION OVERLOADS~~~~~~~~~~~~~~~~~~~~~~~~
 template <class T1, class T2>
-bool	operator==(const Pair<T1, T2>& lhs, const Pair<T1, T2>& rhs)
+bool	operator==(const pair<T1, T2>& lhs, const pair<T1, T2>& rhs)
 {
 	if (lhs.first == rhs.first && lhs.second == rhs.second)
 		return (true);
@@ -76,33 +71,34 @@ bool	operator==(const Pair<T1, T2>& lhs, const Pair<T1, T2>& rhs)
 }
 
 template <class T1, class T2>
-bool	operator!=(const Pair<T1, T2>& lhs, const Pair<T1, T2>& rhs)
+bool	operator!=(const pair<T1, T2>& lhs, const pair<T1, T2>& rhs)
 {
 	return (!(lhs == rhs));
 }
 
 template <class T1, class T2>
-bool	operator<(const Pair<T1, T2>& lhs, const Pair<T1, T2>& rhs)
+bool	operator<(const pair<T1, T2>& lhs, const pair<T1, T2>& rhs)
 {
 	return (lhs.first < rhs.first || (!(rhs.first < lhs.first) && lhs.second < rhs.second));
 }
 
 template <class T1, class T2>
-bool	operator<=(const Pair<T1, T2>& lhs, const Pair<T1, T2>& rhs)
+bool	operator<=(const pair<T1, T2>& lhs, const pair<T1, T2>& rhs)
 {
 	return (!(rhs < lhs));
 }
 
 template <class T1, class T2>
-bool	operator>(const Pair<T1, T2>& lhs, const Pair<T1, T2>& rhs)
+bool	operator>(const pair<T1, T2>& lhs, const pair<T1, T2>& rhs)
 {
 	return (rhs < lhs);
 }
 
 template <class T1, class T2>
-bool	operator>=(const Pair<T1, T2>& lhs, const Pair<T1, T2>& rhs)
+bool	operator>=(const pair<T1, T2>& lhs, const pair<T1, T2>& rhs)
 {
 	return (!(lhs < rhs));
+}
 }
 
 #endif

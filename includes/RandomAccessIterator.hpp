@@ -6,7 +6,7 @@
 /*   By: tevan-de <tevan-de@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/07/26 21:51:11 by tevan-de      #+#    #+#                 */
-/*   Updated: 2021/08/21 17:11:25 by tevan-de      ########   odam.nl         */
+/*   Updated: 2021/10/13 17:05:06 by tevan-de      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,17 @@
 // https://users.cs.northwestern.edu/~riesbeck/programming/c++/stl-iterator-define.html
 // https://internalpointers.com/post/writing-custom-iterators-modern-cpp
 
-template <class T>
+namespace ft {
+template<typename, typename>
+class pair;
+}
+
+namespace ft {
+template<typename>
+class node;
+}
+
+template <class T = ft::pair<class T1, class T2>>
 class RandomAccessIterator
 {
 	public:
