@@ -6,7 +6,7 @@
 /*   By: tevan-de <tevan-de@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/08/20 16:45:32 by tevan-de      #+#    #+#                 */
-/*   Updated: 2021/10/10 17:23:16 by tevan-de      ########   odam.nl         */
+/*   Updated: 2021/10/14 00:25:58 by tevan-de      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@
 # include <utility>		// for std::pair, should include own pair later
 # include <memory>		// for std::allocator
 
-template <class Pair = std::pair<class Key, class T>, class Compare = std::less<Key>>
+template <class Pair = std::pair<class Key, class T>, class Compare = std::less<Key> >
 class Node
 {
 	public:

@@ -6,7 +6,7 @@
 /*   By: tevan-de <tevan-de@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/08/19 12:19:56 by tevan-de      #+#    #+#                 */
-/*   Updated: 2021/10/10 19:28:14 by tevan-de      ########   odam.nl         */
+/*   Updated: 2021/10/14 00:25:38 by tevan-de      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@
 // how to typedef the nested class? https://stackoverflow.com/questions/10144034/typedef-of-a-nested-class
 // typedef Map::compare								value_compare;
 
-template <class Key, class T, class Compare = std::less<Key>, class Alloc = std::allocator<std::pair<const Key, T>>>
+template <class Key, class T, class Compare = std::less<Key>, class Alloc = std::allocator<std::pair<const Key, T> > >
 class Map
 {
 	public:
@@ -46,13 +46,6 @@ class Map
 		typedef std::size_t									size_type;
 
 	// ~~~~~~~~~~~~~~~~~~~~~~~~~~PUBLIC MEMBER OBJECTS~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-struct	node
-{
-	value_type*	key_value;
-	node*		left;
-	node*		right;
-};
 
 	// ~~~~~~~~~~~~~~~~~~~~~~~~~PUBLIC MEMBER FUNCTIONS~~~~~~~~~~~~~~~~~~~~~~~~~
 		// ----------------------------CONSTRUCTORS-----------------------------
@@ -273,20 +266,20 @@ struct	node
 	// node has left, right and key_val
 	private:
 	// ~~~~~~~~~~~~~~~~~~~~~~~~~PRIVATE MEMBER FUNCTIONS~~~~~~~~~~~~~~~~~~~~~~~~
-		node*	_new_node(const value_type& val)
-		{
-			node*	new_node = this->_alloc.allocate(sizeof(node));
+		// node*	_new_node(const value_type& val)
+		// {
+		// 	node*	new_node = this->_alloc.allocate(sizeof(node));
 
-			this->_alloc.construct(new_node.key_value, val);
-			new_node.left = nullptr;
-			new_node.right = nullptr;
-			return (new_node);
-		}
+		// 	this->_alloc.construct(new_node.key_value, val);
+		// 	new_node.left = nullptr;
+		// 	new_node.right = nullptr;
+		// 	return (new_node);
+		// }
 
 	// ~~~~~~~~~~~~~~~~~~~~~~~~~~~PRIVATE MEMBER TYPES~~~~~~~~~~~~~~~~~~~~~~~~~~
 		size_type		_size;
 		allocator_type	_alloc;
-		node*			_root;
+		Node*			_root;
 
 };
 
