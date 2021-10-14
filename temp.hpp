@@ -6,7 +6,7 @@
 /*   By: tevan-de <tevan-de@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/10/10 16:45:45 by tevan-de      #+#    #+#                 */
-/*   Updated: 2021/10/14 00:17:28 by tevan-de      ########   odam.nl         */
+/*   Updated: 2021/10/14 23:29:25 by tevan-de      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,10 +39,10 @@ public:
 		typedef value_type&	reference;
 
 	// ~~~~~~~~~~~~~~~~~~~~~~~~~~PUBLIC MEMBER OBJECTS~~~~~~~~~~~~~~~~~~~~~~~~~~
-		node*		left;
-		node*		parent;
-		node*		right;
-		pointer		data;
+		node*	left;
+		node*	parent;
+		node*	right;
+		pointer	data;
 
 	// ~~~~~~~~~~~~~~~~~~~~~~~~~PUBLIC MEMBER FUNCTIONS~~~~~~~~~~~~~~~~~~~~~~~~~
 		// ----------------------------CONSTRUCTORS-----------------------------
@@ -65,9 +65,8 @@ public:
 			return ;
 		}
 		// copy constructor
-		node(const node& other)
+		node(const node& other) : data(other.data), left(other.left), parent(other.parent), right(other.right)
 		{
-			*this = other;
 			// std::cout << "Copy constructor of node called" << std::endl;
 			return ;
 		}
@@ -109,59 +108,49 @@ public:
 		{
 			node*	temp = this;
 	
-			if (temp == nullptr)
+			if (temp->right)
 			{
-				return (nullptr);
+				if (temp->right->data == nullptr)
+					return (temp->right);
+				temp = temp->right;
+				while (temp && temp->left)
+				{
+					temp = temp->left;
+				}
 			}
 			else
 			{
-				if (temp->right)
+				while (temp->parent && temp->parent->right == temp)
 				{
-					temp = temp->right;
-					while (temp && temp->left)
-					{
-						temp = temp->left;
-					}
-					return (temp);
+					temp = temp->parent;
 				}
-				else
-				{
-					while (temp->parent && temp->parent->right == temp)
-					{
-						temp = temp->parent;
-					}
-					return (temp->parent);
-				}
+				temp = temp->parent;
 			}
+			// if (temp->data == nullptr)
+			// 	std::cout << "this is the end in next" << std::endl;
+			return (temp);
 		}
 		node*	previous(void)
 		{
 			node*	temp = this;
 
-			if (temp == nullptr)
+			if (temp->left)
 			{
-				return (nullptr);
+				temp = temp->left;
+				while (temp && temp->right)
+				{
+					temp = temp->right;
+				}
 			}
 			else
 			{
-				if (temp->left)
+				while (temp && temp->parent->left == temp)
 				{
-					temp = temp->left;
-					while (temp && temp->right)
-					{
-						temp = temp->right;
-					}
-					return (temp);
+					temp = temp->parent;
 				}
-				else
-				{
-					while (temp && temp->parent->left == temp)
-					{
-						temp = temp->parent;
-					}
-					return (temp->parent);
-				}
+				temp = temp->parent;
 			}
+			return (temp);
 		}
 		void	set_data(node* node)
 		{
@@ -208,8 +197,12 @@ class map
 		// empty container construct (default constructor)
 		explicit map(const key_compare& comp = key_compare(), const allocator_type& alloc = allocator_type())
 		{
-			this->_alloc = alloc; // do we have to have allocator as an object in the class?
+			node<value_type>*	new_node = new node<value_type>();
+			
+			this->_alloc = alloc;
+			this->_compare = comp;
 			this->_root = nullptr;
+			this->_end = new_node;
 			this->_size = 0;
 			return ;
 		}
@@ -221,6 +214,7 @@ class map
 
 			for (InputIterator begin = first; begin != last; begin++, n++) {}
 			this->_alloc = alloc;
+			this->_compare = comp;
 			this->_size = n;
 			return ;
 		}
@@ -247,6 +241,7 @@ class map
 				this->_alloc = x._alloc;
 				this->_size = x._size;
 				this->_root = x._root;
+				this->_end = x._end;
 			}
 			return (*this);
 		}
@@ -258,7 +253,12 @@ class map
 			node<value_type>*	most_left = this->_most_left();
 			value_type* 		val = most_left->data;
 
+			std::cout << "most_left_data = " << most_left->data->first << std::endl;
 			return (iterator(val, most_left));
+		}
+		iterator	end(void)
+		{
+			return (iterator(nullptr, this->_end));
 		}
 
 		// -------------------------------CAPACITY------------------------------
@@ -285,9 +285,30 @@ class map
 			return (this->_alloc.max_size());
 		}
 
+		// ----------------------------ELEMENT ACCESS---------------------------
+		mapped_type&	operator[](const key_type& k)
+		{
+			node<value_type>*	node = this->_find(this->_root, k);
+
+			if (node != nullptr)
+			{
+				// if the key is already present in the map
+				// return the second part of the value_type, which is the mapped_type
+				return (node->data->second);
+			}
+			else
+			{
+				// if the key is not yet present in the map
+				// call insert with a pair of k and default constructor of mapped type
+				// derefence the iterator (which is the first part of the pair returned from insert)
+				// return the second part of the value_type, which is the mapped_type
+				return ((*((this->insert(ft::make_pair(k, mapped_type()))).first)).second);
+			}
+		}
+
 		// ------------------------------MODIFIERS------------------------------
-		//
-		ft::pair<node<value_type>*, bool>	insert(const value_type& val)
+		// insert, 1 node based on key
+		ft::pair<iterator, bool>	insert(const value_type& val)
 		{
 			node<value_type>* node;
 
@@ -296,20 +317,22 @@ class map
 			{
 				node = this->_create_node(val);
 				this->_root = node;
+				this->_root->right = this->_end;
 				this->_size++;
-				return (ft::make_pair(node, true));
+				return (ft::make_pair(iterator(node->data, node), true));
 			}
 			node = this->_find(this->_root, val.first);
 			if (node != nullptr)
 			{
-				return (ft::make_pair(node, false)); // change node into map::end
+				return (ft::make_pair(iterator(node->data, node), false)); // change node into map::end
 			}
 			else
 			{
 				node = this->_insert_node(this->_root, val);
 				this->_check_if_tree_is_balanced(node);
 				this->_size++;
-				return (ft::make_pair(node, true));
+				this->_most_right()->right = this->_end;
+				return (ft::make_pair(iterator(node->data, node), true));
 			}
 		}
 		// erase, 1 node based on iterator
@@ -330,7 +353,7 @@ class map
 		{
 			node<value_type>* node = this->_find(this->_root, k);
 
-			if (node == nullptr)
+			if (node == nullptr || node == this->_end)
 			{
 				return (0);
 			}
@@ -352,6 +375,64 @@ class map
 				this->_erase_node(node_to_delete);
 			}
 			this->_size = 0;
+		}
+
+		// ------------------------------OBSERVERS------------------------------
+		// key comparison object
+		key_compare	key_comp(void) const
+		{
+			return (this->_compare);
+		}
+		// value comparison object ???
+		// value_compare	value_compe(void) const
+		// {
+
+		// }
+
+		// -----------------------------OPERATRIONS-----------------------------
+		// find
+		iterator find(const key_type& k)
+		{
+			// if found return iterator to node
+
+			// else return iterator to this->end();
+		}
+		// const_iterator find (const key_type& k) const
+		// {
+		// 	// if found return const iterator to node
+
+		// 	// else return const iterator to this->end();
+		// }
+		// count
+		size_type	count(const key_type& k) const
+		{
+			if (this->_find(this->_root, k))
+			{
+				return (1);
+			}
+			else
+			{
+				return (0);
+			}
+		}
+		// lower_bound
+		iterator	lower_bound(const key_type& k)
+		{
+			// for (iterator = this->begin(); )
+		}
+		// const iterator	lower_bound(const key_type& k) const
+		// {
+			
+		// }
+		// upper_bound
+
+		// equal_range
+		
+
+		// ------------------------------ALLOCATOR------------------------------
+		allocator_type get_allocator(void) const
+		{
+			return (this->_alloc);
 		}
 
 	private:
@@ -378,7 +459,7 @@ class map
 
 		int	_get_height_subtree(node<value_type>* node)
 		{
-			if (node == nullptr)
+			if (node == nullptr || node == this->_end)
 			{
 				return (0);
 			}
@@ -492,7 +573,7 @@ class map
 			else if (pair.first > temp->data->first)
 			{
 				std::cout << pair.first << " is bigger than " << temp->data->first << std::endl;
-				if (temp->right == nullptr) 
+				if (temp->right == nullptr || temp->right == this->_end) 
 				{
 					root->right = this->_create_node(root, pair);
 					return (root->right);
@@ -698,7 +779,7 @@ class map
 
 		node<value_type>* _find(node<value_type>* node, const key_type& key)
 		{
-			if (node == nullptr)
+			if (node == nullptr || node->right == this->_end)
 			{
 				return (nullptr);
 			}
@@ -735,10 +816,27 @@ class map
 			return (temp);
 		}
 
+		node<value_type>*	_most_right(void)
+		{
+			node<value_type>* temp = this->_root;
+
+			if (!temp)
+			{
+				return (nullptr);
+			}
+			while (temp->right && temp->right != this->_end)
+			{
+				temp = temp->right;
+			}
+			return (temp);
+		}
+
 	// ~~~~~~~~~~~~~~~~~~~~~~~~~~~PRIVATE MEMBER TYPES~~~~~~~~~~~~~~~~~~~~~~~~~~
-		size_type			_size;
 		allocator_type		_alloc;
+		key_compare			_compare;
 		node<value_type>*	_root;
+		node<value_type>*	_end;
+		size_type			_size;
 
 	friend class node<value_type>;
 

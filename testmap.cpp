@@ -6,7 +6,7 @@
 /*   By: tevan-de <tevan-de@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/10/10 17:41:27 by tevan-de      #+#    #+#                 */
-/*   Updated: 2021/10/13 23:26:56 by tevan-de      ########   odam.nl         */
+/*   Updated: 2021/10/14 23:12:14 by tevan-de      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,12 +27,21 @@ int main(void)
 	m.insert(pair3);
 
 	size_t size = m.size();
-	for (ft::map<int,int>::iterator it = m.begin(); size > 0; size--)
+	std::cout << "size = " << size << std::endl;
+	// ft::map<int, int>::iterator mend = m.end();
+	// ft::map<int, int>::iterator mbegin = m.begin();
+	// while (mbegin != mend)
+	// {
+	// 	mbegin++;
+	// 	std::cout << "why u no work " << std::endl;
+	// }
+	for (ft::map<int,int>::iterator it = m.begin(); it != m.end(); it++)
 	{
 		std::cout << it->first << std::endl;
-		it++;
+		if (it == m.end())
+			std::cout << "STOP" << std::endl;
 	}
-
+	std::cout << "here" << std::endl;
 	ft::map<int,int>::iterator mit = m.begin();
 	m.erase(mit->first);
 	size = m.size();
@@ -44,6 +53,12 @@ int main(void)
 		it++;
 	}
 
+	ft::map<int, int>	m_test_brackets;
+
+	m_test_brackets[1];
+	std::cout << m_test_brackets[1] << std::endl;
+	m_test_brackets[1] = 2;
+	std::cout << m_test_brackets[1] << std::endl;
 	// mit = m.begin();
 	// m.erase(mit->first);
 	// size = m.size();
