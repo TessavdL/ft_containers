@@ -6,7 +6,7 @@
 /*   By: tevan-de <tevan-de@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/10/10 16:45:45 by tevan-de      #+#    #+#                 */
-/*   Updated: 2021/10/14 23:29:25 by tevan-de      ########   odam.nl         */
+/*   Updated: 2021/10/14 23:59:36 by tevan-de      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -111,7 +111,9 @@ public:
 			if (temp->right)
 			{
 				if (temp->right->data == nullptr)
+				{
 					return (temp->right);
+				}
 				temp = temp->right;
 				while (temp && temp->left)
 				{
@@ -290,10 +292,12 @@ class map
 		{
 			node<value_type>*	node = this->_find(this->_root, k);
 
+			std::cout << "here" << std::endl;
 			if (node != nullptr)
 			{
 				// if the key is already present in the map
 				// return the second part of the value_type, which is the mapped_type
+				std::cout << "found it = " << node->data->second << std::endl;
 				return (node->data->second);
 			}
 			else
@@ -318,12 +322,14 @@ class map
 				node = this->_create_node(val);
 				this->_root = node;
 				this->_root->right = this->_end;
+				this->_end->parent = this->_root;
 				this->_size++;
 				return (ft::make_pair(iterator(node->data, node), true));
 			}
 			node = this->_find(this->_root, val.first);
 			if (node != nullptr)
 			{
+				std::cout << "tried to insert duplicate" << std::endl;
 				return (ft::make_pair(iterator(node->data, node), false)); // change node into map::end
 			}
 			else
@@ -332,6 +338,7 @@ class map
 				this->_check_if_tree_is_balanced(node);
 				this->_size++;
 				this->_most_right()->right = this->_end;
+				this->_end->parent = this->_most_right();
 				return (ft::make_pair(iterator(node->data, node), true));
 			}
 		}
@@ -779,7 +786,7 @@ class map
 
 		node<value_type>* _find(node<value_type>* node, const key_type& key)
 		{
-			if (node == nullptr || node->right == this->_end)
+			if (node == nullptr)
 			{
 				return (nullptr);
 			}
@@ -792,7 +799,7 @@ class map
 			}
 			else if (key > node->data->first)
 			{
-				if (node->right)
+				if (node->right && node->right->data != nullptr)
 					return (this->_find(node->right, key));
 				else
 					return (nullptr);

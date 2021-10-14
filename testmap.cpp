@@ -6,7 +6,7 @@
 /*   By: tevan-de <tevan-de@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/10/10 17:41:27 by tevan-de      #+#    #+#                 */
-/*   Updated: 2021/10/14 23:12:14 by tevan-de      ########   odam.nl         */
+/*   Updated: 2021/10/14 23:56:27 by tevan-de      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,11 +35,12 @@ int main(void)
 	// 	mbegin++;
 	// 	std::cout << "why u no work " << std::endl;
 	// }
-	for (ft::map<int,int>::iterator it = m.begin(); it != m.end(); it++)
+	for (ft::map<int,int>::iterator it = m.begin(); size > 0; size--)
 	{
 		std::cout << it->first << std::endl;
 		if (it == m.end())
 			std::cout << "STOP" << std::endl;
+			it++;
 	}
 	std::cout << "here" << std::endl;
 	ft::map<int,int>::iterator mit = m.begin();
@@ -57,8 +58,8 @@ int main(void)
 
 	m_test_brackets[1];
 	std::cout << m_test_brackets[1] << std::endl;
-	m_test_brackets[1] = 2;
-	std::cout << m_test_brackets[1] << std::endl;
+	// m_test_brackets[1] = 2;
+	// std::cout << m_test_brackets[1] << std::endl;
 	// mit = m.begin();
 	// m.erase(mit->first);
 	// size = m.size();
