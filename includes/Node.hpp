@@ -6,7 +6,7 @@
 /*   By: tevan-de <tevan-de@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/08/20 16:45:32 by tevan-de      #+#    #+#                 */
-/*   Updated: 2021/10/14 00:25:58 by tevan-de      ########   odam.nl         */
+/*   Updated: 2021/10/15 18:32:14 by tevan-de      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,128 +18,148 @@
 # include <utility>		// for std::pair, should include own pair later
 # include <memory>		// for std::allocator
 
-template <class Pair = std::pair<class Key, class T>, class Compare = std::less<Key> >
-class Node
+#include "./Pair.hpp"
+
+namespace ft {
+template<typename, typename>
+class pair;
+}
+
+namespace ft {
+template <class T = ft::pair<class T1, class T2> >
+class node
 {
-	public:
+public:
 	// ~~~~~~~~~~~~~~~~~~~~~~~~~~~PUBLIC MEMBER TYPES~~~~~~~~~~~~~~~~~~~~~~~~~~~
-		typedef Pair	value_type;
-		typedef Compare	key_compare;
-		typedef Key		key_type;
-		typedef T		mapped_type;
+		typedef T			value_type;
+		typedef value_type*	pointer;
+		typedef value_type&	reference;
 
 	// ~~~~~~~~~~~~~~~~~~~~~~~~~~PUBLIC MEMBER OBJECTS~~~~~~~~~~~~~~~~~~~~~~~~~~
-		Node*	left;
-		Node*	parent;
-		Node*	right;
+		node*	left;
+		node*	parent;
+		node*	right;
+		pointer	data;
 
 	// ~~~~~~~~~~~~~~~~~~~~~~~~~PUBLIC MEMBER FUNCTIONS~~~~~~~~~~~~~~~~~~~~~~~~~
 		// ----------------------------CONSTRUCTORS-----------------------------
-		Node(void)
+		// default constructor
+		node(void) : left(nullptr), parent(nullptr), right(nullptr), data(nullptr)
 		{
-			this->left = nullptr;
-			this->parent = nullptr;
-			this->right = nullptr;
-			// std::cout << "Default constructor" << std::endl;
+			// std::cout << "Default constructor of node called" << std::endl;
 			return ;
 		}
-		Node(const value_type& val)
+		// parameter constructor 1, used to make root node
+		node(pointer ptr) : left(nullptr), parent(nullptr), right(nullptr), data(ptr)
 		{
-			this->_data = val;
-			this->left = nullptr;
-			this->parent = nullptr;
-			this->right = nullptr;
-			std::cout << "Parameter constructor" << std::endl;
+			// std::cout << "Parameter constructor root of node called" << std::endl;
 			return ;
 		}
-		Node(Node* p, const value_type& val)
+		// parameter constructor 2, used to make leaf node and connect to parent
+		node(node* p, pointer ptr) : left(nullptr), parent(p), right(nullptr), data(ptr)
 		{
-			this->_data = val;
-			this->left = nullptr;
-			this->parent = p;
-			this->right = nullptr;
-			std::cout << "Parameter constructor parent" << std::endl;
+			// std::cout << "Parameter constructor leaf of node called" << std::endl;
 			return ;
 		}
-		Node(const Node& other)
+		// copy constructor
+		node(const node& other) : left(other.left), parent(other.parent), right(other.right), data(other.data)
 		{
-			*this = other;
-			std::cout << "Copy constructor" << std::endl;
+			// std::cout << "Copy constructor of node called" << std::endl;
 			return ;
 		}
 
 		// -----------------------------DESTRUCTOR------------------------------
-		~Node(void)
+		~node(void)
 		{
 			return ;
 		}
 
 		// -------------------------ASSIGNMENT OPERATOR-------------------------
-		Node&	operator=(const Node& other)
+		node&	operator=(const node& other)
 		{
 			if (this != &other)
 			{
-				this->_data = other._data;
+				this->data = other.data;
 				this->left = other.left;
 				this->parent = other.parent;
 				this->right = other.right;
 			}
-			std::cout << "Assigment operator" << std::endl;
+			// std::cout << "Assigment operator of node called" << std::endl;
 			return (*this);
 		}
 
-		value_type&	operator*(void)
+		// ------------------------MEMBER ACCESS OPERATORS----------------------
+		// arrow operator
+		pointer	operator->(void)
 		{
-			return(this->_data);
+			return (this->data);
+		}
+		// dereference operator
+		reference operator*(void)
+		{
+			return (*this->data);
 		}
 
 		// --------------------------UTILITY FUNCTIONS--------------------------
-		bool	has_left(void)
+		node*	next(void)
 		{
-			if (this->left)
-				return (true);
-			return (false);
+			node*	temp = this;
+	
+			if (temp->right)
+			{
+				if (temp->right->data == nullptr)
+				{
+					return (temp->right);
+				}
+				temp = temp->right;
+				while (temp && temp->left)
+				{
+					temp = temp->left;
+				}
+			}
+			else
+			{
+				while (temp->parent && temp->parent->right == temp)
+				{
+					temp = temp->parent;
+				}
+				temp = temp->parent;
+			}
+			// if (temp->data == nullptr)
+			// 	std::cout << "this is the end in next" << std::endl;
+			return (temp);
 		}
-
-		bool	has_right(void)
+		node*	previous(void)
 		{
-			if (this->right)
-				return (true);
-			return (false);
-		}
+			node*	temp = this;
 
-		bool	has_parent(void)
+			if (temp->left)
+			{
+				if (temp->left->data == nullptr)
+				{
+					return (temp->left);
+				}
+				temp = temp->left;
+				while (temp && temp->right)
+				{
+					temp = temp->right;
+				}
+			}
+			else
+			{
+				while (temp && temp->parent->left == temp)
+				{
+					temp = temp->parent;
+				}
+				temp = temp->parent;
+			}
+			return (temp);
+		}
+		void	set_data(node* node)
 		{
-			if (this->parent)
-				return (true);
-			return (false);
+			this->data = node->data;
 		}
-
-		void	set_data(Node<value_type>* node)
-		{
-			this->_data = *(*node);
-		}
-
-		private:
-	// ~~~~~~~~~~~~~~~~~~~~~~~~~~~PRIVATE MEMBER TYPES~~~~~~~~~~~~~~~~~~~~~~~~~~
-		value_type	_data;
 };
+}
 
 #endif
-
-/*
-if key < n_key
-if left n = n_left
-if right n = n_right
-n = n_parent
-if !n_parent not found
-
-if key > n_key
-if right n = n_right
-if left n = n_left
-n = n_parent
-if !n_parent not found
-
-if key == n_key
-return
-*/

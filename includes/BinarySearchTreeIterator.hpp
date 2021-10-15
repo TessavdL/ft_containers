@@ -6,7 +6,7 @@
 /*   By: tevan-de <tevan-de@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/08/26 11:30:29 by tevan-de      #+#    #+#                 */
-/*   Updated: 2021/10/14 23:31:07 by tevan-de      ########   odam.nl         */
+/*   Updated: 2021/10/15 18:35:09 by tevan-de      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,12 +15,9 @@
 
 # include <functional>	// for std::less, should include own compare later
 # include <iostream>	// for output, prob remove later
-# include <utility>		// for std::pair, should include own pair later
-# include <memory>		// for std::allocator
 
-# include "../temp.hpp"
-// # include "./RandomAccessIterator.hpp"
 # include "./Pair.hpp"
+# include "./Node.hpp"
 
 namespace ft {
 template<typename, typename>
@@ -32,14 +29,14 @@ template<typename>
 class node;
 }
 
-template <class T = ft::pair<class T1, class T2>>
+template <class T = ft::node<ft::pair<class T1, class T2> > >
 class BinarySearchTreeIterator
 {
 	public:
 	// ~~~~~~~~~~~~~~~~~~~~~~~~~~~PUBLIC MEMBER TYPES~~~~~~~~~~~~~~~~~~~~~~~~~~~
-		typedef T					value_type;
-		typedef value_type*			pointer;
-		typedef value_type&			reference;
+		typedef T			value_type;
+		typedef value_type*	pointer;
+		typedef value_type&	reference;
 
 	// ~~~~~~~~~~~~~~~~~~~~~~~~~PUBLIC MEMBER FUNCTIONS~~~~~~~~~~~~~~~~~~~~~~~~~
 		// ----------------------------CONSTRUCTORS-----------------------------
@@ -64,7 +61,7 @@ class BinarySearchTreeIterator
 		}
 
 		// -----------------------------DESTRUCTOR------------------------------
-		~BinarySearchTreeIterator(void)
+		virtual ~BinarySearchTreeIterator(void)
 		{
 			// std::cout << "Destructor of BSTI called" << std::endl;
 			return ;
@@ -87,47 +84,47 @@ class BinarySearchTreeIterator
 		BinarySearchTreeIterator&	operator--(void)
 		{
 			this->_node = this->_node->previous();
+			this->_ptr = this->node->data;
 			return (*this);
 		}
 		// postfix decrement
-		BinarySearchTreeIterator	operator--(int n)
+		BinarySearchTreeIterator	operator--(int)
 		{
 			BinarySearchTreeIterator	bsti = (*this);
 
 			this->_node = this->_node->previous();
+			this->_ptr = this->_node->data;
 			return (bsti);
 		}
 		// prefix increment
 		BinarySearchTreeIterator&	operator++(void)
 		{
 			this->_node = this->_node->next();
-			// std::cout << "in ++" << this->_node->data->first << std::endl;
+			this->_ptr = this->_node->data;
 			return (*this);
 		}
 		// postfix increment
-		BinarySearchTreeIterator	operator++(int n)
+		BinarySearchTreeIterator	operator++(int)
 		{
 			BinarySearchTreeIterator	bsti = (*this);
-	
-			std::cout << "before increment = " << this->_node->data->first << std::endl;
+
 			this->_node = this->_node->next();
-			if (this->_node->data == nullptr)
+			this->_ptr = this->_node->data;
+			if (this->_ptr == nullptr)
 				std::cout << "this is end" << std::endl;
-			else
-				std::cout << "after increment = " << this->_node->data->first << std::endl;
 			return (bsti);
 		}
 
 		// ------------------------MEMBER ACCESS OPERATORS----------------------
 		// arrow operator
-		pointer	operator->(void)
+		pointer	operator->(void) const
 		{
-			return (this->_node->data);
+			return (this->_ptr);
 		}
 		// dereference operator
-		reference	operator*(void)
+		reference	operator*(void) const
 		{
-			return (*this->_node->data);
+			return (*this->_ptr);
 		}
 
 		// -------------------------RELATIONAL OPERATORS------------------------

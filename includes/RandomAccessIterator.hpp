@@ -6,7 +6,7 @@
 /*   By: tevan-de <tevan-de@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/07/26 21:51:11 by tevan-de      #+#    #+#                 */
-/*   Updated: 2021/10/13 17:05:06 by tevan-de      ########   odam.nl         */
+/*   Updated: 2021/10/15 11:53:22 by tevan-de      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@ template<typename>
 class node;
 }
 
-template <class T = ft::pair<class T1, class T2>>
+template <class T = ft::pair<class T1, class T2> >
 class RandomAccessIterator
 {
 	public:
@@ -132,7 +132,7 @@ class RandomAccessIterator
 			return (*this);
 		}
 		// postfix decrement
-		RandomAccessIterator	operator--(int n)
+		RandomAccessIterator	operator--(int)
 		{
 			RandomAccessIterator	it = *this;
 
@@ -146,7 +146,7 @@ class RandomAccessIterator
 			return (*this);
 		}
 		// postfix increment
-		RandomAccessIterator	operator++(int n)
+		RandomAccessIterator	operator++(int)
 		{
 			RandomAccessIterator	it = *this;
 
