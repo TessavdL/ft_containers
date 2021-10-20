@@ -6,7 +6,7 @@
 /*   By: tevan-de <tevan-de@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/07/26 21:51:11 by tevan-de      #+#    #+#                 */
-/*   Updated: 2021/10/15 11:53:22 by tevan-de      ########   odam.nl         */
+/*   Updated: 2021/10/20 16:35:56 by tevan-de      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@ template<typename>
 class node;
 }
 
-template <class T = ft::pair<class T1, class T2> >
+template <class T>
 class RandomAccessIterator
 {
 	public:
@@ -39,6 +39,7 @@ class RandomAccessIterator
 		typedef value_type*		pointer;
 		typedef value_type&		reference;
 		typedef std::ptrdiff_t	difference_type;
+		typedef std::size_t		size_type;
 
 	// ~~~~~~~~~~~~~~~~~~~~~~~~~PUBLIC MEMBER FUNCTIONS~~~~~~~~~~~~~~~~~~~~~~~~~
 		// ----------------------------CONSTRUCTORS-----------------------------

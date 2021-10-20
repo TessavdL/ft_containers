@@ -6,11 +6,11 @@
 /*   By: tevan-de <tevan-de@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/10/10 17:41:27 by tevan-de      #+#    #+#                 */
-/*   Updated: 2021/10/15 18:37:27 by tevan-de      ########   odam.nl         */
+/*   Updated: 2021/10/20 12:21:08 by tevan-de      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "temp.hpp"
+#include "Map.hpp"
 #include "./includes/Pair.hpp"
 #include <map>
 #include <iostream>
@@ -39,11 +39,11 @@ int main(void)
 
 	// ----------------------------------------------------------------------------
 
-	for (ft::map<int,int>::reverse_iterator it = m.rbegin(); it != m.rend(); it++)
-	{
-		std::cout << it->first << std::endl;
-	}
-	std::cout << std::endl;
+	// for (ft::map<int,int>::reverse_iterator it = m.rbegin(); it != m.rend(); it++)
+	// {
+	// 	std::cout << it->first << std::endl;
+	// }
+	// std::cout << std::endl;
 
 	// ----------------------------------------------------------------------------
 

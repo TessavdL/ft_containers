@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        ::::::::            */
-/*   temp.hpp                                           :+:    :+:            */
+/*   Map.hpp                                            :+:    :+:            */
 /*                                                     +:+                    */
 /*   By: tevan-de <tevan-de@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/10/10 16:45:45 by tevan-de      #+#    #+#                 */
-/*   Updated: 2021/10/15 18:46:12 by tevan-de      ########   odam.nl         */
+/*   Updated: 2021/10/20 14:38:40 by tevan-de      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,7 +49,7 @@ class map
 		typedef typename allocator_type::const_pointer		const_pointer;
 		typedef BinarySearchTreeIterator<value_type>		iterator;
 		// typedef BidirectionalIterator<value_type>			const_iterator;
-		typedef ft::reverse_iterator<iterator>				reverse_iterator;
+		// typedef ft::reverse_iterator<iterator>				reverse_iterator;
 		// typedef std::reverse_iterator<const_iterator>		reverse_const_iterator;
 		typedef std::ptrdiff_t								difference_type;
 		typedef std::size_t									size_type;
@@ -80,7 +80,6 @@ class map
 			this->_end = new_end_node;
 			this->_root = nullptr;
 			this->_size = 0;
-			return ;
 		}
 		// range constructor
 		template <class InputIterator>
@@ -91,21 +90,26 @@ class map
 			for (InputIterator begin = first; begin != last; begin++, n++) {}
 			this->_alloc = alloc;
 			this->_compare = comp;
-			this->_size = n;
-			return ;
+
+			// /*
+			// this->_size = ft::distance(first, last, ft::input_iterator_tag);
+			// while (first != last)
+			// {
+			// 	insert(first);
+			// 	first++;
+			// }
+			// return ;
 		}
 		// copy constructor
 		map(const map& x)
 		{
 			*this = x;
-			return;
 		}
 
 		// -----------------------------DESTRUCTOR------------------------------
 		~map(void)
 		{
 			this->clear();
-			return ;
 		}
 
 		// -------------------------ASSIGNMENT OPERATOR-------------------------
@@ -135,16 +139,16 @@ class map
 			return (iterator(nullptr, this->_end));
 		}
 
-		reverse_iterator	rbegin(void)
-		{
-			std::cout << "in rbegin = " << this->_most_right()->data->first << std::endl;
-			return (reverse_iterator(this->_most_right()->data, this->_most_right()));
-		}
+		// reverse_iterator	rbegin(void)
+		// {
+		// 	std::cout << "in rbegin = " << this->_most_right()->data->first << std::endl;
+		// 	return (reverse_iterator(this->_most_right()->data, this->_most_right()));
+		// }
 
-		reverse_iterator	rend(void)
-		{
-			return (reverse_iterator(nullptr, this->_begin));
-		}
+		// reverse_iterator	rend(void)
+		// {
+		// 	return (reverse_iterator(nullptr, this->_begin));
+		// }
 
 		// -------------------------------CAPACITY------------------------------
 		bool	empty(void) const

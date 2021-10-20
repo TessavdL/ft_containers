@@ -6,7 +6,7 @@
 /*   By: tevan-de <tevan-de@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/08/20 16:45:32 by tevan-de      #+#    #+#                 */
-/*   Updated: 2021/10/15 18:32:14 by tevan-de      ########   odam.nl         */
+/*   Updated: 2021/10/20 11:54:46 by tevan-de      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,9 +31,11 @@ class node
 {
 public:
 	// ~~~~~~~~~~~~~~~~~~~~~~~~~~~PUBLIC MEMBER TYPES~~~~~~~~~~~~~~~~~~~~~~~~~~~
-		typedef T			value_type;
-		typedef value_type*	pointer;
-		typedef value_type&	reference;
+		typedef T				value_type;
+		typedef value_type*		pointer;
+		typedef value_type&		reference;
+		typedef std::ptrdiff_t	difference_type;
+		typedef std::size_t		size_type;
 
 	// ~~~~~~~~~~~~~~~~~~~~~~~~~~PUBLIC MEMBER OBJECTS~~~~~~~~~~~~~~~~~~~~~~~~~~
 		node*	left;
@@ -125,8 +127,6 @@ public:
 				}
 				temp = temp->parent;
 			}
-			// if (temp->data == nullptr)
-			// 	std::cout << "this is the end in next" << std::endl;
 			return (temp);
 		}
 		node*	previous(void)

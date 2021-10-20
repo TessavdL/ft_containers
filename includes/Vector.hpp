@@ -6,7 +6,7 @@
 /*   By: tevan-de <tevan-de@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/07/06 20:21:15 by tevan-de      #+#    #+#                 */
-/*   Updated: 2021/08/19 13:55:31 by tevan-de      ########   odam.nl         */
+/*   Updated: 2021/10/20 17:51:22 by tevan-de      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,19 +21,13 @@
 
 # include "./RandomAccessIterator.hpp"
 
-template <class T, class Allocator = std::allocator<T>>
+template <class T, class Allocator = std::allocator<T> >
 	class Vector
 	{
 		public:
 			// ---------------------------MEMBER TYPES--------------------------
 			typedef T									value_type;
 			typedef Allocator							allocator_type;
-
-			// size_t and ptrdiff_t were created to perform correct address arithmetic
-			// safety + portability + good performance
-			// can store the maximum size of a theoretically possible array of any type (32 or 64 bit)
-			// can safely store a pointer (exception pointer to class function)
-			// documentation: https://pvs-studio.com/en/blog/posts/cpp/a0050/
 			typedef std::size_t							size_type;
 			typedef std::ptrdiff_t						difference_type;
 			typedef value_type&							reference;
@@ -41,8 +35,8 @@ template <class T, class Allocator = std::allocator<T>>
 			typedef value_type*							pointer;
 			typedef const value_type*					const_pointer;
 
-			// typedef allocator_type::pointer				pointer;
-			// typedef allocator_type::const_pointer		const_pointer;
+			// typedef typename allocator_type::pointer				pointer;
+			// typedef typename allocator_type::const_pointer		const_pointer;
 
 			typedef RandomAccessIterator<value_type>	iterator;
 
@@ -269,7 +263,9 @@ template <class T, class Allocator = std::allocator<T>>
 			iterator insert(iterator pos, const T& value)
 			{
 				difference_type	n = pos - this->begin();
-				
+
+				std::cout << "n = " << n << " val = " << value << std::endl;
+
 				// allocate space for one and construct the value - if the capacity is zero
 				if (this->_capacity == 0)
 				{
@@ -295,6 +291,7 @@ template <class T, class Allocator = std::allocator<T>>
 				this->_size++;
 				return (pos);
 			}
+
 			void insert(iterator pos, size_type count, const T& value)
 			{
 				difference_type	n = pos - this->begin();
@@ -326,10 +323,61 @@ template <class T, class Allocator = std::allocator<T>>
 					this->_alloc.construct(this->_first_element + n + i, value);
 				}
 			}
+			#include <stdio.h>
 			template<class InputIt>
 			void insert(iterator pos, InputIt first, InputIt last)
 			{
+				difference_type	n = pos - this->begin();
+				difference_type	count = 0;
+				InputIt temp = first;
 
+				while (temp != last)
+				{
+					count++;
+					temp++;
+				}
+
+				std::cout << "n = " << n << " count = " << count << " capacity = " << this->_capacity << " size = " << this->_size << std::endl;
+
+				if (this->_capacity == 0)
+				{
+					this->_allocate_new(count, *first);
+					return ;
+				}
+				if (this->_size + count > this->_capacity)
+				{
+					std::cout << " here " << std::endl;
+					if (this->_capacity * 2 < this->_size + count)
+					{
+						std::cout << " here 2 " << std::endl;
+						this->_reallocate(this->_size + count);
+					}
+					else
+					{
+						std::cout << " here 3 " << std::endl;
+						this->_reallocate(this->_capacity * 2);
+					}
+				}
+					
+				std::cout << "increased capacity = ";
+				std::cout << this->_capacity << std::endl;
+				std::cout << "count = " << count << std::endl;
+
+				difference_type old_end = this->_size - 1;
+				difference_type new_end = this->_size - 1 + count;
+
+				this->_size += count;
+				for (iterator it = this->end(); it > this->begin() + n + count; it--, old_end--, new_end--)
+				{
+					this->_alloc.construct(this->_first_element + new_end, *(this->_first_element + old_end));
+					this->_alloc.destroy(this->_first_element + old_end);
+				}
+				for (size_type i = 0; i < count; i++)
+				{
+					this->_alloc.destroy(this->_first_element + n + i);
+					this->_alloc.construct(this->_first_element + n + i, *first);
+					first++;
+				}				
 			}
 
 			// erase
@@ -493,7 +541,7 @@ template <class T, class Allocator = std::allocator<T>>
 				return ;
 			}
 
-			allocator_type _alloc;
+			allocator_type	_alloc;
 			size_type		_capacity;
 			value_type*		_first_element;
 			size_type		_size;
@@ -501,7 +549,7 @@ template <class T, class Allocator = std::allocator<T>>
 	};
 
 // -----------------------------NON-MEMBER FUNCTIONS----------------------------
-template <typename T, class Allocator = std::allocator<T>>
+template <typename T, class Allocator >
 bool operator==(const Vector<T,Allocator>& lhs, const Vector<T,Allocator>& rhs)
 {
 	if (lhs.size() != rhs.size())
@@ -509,31 +557,31 @@ bool operator==(const Vector<T,Allocator>& lhs, const Vector<T,Allocator>& rhs)
 	return (true);
 }
 
-template <typename T, class Allocator = std::allocator<T>>
+template <typename T, class Allocator >
 bool operator!=(const Vector<T,Allocator>& lhs, const Vector<T,Allocator>& rhs)
 {
 	return (!(lhs == rhs));
 }
 
-template <typename T, class Allocator = std::allocator<T>>
+template <typename T, class Allocator >
 bool operator<(const Vector<T,Allocator>& lhs, const Vector<T,Allocator>& rhs)
 {
 	return (true);
 }
 
-template <typename T, class Allocator = std::allocator<T>>
+template <typename T, class Allocator >
 bool operator>(const Vector<T,Allocator>& lhs, const Vector<T,Allocator>& rhs)
 {
 	return (true);
 }
 
-template <typename T, class Allocator = std::allocator<T>>
+template <typename T, class Allocator  >
 bool operator<=(const Vector<T,Allocator>& lhs, const Vector<T,Allocator>& rhs)
 {
 	return (!(lhs > rhs));
 }
 
-template <typename T, class Allocator = std::allocator<T>>
+template <typename T, class Allocator >
 bool operator>=(const Vector<T,Allocator>& lhs, const Vector<T,Allocator>& rhs)
 {
 	return (!(lhs < rhs));
