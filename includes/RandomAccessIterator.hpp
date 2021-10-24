@@ -6,7 +6,7 @@
 /*   By: tevan-de <tevan-de@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/07/26 21:51:11 by tevan-de      #+#    #+#                 */
-/*   Updated: 2021/10/24 13:09:35 by tevan-de      ########   odam.nl         */
+/*   Updated: 2021/10/24 18:25:22 by tevan-de      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,6 @@ class RandomAccessIterator
 		typedef value_type*						pointer;
 		typedef value_type&						reference;
 		typedef std::ptrdiff_t					difference_type;
-		typedef std::size_t						size_type;
 		typedef ft::random_access_iterator_tag	iterator_category;
 
 	// ~~~~~~~~~~~~~~~~~~~~~~~~~PUBLIC MEMBER FUNCTIONS~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -183,7 +182,7 @@ class RandomAccessIterator
 		}
 
 	private:
-	// ~~~~~~~~~~~~~~~~~~~~~~~~~~~PRIVATE MEMBER TYPE~~~~~~~~~~~~~~~~~~~~~~~~~~~
+	// ~~~~~~~~~~~~~~~~~~~~~~~~~~PRIVATE MEMBER OBJECT~~~~~~~~~~~~~~~~~~~~~~~~~~
 		pointer	_ptr;
 };
 

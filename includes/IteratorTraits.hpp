@@ -6,14 +6,12 @@
 /*   By: tevan-de <tevan-de@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/08/17 15:26:55 by tevan-de      #+#    #+#                 */
-/*   Updated: 2021/10/24 13:06:15 by tevan-de      ########   odam.nl         */
+/*   Updated: 2021/10/24 13:24:39 by tevan-de      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef ITERATOR_TRAITS_HPP
 # define ITERATOR_TRAITS_HPP
-
-# include <iostream>
 
 namespace ft {
 template <class Iterator>

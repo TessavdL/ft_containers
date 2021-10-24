@@ -6,7 +6,7 @@
 /*   By: tevan-de <tevan-de@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/08/12 17:51:07 by tevan-de      #+#    #+#                 */
-/*   Updated: 2021/10/24 13:15:41 by tevan-de      ########   odam.nl         */
+/*   Updated: 2021/10/24 18:25:51 by tevan-de      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,6 @@ class ForwardIterator
 		typedef value_type*					pointer;
 		typedef value_type&					reference;
 		typedef std::ptrdiff_t				difference_type;
-		typedef std::size_t					size_type;
 		typedef ft::forward_iterator_tag	iterator_category;
 
 	// ~~~~~~~~~~~~~~~~~~~~~~~~~PUBLIC MEMBER FUNCTIONS~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -97,7 +96,7 @@ class ForwardIterator
 		}
 
 	private:
-	// ~~~~~~~~~~~~~~~~~~~~~~~~~~~PRIVATE MEMBER TYPE~~~~~~~~~~~~~~~~~~~~~~~~~~~
+	// ~~~~~~~~~~~~~~~~~~~~~~~~~~PRIVATE MEMBER OBJECT~~~~~~~~~~~~~~~~~~~~~~~~~~
 		pointer	_ptr;
 };
 
