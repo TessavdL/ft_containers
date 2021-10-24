@@ -6,7 +6,7 @@
 /*   By: tevan-de <tevan-de@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/07/26 21:51:11 by tevan-de      #+#    #+#                 */
-/*   Updated: 2021/10/20 16:35:56 by tevan-de      ########   odam.nl         */
+/*   Updated: 2021/10/24 13:09:35 by tevan-de      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,55 +15,44 @@
 
 # include <iostream>
 
+# include "./IteratorTraits.hpp"
+
 // Random Access Iterator (RAI) is the most complete iterator in terms of functionality
 // RAI allows reading, incrementing (with/without multiple passes), decrementing and random access
 // https://users.cs.northwestern.edu/~riesbeck/programming/c++/stl-iterator-define.html
 // https://internalpointers.com/post/writing-custom-iterators-modern-cpp
-
-namespace ft {
-template<typename, typename>
-class pair;
-}
-
-namespace ft {
-template<typename>
-class node;
-}
 
 template <class T>
 class RandomAccessIterator
 {
 	public:
 	// ~~~~~~~~~~~~~~~~~~~~~~~~~~~PUBLIC MEMBER TYPES~~~~~~~~~~~~~~~~~~~~~~~~~~~
-		typedef T				value_type;
-		typedef value_type*		pointer;
-		typedef value_type&		reference;
-		typedef std::ptrdiff_t	difference_type;
-		typedef std::size_t		size_type;
+		typedef T								value_type;
+		typedef value_type*						pointer;
+		typedef value_type&						reference;
+		typedef std::ptrdiff_t					difference_type;
+		typedef std::size_t						size_type;
+		typedef ft::random_access_iterator_tag	iterator_category;
 
 	// ~~~~~~~~~~~~~~~~~~~~~~~~~PUBLIC MEMBER FUNCTIONS~~~~~~~~~~~~~~~~~~~~~~~~~
 		// ----------------------------CONSTRUCTORS-----------------------------
-		// default
 		RandomAccessIterator(void) : _ptr(nullptr)
 		{
 			// std::cout << "Default Constructor of RAI called" << std::endl;
-			return ;
 		}
-		// parameter
 		RandomAccessIterator(pointer ptr) : _ptr(ptr)
 		{
 			// std::cout << "Parameter Constructor of RAI called" << std::endl;
-			return ;
 		}
-		// copy
-		RandomAccessIterator(const RandomAccessIterator& other) : _ptr(other._ptr)
+		RandomAccessIterator(const RandomAccessIterator& other)
 		{
+			*this = other;
 			// std::cout << "Copy Constructor of RAI called" << std::endl;
 			return ;
 		}
 
 		// -----------------------------DESTRUCTOR------------------------------
-		virtual ~RandomAccessIterator(void)
+		~RandomAccessIterator(void)
 		{
 			// std::cout << "Destructor of RAI called" << std::endl;
 			return ;
@@ -73,7 +62,9 @@ class RandomAccessIterator
 		RandomAccessIterator&	operator=(const RandomAccessIterator& other)
 		{
 			if (this != &other)
+			{
 				this->_ptr = other._ptr;
+			}
 			// std::cout << "Assignment Operator of RAI called" << std::endl;
 			return (*this);
 		}
@@ -126,13 +117,11 @@ class RandomAccessIterator
 
 		// -------------------DECREMENT AND INCREMENT OPERATORS-----------------
 		// article about prefix and postfix increments https://hownot2code.com/2016/06/30/use-a-prefix-increment-operator-i-in-iterators-instead-of-a-postfix-i-operator/
-		// prefix decrement
 		RandomAccessIterator&	operator--(void)
 		{
 			this->_ptr--;
 			return (*this);
 		}
-		// postfix decrement
 		RandomAccessIterator	operator--(int)
 		{
 			RandomAccessIterator	it = *this;
@@ -140,13 +129,11 @@ class RandomAccessIterator
 			--(*this);
 			return (it);
 		}
-		// prefix increment
 		RandomAccessIterator&	operator++(void)
 		{
 			this->_ptr++;
 			return (*this);
 		}
-		// postfix increment
 		RandomAccessIterator	operator++(int)
 		{
 			RandomAccessIterator	it = *this;
@@ -156,55 +143,40 @@ class RandomAccessIterator
 		}
 
 		// ------------------------MEMBER ACCESS OPERATORS----------------------
-		// arrow operator
-		// returns a pointer to the current position of the iterator
 		pointer	operator->(void)
 		{
 			return (this->_ptr);
 		}
-		// dereference operator
-		// returns a reference so the type is of l-value
-		// returns a reference of the value at the current position of the iterator
 		reference	operator*(void)
 		{
 			return (*(this->_ptr));
 		}
-		// subscript operator
-		// has a high precedence
-		// returns a reference so the type is of l-value
-		// returns a reference of the value at the index of the iterator
 		reference	operator[](int index)
 		{
 			return (*(this->_ptr + index));
 		}
 
 		// -------------------------RELATIONAL OPERATORS------------------------
-		// == operator, is equal to
 		bool	operator==(const RandomAccessIterator& other) const
 		{
 			return (this->_ptr == other._ptr);
 		}
-		// != operator, is not equal to
 		bool	operator!=(const RandomAccessIterator& other) const
 		{
 			return (!(*this == other));
 		}
-		// > operator, greater than
 		bool	operator>(const RandomAccessIterator& other) const
 		{
 			return (this->_ptr > other._ptr);
 		}	
-		// < operator, less than
 		bool	operator<(const RandomAccessIterator& other) const
 		{
 			return (this->_ptr < other._ptr);
 		}	
-		// >= operator, greater than or equal to
 		bool	operator>=(const RandomAccessIterator& other) const
 		{
 			return (!(this->_ptr < other._ptr));
 		}
-		// <= operator, less than or equal to
 		bool	operator<=(const RandomAccessIterator& other) const
 		{
 			return (!(this->_ptr > other._ptr));
@@ -212,7 +184,7 @@ class RandomAccessIterator
 
 	private:
 	// ~~~~~~~~~~~~~~~~~~~~~~~~~~~PRIVATE MEMBER TYPE~~~~~~~~~~~~~~~~~~~~~~~~~~~
-		value_type*	_ptr;
+		pointer	_ptr;
 };
 
 # endif

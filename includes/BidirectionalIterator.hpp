@@ -6,116 +6,112 @@
 /*   By: tevan-de <tevan-de@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/08/12 15:35:44 by tevan-de      #+#    #+#                 */
-/*   Updated: 2021/10/20 11:51:58 by tevan-de      ########   odam.nl         */
+/*   Updated: 2021/10/24 13:12:23 by tevan-de      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef BIDIRECTIONAL_ITERATOR_HPP
 # define BIDIRECTIONAL_ITERATOR_HPP
 
-#include "./RandomAccessIterator.hpp"
+# include <iostream>
+
+# include "./IteratorTraits.hpp"
 
 template <class T>
-class BidirectionalIterator : public RandomAccessIterator<T>
+class BidirectionalIterator
 {
 	public:
 	// ~~~~~~~~~~~~~~~~~~~~~~~~~~~PUBLIC MEMBER TYPES~~~~~~~~~~~~~~~~~~~~~~~~~~~
-		typedef T				value_type;
-		typedef value_type*		pointer;
-		typedef value_type&		reference;
-		typedef std::ptrdiff_t	difference_type;
-		typedef std::size_t		size_type;
+		typedef T								value_type;
+		typedef value_type*						pointer;
+		typedef value_type&						reference;
+		typedef std::ptrdiff_t					difference_type;
+		typedef std::size_t						size_type;
+		typedef ft::bidrectional_iterator_tag	iterator_category;
 
 	// ~~~~~~~~~~~~~~~~~~~~~~~~~PUBLIC MEMBER FUNCTIONS~~~~~~~~~~~~~~~~~~~~~~~~~
 		// ----------------------------CONSTRUCTORS-----------------------------
-		// default
-		BidirectionalIterator(void) : RandomAccessIterator<T>()
+		BidirectionalIterator(void) : _ptr(nullptr)
 		{
-			std::cout << "Default Constructor of BI called" << std::endl;
-			return ;
+			// std::cout << "Default Constructor of BI called" << std::endl;
 		}
-		// parameter
-		BidirectionalIterator(pointer ptr) : RandomAccessIterator<T>(ptr)
+		BidirectionalIterator(pointer ptr) _ptr(ptr)
 		{
-			std::cout << "Parameter Constructor of BI called" << std::endl;
-			return ;
+			// std::cout << "Parameter Constructor of BI called" << std::endl;
 		}
 		// copy
-		BidirectionalIterator(const BidirectionalIterator& other) : RandomAccessIterator<T>(other)
+		BidirectionalIterator(const BidirectionalIterator& other)
 		{
-			std::cout << "Copy Constructor of BI called" << std::endl;
-			return ;
+			*this = other;
+			// std::cout << "Copy Constructor of BI called" << std::endl;
 		}
 
 		// -----------------------------DESTRUCTOR------------------------------
 		~BidirectionalIterator(void)
 		{
-			std::cout << "Destructor of BI called" << std::endl;
-			return ;
+			// std::cout << "Destructor of BI called" << std::endl;
 		}
 
 		// ------------------------ASSIGNMENT OPERATOR--------------------------
 		BidirectionalIterator&	operator=(const BidirectionalIterator& other)
 		{
-			RandomAccessIterator<T>::operator=(other);
-			std::cout << "Assignment Operator of BI called" << std::endl;
+			if (this != &other)
+			{
+				this->_ptr = other._ptr;
+			}
+			// std::cout << "Assignment Operator of BI called" << std::endl;
 			return (*this);
-
 		}
 
 		// -------------------DECREMENT AND INCREMENT OPERATORS-----------------
-		// prefix decrement
 		BidirectionalIterator&	operator--(void)
 		{
-			RandomAccessIterator<T>::operator--();
+			this->_ptr--;
 			return (*this);
 		}
-		// postfix decrement
-		BidirectionalIterator	operator--(int n)
+		BidirectionalIterator	operator--(int)
 		{
-			RandomAccessIterator<T>::operator--(n);
-			return (*this);
+			BidirectionalIterator	it = *this;
+
+			--(*this);
+			return (it);
 		}
-		// prefix increment
 		BidirectionalIterator&	operator++(void)
 		{
-			RandomAccessIterator<T>::operator++();
+			this->_ptr++;
 			return (*this);
 		}
-		// postfix increment
-		BidirectionalIterator	operator++(int n)
+		BidirectionalIterator	operator++(int)
 		{
-			RandomAccessIterator<T>::operator++(n);
-			return (*this);
+			BidirectionalIterator	it = *this;
+
+			++(*this);
+			return (it);
 		}
 
 		// ------------------------MEMBER ACCESS OPERATORS----------------------
-		// arrow operator
 		pointer	operator->(void)
 		{
-			return (RandomAccessIterator<T>::operator->());
+			return (this->_ptr);
 		}
-		// dereference operator
 		reference	operator*(void)
 		{
-			return (RandomAccessIterator<T>::operator*());
+			return (*(this->_ptr));
 		}
 
 		// -------------------------RELATIONAL OPERATORS------------------------
-		// == operator, is equal to
 		bool	operator==(const BidirectionalIterator& other) const
 		{
-			return (RandomAccessIterator<T>::operator==(other));
+			return (this->_ptr == other._ptr);
 		}
-		// != operator, is not equal to
 		bool	operator!=(const BidirectionalIterator& other) const
 		{
-			return (RandomAccessIterator<T>::operator!=(other));
+			return (!(*this == other));
 		}
 
 	private:
 	// ~~~~~~~~~~~~~~~~~~~~~~~~~~~PRIVATE MEMBER TYPE~~~~~~~~~~~~~~~~~~~~~~~~~~~
-		value_type*	_ptr;
+		pointer	_ptr;
 };
 
 #endif

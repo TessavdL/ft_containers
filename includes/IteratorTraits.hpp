@@ -6,7 +6,7 @@
 /*   By: tevan-de <tevan-de@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/08/17 15:26:55 by tevan-de      #+#    #+#                 */
-/*   Updated: 2021/10/20 14:30:39 by tevan-de      ########   odam.nl         */
+/*   Updated: 2021/10/24 13:06:15 by tevan-de      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,14 +14,6 @@
 # define ITERATOR_TRAITS_HPP
 
 # include <iostream>
-
-/*
-iteratator_category	input_iterator_tag
-					output_iterator_tag
-					forward_iterator_tag
-					bidirectional_iterator_tag
-					random_access_iterator_tag
-*/
 
 namespace ft {
 template <class Iterator>
@@ -35,10 +27,6 @@ class iterator_traits
 		typedef typename Iterator::iterator_category	iterator_category;
 };
 }
-
-/*
-iterator tags
-*/
 
 namespace ft {
 struct input_iterator_tag {};

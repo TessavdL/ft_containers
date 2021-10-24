@@ -6,96 +6,91 @@
 /*   By: tevan-de <tevan-de@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/08/12 17:51:07 by tevan-de      #+#    #+#                 */
-/*   Updated: 2021/10/20 11:52:04 by tevan-de      ########   odam.nl         */
+/*   Updated: 2021/10/24 13:15:41 by tevan-de      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef FORWARD_ITERATOR_HPP
 # define FORWARD_ITERATOR_HPP
 
-#include "./RandomAccessIterator.hpp"
+# include <iostream>
+
+# include "./IteratorTraits.hpp"
 
 template <class T>
-class ForwardIterator : public RandomAccessIterator<T>
+class ForwardIterator
 {
 	public:
 	// ~~~~~~~~~~~~~~~~~~~~~~~~~~~PUBLIC MEMBER TYPES~~~~~~~~~~~~~~~~~~~~~~~~~~~
-		typedef T				value_type;
-		typedef value_type*		pointer;
-		typedef value_type&		reference;
-		typedef std::ptrdiff_t	difference_type;
-		typedef std::size_t		size_type;
+		typedef T							value_type;
+		typedef value_type*					pointer;
+		typedef value_type&					reference;
+		typedef std::ptrdiff_t				difference_type;
+		typedef std::size_t					size_type;
+		typedef ft::forward_iterator_tag	iterator_category;
 
 	// ~~~~~~~~~~~~~~~~~~~~~~~~~PUBLIC MEMBER FUNCTIONS~~~~~~~~~~~~~~~~~~~~~~~~~
 		// ----------------------------CONSTRUCTORS-----------------------------
-		// default
-		ForwardIterator() : RandomAccessIterator<T>()
+		ForwardIterator() : _ptr(nullptr)
 		{
-			std::cout << "Default Constructor of FI called" << std::endl;
-			return ;
+			// std::cout << "Default Constructor of FI called" << std::endl;
 		}
-		//parameter
-		ForwardIterator(pointer ptr) : RandomAccessIterator<T>(ptr)
+		ForwardIterator(pointer ptr) : _ptr(ptr)
 		{
-			std::cout << "Parameter Constructor of FI called" << std::endl;
-			return ;
+			// std::cout << "Parameter Constructor of FI called" << std::endl;
 		}
-		//copy
-		ForwardIterator(const ForwardIterator& other) : RandomAccessIterator<T>(other)
+		ForwardIterator(const ForwardIterator& other)
 		{
-			std::cout << "Copy Constructor of FI called" << std::endl;
-			return ;
+			*this = other;
+			// std::cout << "Copy Constructor of FI called" << std::endl;
 		}
 
 		// -----------------------------DESTRUCTOR------------------------------
 		~ForwardIterator()
 		{
-			std::cout << "Destructor of FI called" << std::endl;
-			return ;
+			// std::cout << "Destructor of FI called" << std::endl;
 		}
 
 		// ------------------------ASSIGNMENT OPERATOR--------------------------
 		ForwardIterator&	operator=(const ForwardIterator& other)
 		{
-			RandomAccessIterator<T>::operator=(other);
-			std::cout << "Assignment Operator of FI called" << std::endl;
+			if (this != &other)
+			{
+				this->_ptr = other._ptr;
+			}
+			// std::cout << "Assignment Operator of FI called" << std::endl;
 			return (*this);
-
 		}
 
 		// --------------------------INCREMENT OPERATORS------------------------
-		// prefix increment
 		ForwardIterator&	operator++(void)
 		{
-			RandomAccessIterator<T>::operator++();
+			this->_ptr++;
 			return (*this);
 		}
-		// postfix increment
-		ForwardIterator	operator++(int n)
+		ForwardIterator	operator++(int)
 		{
-			RandomAccessIterator<T>::operator++(n);
-			return (*this);
+			ForwardIterator	it = *this;
+
+			++(*this);
+			return (it);
 		}
 
 		// ------------------------MEMBER ACCESS OPERATORS----------------------
-		// arrow operator
 		pointer	operator->(void)
 		{
 			return (RandomAccessIterator::operator->());
 		}
-		// dereference operator
 		reference	operator*(void)
 		{
 			return (RandomAccessIterator::operator*());
 		}
 
 		// -------------------------RELATIONAL OPERATORS------------------------
-		// == operator, is equal to
 		bool	operator==(ForwardIterator const& other) const
 		{
 			return (RandomAccessIterator::operator==(other));
 		}
-		// != operator, is not equal to
 		bool	operator!=(ForwardIterator const& other) const
 		{
 			return (RandomAccessIterator::operator!=(other));
@@ -103,7 +98,7 @@ class ForwardIterator : public RandomAccessIterator<T>
 
 	private:
 	// ~~~~~~~~~~~~~~~~~~~~~~~~~~~PRIVATE MEMBER TYPE~~~~~~~~~~~~~~~~~~~~~~~~~~~
-		value_type*	_ptr;
+		pointer	_ptr;
 };
 
 #endif
