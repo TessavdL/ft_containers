@@ -6,7 +6,7 @@
 /*   By: tevan-de <tevan-de@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/07/06 20:21:49 by tevan-de      #+#    #+#                 */
-/*   Updated: 2021/08/19 13:47:58 by tevan-de      ########   odam.nl         */
+/*   Updated: 2021/10/19 17:02:45 by tevan-de      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,6 @@
 void	vector_integers_capacity(void)
 {
 	std::vector<int>	Vector_int;
-
 
 	for (int i = 0; i < 500; i++)
 	{
@@ -64,7 +63,7 @@ void	vector_integers_empty(void)
 void	vector_element_access(void)
 {
 	std::vector<int>	original_default;
-	Vector<int>			mine_default;
+	ft::vector<int>			mine_default;
 
 	std::cout << "original capapcity " << original_default.capacity() << std::endl;
 	std::cout << "mine capapcity " << mine_default.capacity() << std::endl;
@@ -76,11 +75,11 @@ void	vector_element_access(void)
 	std::cout << "mine capapcity " << mine_default.capacity() << std::endl;
 
 	std::vector<int>	original_fill(20, 42);
-	Vector<int>			mine_fill(20, 42);
+	ft::vector<int>			mine_fill(20, 42);
 
 	for (std::vector<int>::iterator it = original_fill.begin(); it != original_fill.end(); it++)
 		std::cout << "original " << *it << std::endl;
-	for (Vector<int>::iterator it = mine_fill.begin(); it != mine_fill.end(); it++)
+	for (ft::vector<int>::iterator it = mine_fill.begin(); it != mine_fill.end(); it++)
 		std::cout << "mine " << *it << std::endl;
 
 	original_fill.reserve(50);
@@ -89,7 +88,7 @@ void	vector_element_access(void)
 
 	for (std::vector<int>::iterator it = original_fill.begin(); it != original_fill.end(); it++)
 		std::cout << "original " << *it << std::endl;
-	for (Vector<int>::iterator it = mine_fill.begin(); it != mine_fill.end(); it++)
+	for (ft::vector<int>::iterator it = mine_fill.begin(); it != mine_fill.end(); it++)
 		std::cout << "mine " << *it << std::endl;
 
 	original_fill[0] = 0;
@@ -109,7 +108,7 @@ void	vector_element_access(void)
 	std::cout << *original_back << std::endl;
 	mine_fill.back() = 2;
 	std::cout << mine_fill.back() << std::endl;
-	Vector<int>::iterator mine_back = mine_fill.end();
+	ft::vector<int>::iterator mine_back = mine_fill.end();
 	mine_back--;
 	std::cout << *mine_back << std::endl;
 }
@@ -117,7 +116,7 @@ void	vector_element_access(void)
 void	vector_clear(void)
 {
 	std::vector<int>	original_fill(20, 42);
-	Vector<int>			mine_fill(20, 42);
+	ft::vector<int>			mine_fill(20, 42);
 
 	original_fill.push_back(21);
 	mine_fill.push_back(21);
@@ -156,7 +155,7 @@ void	vector_clear(void)
 void	vector_erase(void)
 {
 	std::vector<int>	original_fill(20);
-	Vector<int>			mine_fill(20);
+	ft::vector<int>			mine_fill(20);
 
 	for (size_t i = 0; i < original_fill.size(); i++)
 		original_fill[i] = i;
@@ -168,7 +167,7 @@ void	vector_erase(void)
 		std::cout << *it << "\t";
 	std::cout << std::endl;
 	std::cout << "mine\t\t\t";
-	for (Vector<int>::iterator it = mine_fill.begin(); it != mine_fill.end(); it++)
+	for (ft::vector<int>::iterator it = mine_fill.begin(); it != mine_fill.end(); it++)
 		std::cout << *it << "\t";
 	std::cout << std::endl;
 		
@@ -182,7 +181,7 @@ void	vector_erase(void)
 		}
 	}
 	even = 0;
-	for (Vector<int>::iterator it = mine_fill.begin(); it != mine_fill.end(); it++, even++)
+	for (ft::vector<int>::iterator it = mine_fill.begin(); it != mine_fill.end(); it++, even++)
 	{
 		if (even % 2 != 0)
 		{
@@ -200,7 +199,7 @@ void	vector_erase(void)
 		std::cout << original_fill[i] << "\t";
 	std::cout << std::endl;
 	std::cout << "mine after erase\t";
-	for (Vector<int>::iterator it = mine_fill.begin(); it != mine_fill.end(); it++)
+	for (ft::vector<int>::iterator it = mine_fill.begin(); it != mine_fill.end(); it++)
 		std::cout << *it << "\t";
 	std::cout << std::endl;
 	std::cout << "mine did it remove?\t";
@@ -209,7 +208,7 @@ void	vector_erase(void)
 	std::cout << std::endl;
 
 	std::vector<int>	original(20);
-	Vector<int>	mine(20);
+	ft::vector<int>	mine(20);
 
 	for (size_t i = 0; i < original.size(); i++)
 		original[i] = i;
@@ -224,11 +223,11 @@ void	vector_erase(void)
 		std::cout << *it << "\t";
 	std::cout << std::endl;
 
-	Vector<int>::iterator toerase2 = mine.begin() + 10;
+	ft::vector<int>::iterator toerase2 = mine.begin() + 10;
 
 	mine.erase(toerase2, mine.end() - 1);
 	std::cout << "mine half erase\t\t";
-	for (Vector<int>::iterator it = mine.begin(); it != mine.end(); it++)
+	for (ft::vector<int>::iterator it = mine.begin(); it != mine.end(); it++)
 		std::cout << *it << "\t";
 	std::cout << std::endl;
 }
@@ -236,7 +235,7 @@ void	vector_erase(void)
 void	vector_resize(void)
 {
 	std::vector<int>	original(10);
-	Vector<int>			mine(10);
+	ft::vector<int>			mine(10);
 
 	std::cout << original.size() << std::endl;
 	for (size_t i = 0; i < 10; i++)
@@ -250,7 +249,7 @@ void	vector_resize(void)
 	std::cout << std::endl;
 
 	std::cout << "mine\t\t\t";
-	for (Vector<int>::iterator it = mine.begin(); it != mine.end(); it++)
+	for (ft::vector<int>::iterator it = mine.begin(); it != mine.end(); it++)
 		std::cout << *it << "\t";
 	std::cout << std::endl;
 
@@ -270,7 +269,7 @@ void	vector_resize(void)
 	std::cout << "mine capacity is now " << mine.capacity() << std::endl;
 	std::cout << "mine size is now " << mine.size() << std::endl;
 	std::cout << "mine\t\t\t";
-	for (Vector<int>::iterator it = mine.begin(); it != mine.end(); it++)
+	for (ft::vector<int>::iterator it = mine.begin(); it != mine.end(); it++)
 		std::cout << *it << "\t";
 	std::cout << std::endl;
 	std::cout << "mine did it remove?\t";
@@ -294,7 +293,7 @@ void	vector_resize(void)
 	std::cout << "mine capacity is now " << mine.capacity() << std::endl;
 	std::cout << "mine size is now " << mine.size() << std::endl;
 	std::cout << "mine\t\t\t";
-	for (Vector<int>::iterator it = mine.begin(); it != mine.end(); it++)
+	for (ft::vector<int>::iterator it = mine.begin(); it != mine.end(); it++)
 		std::cout << *it << "\t";
 	std::cout << std::endl;
 	std::cout << "mine did it remove?\t";
@@ -326,8 +325,8 @@ void	vector_swap(void)
 		std::cout << *it << "\t";
 	std::cout << std::endl;
 
-	Vector<int>	een(3);
-	Vector<int>	twee(2);
+	ft::vector<int>	een(3);
+	ft::vector<int>	twee(2);
 	een[0] = 1;
 	een[1] = 2;
 	een[2] = 3;
@@ -335,20 +334,20 @@ void	vector_swap(void)
 	twee[1] = 5;
 
 	std::cout << "een\t\t\t";
-	for (Vector<int>::iterator it = een.begin(); it != een.end(); it++)
+	for (ft::vector<int>::iterator it = een.begin(); it != een.end(); it++)
 		std::cout << *it << "\t";
 	std::cout << std::endl;
 	std::cout << "twee\t\t\t";
-	for (Vector<int>::iterator it = twee.begin(); it != twee.end(); it++)
+	for (ft::vector<int>::iterator it = twee.begin(); it != twee.end(); it++)
 		std::cout << *it << "\t";
 	std::cout << std::endl;
 	een.swap(twee);
 	std::cout << "een\t\t\t";
-	for (Vector<int>::iterator it = een.begin(); it != een.end(); it++)
+	for (ft::vector<int>::iterator it = een.begin(); it != een.end(); it++)
 		std::cout << *it << "\t";
 	std::cout << std::endl;
 	std::cout << "twee\t\t\t";
-	for (Vector<int>::iterator it = twee.begin(); it != twee.end(); it++)
+	for (ft::vector<int>::iterator it = twee.begin(); it != twee.end(); it++)
 		std::cout << *it << "\t";
 	std::cout << std::endl;
 }
@@ -380,23 +379,44 @@ void	vector_insert(void)
 		std::cout << *it << "\t";
 	std::cout << std::endl;
 
-	Vector<int>	mine(10);
+	ft::vector<int>	mine(10);
 	for (size_t i = 0; i < 10; i++)
 		mine[i] = i;
 	mine.insert(mine.begin() + 1, 21);
 	std::cout << "capacity " << mine.capacity() << std::endl;
-	for (Vector<int>::iterator it = mine.begin(); it != mine.end(); it++)
+	for (ft::vector<int>::iterator it = mine.begin(); it != mine.end(); it++)
 		std::cout << *it << "\t";
 	std::cout << std::endl;
 
-	Vector<int>	fill(10);
+	ft::vector<int>	fill(10);
 	for (size_t i = 0; i < 10; i++)
 		fill[i] = i;
 	fill.insert(fill.begin(), (size_t)3, 21);
 	std::cout << "capacity " << fill.capacity() << std::endl;
-	for (Vector<int>::iterator it = fill.begin(); it != fill.end(); it++)
+	for (ft::vector<int>::iterator it = fill.begin(); it != fill.end(); it++)
 		std::cout << *it << "\t";
 	std::cout << std::endl;
+}
+
+#include "../includes/InputIterator.hpp"
+
+void	vector_inputiterator(void)
+{
+	ft::vector<int>	mine;
+
+	mine.insert(mine.begin(), 1);
+	mine.insert(mine.begin(), 2);
+	mine.insert(mine.begin(), 3);
+
+	for (ft::vector<int>::iterator it = mine.begin(); it != mine.end(); it++)
+		std::cout << *it << "\t";
+	std::cout << std::endl;
+
+	InputIterator<int>	begin = mine.begin();
+	InputIterator<int>	end = mine.end();
+
+	ft::vector<int>		mine2(begin, end);
+
 }
 
 int	main(void)
@@ -404,9 +424,9 @@ int	main(void)
 	// vector_integers_empty();
 	// vector_integers_capacity();
 	// vector_chars_capacity();
-	// Vector<int>			mine_default;
-	// Vector<int>			mine_fill(5, 2);
-	// Vector<int>			mini_fill_copy(mine_fill);
+	// ft::vector<int>			mine_default;
+	// ft::vector<int>			mine_fill(5, 2);
+	// ft::vector<int>			mini_fill_copy(mine_fill);
 	// std::vector<int>	original_default;
 	// std::vector<int>	original_fill(5, 3);
 
@@ -414,18 +434,19 @@ int	main(void)
 	// std::cout << "original max_size =\t" << original_default.max_size() << std::endl;
 	// for (int i = 0; i < 5; i++)
 	// 	std::cout << original_fill[i] << std::endl;
-	// for (Vector<int>::iterator it = mine_fill.begin(); it != mine_fill.end(); it++)
+	// for (ft::vector<int>::iterator it = mine_fill.begin(); it != mine_fill.end(); it++)
 	// 	std::cout << "iterator " << *it << std::endl;
-	// for (Vector<int>::iterator it = mine_default.begin(); it != mine_default.end(); it++)
+	// for (ft::vector<int>::iterator it = mine_default.begin(); it != mine_default.end(); it++)
 	// 	std::cout << "mine default " << *it << std::endl;
 	// for (std::vector<int>::iterator it = original_default.begin(); it != original_default.end(); it++)
 	// 	std::cout << "original default " << *it << std::endl;
 
-	vector_element_access();
-	vector_clear();
-	vector_erase();
-	vector_resize();
-	vector_swap();
-	vector_insert();
+	// vector_element_access();
+	// vector_clear();
+	// vector_erase();
+	// vector_resize();
+	// vector_swap();
+	// vector_insert();
+	vector_inputiterator();
 	return (0);
 }

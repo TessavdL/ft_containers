@@ -6,14 +6,16 @@
 /*   By: tevan-de <tevan-de@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/08/12 17:52:57 by tevan-de      #+#    #+#                 */
-/*   Updated: 2021/08/21 17:09:27 by tevan-de      ########   odam.nl         */
+/*   Updated: 2021/10/19 17:19:50 by tevan-de      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef INPUT_ITERATOR_HPP
 # define INPUT_ITERATOR_HPP
 
-#include "./RandomAccessIterator.hpp"
+# include <iostream>
+
+# include "RandomAccessIterator.hpp"
 
 template <class T>
 class InputIterator : public RandomAccessIterator<T>
@@ -27,77 +29,69 @@ class InputIterator : public RandomAccessIterator<T>
 
 	// ~~~~~~~~~~~~~~~~~~~~~~~~~PUBLIC MEMBER FUNCTIONS~~~~~~~~~~~~~~~~~~~~~~~~~
 		// ----------------------------CONSTRUCTORS-----------------------------
-		// default
 		InputIterator(void) : RandomAccessIterator<T>()
 		{
 			std::cout << "Default Constructor of II called" << std::endl;
-			return ;
 		}
-		// parameter
 		InputIterator(pointer ptr) : RandomAccessIterator<T>(ptr)
 		{
 			std::cout << "Parameter Constructor of II called" << std::endl;
-			return ;
 		}
-		// copy
-		InputIterator(const InputIterator& other) : RandomAccessIterator<T>(other)
+		InputIterator(const InputIterator& other)
 		{
+			*this = other;
 			std::cout << "Copy Constructor of II called" << std::endl;
-			return ;
 		}
 
 		// -----------------------------DESTRUCTOR------------------------------
 		~InputIterator(void)
 		{
 			std::cout << "Destructor of II called" << std::endl;
-			return ;
 		}
 
 		// ------------------------ASSIGNMENT OPERATOR--------------------------
 		InputIterator&	operator=(const InputIterator& other)
 		{
-			RandomAccessIterator<T>::operator=(other);
+			if (this != &other)
+			{
+				this->_ptr = other._ptr;
+			}
 			std::cout << "Assignment Operator of II called" << std::endl;
 			return (*this);
-
 		}
 
 		// --------------------------INCREMENT OPERATORS------------------------
-		// prefix increment
 		InputIterator&	operator++(void)
 		{
-			RandomAccessIterator<T>::operator++();
+			this->_ptr++;
 			return (*this);
 		}
-		// postfix increment
 		InputIterator	operator++(int n)
 		{
-			RandomAccessIterator<T>::operator++(n);
-			return (*this);
+			InputIterator	it = *this;
+
+			++(*this);
+			return (it);
 		}
 
 		// ------------------------MEMBER ACCESS OPERATORS----------------------
-		// arrow operator
 		pointer	operator->(void)
 		{
-			return (RandomAccessIterator<T>::operator->());
+			return (this->_ptr);
 		}
-		// dereference operator
 		reference	operator*(void)
 		{
-			return (RandomAccessIterator<T>::operator*());
+			return (*(this->_ptr));
 		}
 
 		// -------------------------RELATIONAL OPERATORS------------------------
-		// == operator, is equal to
 		bool	operator==(const InputIterator& other) const
 		{
-			return (RandomAccessIterator<T>::operator==(other));
+			return (this->_ptr == other._ptr);
 		}
-		// != operator, is not equal to
 		bool	operator!=(const InputIterator& other) const
 		{
-			return (RandomAccessIterator<T>::operator!=(other));
+			return (!(*this == other));
 		}
 
 	private:
@@ -106,4 +100,3 @@ class InputIterator : public RandomAccessIterator<T>
 };
 
 #endif
-

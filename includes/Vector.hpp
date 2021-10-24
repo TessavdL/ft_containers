@@ -6,7 +6,7 @@
 /*   By: tevan-de <tevan-de@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/07/06 20:21:15 by tevan-de      #+#    #+#                 */
-/*   Updated: 2021/08/19 13:55:31 by tevan-de      ########   odam.nl         */
+/*   Updated: 2021/10/19 17:21:21 by tevan-de      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,54 +14,47 @@
 # define VECTOR_HPP
 
 # include <algorithm>	// for std::swap
-# include <cmath>		// for pow
 # include <cstddef>		// for size_t and ptrdiff_t
 # include <iostream>	// for output
 # include <memory>		// for std::allocator
 
 # include "./RandomAccessIterator.hpp"
+# include "./InputIterator.hpp"
 
+namespace ft {
 template <class T, class Allocator = std::allocator<T>>
-	class Vector
+	class vector
 	{
 		public:
 			// ---------------------------MEMBER TYPES--------------------------
-			typedef T									value_type;
-			typedef Allocator							allocator_type;
+			typedef T										value_type;
+			typedef Allocator								allocator_type;
+			typedef std::size_t								size_type;
+			typedef std::ptrdiff_t							difference_type;
+			typedef value_type&								reference;
+			typedef const value_type& 						const_reference;
+			typedef value_type*								pointer;
+			typedef const value_type*						const_pointer;
+			// typedef typename allocator_type::pointer		pointer;
+			// typedef typename allocator_type::const_pointer	const_pointer;
+			typedef RandomAccessIterator<value_type>		iterator;
 
-			// size_t and ptrdiff_t were created to perform correct address arithmetic
-			// safety + portability + good performance
-			// can store the maximum size of a theoretically possible array of any type (32 or 64 bit)
-			// can safely store a pointer (exception pointer to class function)
-			// documentation: https://pvs-studio.com/en/blog/posts/cpp/a0050/
-			typedef std::size_t							size_type;
-			typedef std::ptrdiff_t						difference_type;
-			typedef value_type&							reference;
-			typedef const value_type& 					const_reference;
-			typedef value_type*							pointer;
-			typedef const value_type*					const_pointer;
-
-			// typedef allocator_type::pointer				pointer;
-			// typedef allocator_type::const_pointer		const_pointer;
-
-			typedef RandomAccessIterator<value_type>	iterator;
 
 			// ---------------------------CONSTRUCTORS--------------------------
 			// Default constructor
 			// constructs an empty container with no elements
 			// explicit vector (const allocator_type& alloc = allocator_type());
-			explicit Vector(const allocator_type& alloc = allocator_type()) :
-				 _alloc(alloc), _capacity(0), _first_element(nullptr), _size(0), _size_value_type(sizeof(value_type))
+			explicit vector(const allocator_type& alloc = allocator_type()) :
+				 _alloc(alloc), _capacity(0), _first_element(nullptr), _size(0)
 			{
 				// std::cout << "Default construtor is called" << std::endl;
-				return ;
 			}
 
 			// Fill constructor
 			// constructs a container with n elements. Each element is a copy of val
 			// explicit vector (size_type n, const value_type& val = value_type(), const allocator_type& alloc = allocator_type());
-			explicit Vector(size_type n, const value_type& val = value_type(), const allocator_type& alloc = allocator_type()) :
-				_alloc(alloc), _capacity(n), _size(n), _size_value_type(sizeof(value_type))
+			explicit vector(size_type n, const value_type& val = value_type(), const allocator_type& alloc = allocator_type()) :
+				_alloc(alloc), _capacity(n), _size(n)
 			{
 				this->_first_element = this->_alloc.allocate(this->_size);
 				for (size_type i = 0; i < this->_size; i++)
@@ -69,18 +62,32 @@ template <class T, class Allocator = std::allocator<T>>
 					this->_alloc.construct(this->_first_element + i, val);
 				}
 				// std::cout << "Fill construtor is called" << std::endl;
-				return ;
 			}
 			// Range constructor
 			// constructs a container with as many elements as the range [first,last), with each element constructed from its corresponding element in that range, in the same order.
-			// template <class InputIterator>
-				//vector (InputIterator first, InputIterator last, const allocator_type& alloc = allocator_type());
+			// template <typename>
+			// class InputIterator;
+			
+			template <typename InputIterator>
+			vector (InputIterator first, InputIterator last, const allocator_type& alloc = allocator_type()) :
+				_alloc(alloc)
+			{
+				difference_type n = 0;
+				while (first != last)
+				{
+					n++;
+					std::cout << *first << std::endl;
+					first++;
+				}
+				this->_size = n;
+				std::cout << n << std::endl;
+			}
 
 			// Copy constructor
 			// constructs a container with a copy of each of the elements in x, in the same order.
 			// vector (const vector& x);
-			Vector(const Vector& x) :
-				_alloc(x._alloc), _capacity(x._capacity), _size(x._size), _size_value_type(x._size_value_type)
+			vector(const vector& x) :
+				_alloc(x._alloc), _capacity(x._capacity), _size(x._size)
 			{
 				this->_first_element = this->_alloc.allocate(this->_size);
 				for (size_type i = 0; i < this->_size; i++)
@@ -88,23 +95,21 @@ template <class T, class Allocator = std::allocator<T>>
 					this->_alloc.construct(this->_first_element + i, *(x._first_element + i));
 				}
 				// std::cout << "Copy construtor is called" << std::endl;
-				return ;
 			}
 
 			// Destructor
 			// This destroys all container elements, and deallocates all the storage capacity allocated by the vector using its allocator.
-			~Vector(void)
+			~vector(void)
 			{
-				if (this->_size > 0)
-				{
-					this->clear();
-				}
-				if (this->_capacity > 0)
-				{
-					this->_alloc.deallocate(this->_first_element, this->_capacity);
-				}
+			// 	if (this->_size > 0)
+			// 	{
+			// 		this->clear();
+			// 	}
+			// 	if (this->_capacity > 0)
+			// 	{
+			// 		this->_alloc.deallocate(this->_first_element, this->_capacity);
+			// 	}
 				// std::cout << "Destructor is called" << std::endl;
-				return ;
 			}
 
 			// operator=
@@ -219,7 +224,8 @@ template <class T, class Allocator = std::allocator<T>>
 			// returns the maximum possible number of elements
 			size_type	max_size(void) const
 			{
-				return ((size_type)(pow(2.0, 63.0) / this->_size_value_type) - 1);
+				// return ((size_type)(pow(2.0, 63.0) / this->_size_value_type) - 1);
+				return (this->_alloc.max_size());
 			}
 
 			// reserve
@@ -427,13 +433,12 @@ template <class T, class Allocator = std::allocator<T>>
 
 			// swap
 			// swaps the contents of this vector with the contents of the other vector
-			void	swap(Vector<value_type>& other)
+			void	swap(vector<value_type>& other)
 			{
 				std::swap(this->_alloc, other._alloc);
 				std::swap(this->_capacity, other._capacity);
 				std::swap(this->_first_element, other._first_element);
 				std::swap(this->_size, other._size);
-				std::swap(this->_size_value_type, other._size_value_type);
 			}
 
 		private:
@@ -497,12 +502,11 @@ template <class T, class Allocator = std::allocator<T>>
 			size_type		_capacity;
 			value_type*		_first_element;
 			size_type		_size;
-			size_type		_size_value_type;
 	};
 
 // -----------------------------NON-MEMBER FUNCTIONS----------------------------
 template <typename T, class Allocator = std::allocator<T>>
-bool operator==(const Vector<T,Allocator>& lhs, const Vector<T,Allocator>& rhs)
+bool operator==(const vector<T,Allocator>& lhs, const vector<T,Allocator>& rhs)
 {
 	if (lhs.size() != rhs.size())
 		return (false);
@@ -510,33 +514,34 @@ bool operator==(const Vector<T,Allocator>& lhs, const Vector<T,Allocator>& rhs)
 }
 
 template <typename T, class Allocator = std::allocator<T>>
-bool operator!=(const Vector<T,Allocator>& lhs, const Vector<T,Allocator>& rhs)
+bool operator!=(const vector<T,Allocator>& lhs, const vector<T,Allocator>& rhs)
 {
 	return (!(lhs == rhs));
 }
 
 template <typename T, class Allocator = std::allocator<T>>
-bool operator<(const Vector<T,Allocator>& lhs, const Vector<T,Allocator>& rhs)
+bool operator<(const vector<T,Allocator>& lhs, const vector<T,Allocator>& rhs)
 {
 	return (true);
 }
 
 template <typename T, class Allocator = std::allocator<T>>
-bool operator>(const Vector<T,Allocator>& lhs, const Vector<T,Allocator>& rhs)
+bool operator>(const vector<T,Allocator>& lhs, const vector<T,Allocator>& rhs)
 {
 	return (true);
 }
 
 template <typename T, class Allocator = std::allocator<T>>
-bool operator<=(const Vector<T,Allocator>& lhs, const Vector<T,Allocator>& rhs)
+bool operator<=(const vector<T,Allocator>& lhs, const vector<T,Allocator>& rhs)
 {
 	return (!(lhs > rhs));
 }
 
 template <typename T, class Allocator = std::allocator<T>>
-bool operator>=(const Vector<T,Allocator>& lhs, const Vector<T,Allocator>& rhs)
+bool operator>=(const vector<T,Allocator>& lhs, const vector<T,Allocator>& rhs)
 {
 	return (!(lhs < rhs));
+}
 }
 
 #endif
