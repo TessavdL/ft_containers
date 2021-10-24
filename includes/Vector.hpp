@@ -6,7 +6,7 @@
 /*   By: tevan-de <tevan-de@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/10/24 13:58:51 by tevan-de      #+#    #+#                 */
-/*   Updated: 2021/10/24 18:53:56 by tevan-de      ########   odam.nl         */
+/*   Updated: 2021/10/24 19:00:21 by tevan-de      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,15 +67,19 @@ class vector
 		vector(InputIterator first, InputIterator last, const allocator_type& alloc = allocator_type()) :
 			_alloc(alloc), _capacity(0), _first_element(nullptr), _size(0)
 		{
-			difference_type n = 0;
-			while (first != last)
+			difference_type	n = ft::distance(first, last);
+			size_t			i;
+			
+			if (n > 0)
 			{
-				n++;
-				std::cout << *first << std::endl;
-				first++;
+				this->_first_element = this->_alloc.allocate(n);
+				this->_capacity = n;
+			}
+			for (InputIterator temp = first, i = 0; first != last; temp++, i++)
+			{
+				this->_alloc.construct(this->_first_element + i, *temp);
 			}
 			this->_size = n;
-			std::cout << n << std::endl;
 			// std::cout << "Range construct is called" << std::endl;
 		}
 		vector(const vector& x) :
@@ -108,8 +112,15 @@ class vector
 
 		// -------------------------ASSIGNMENT OPERATOR-------------------------
 		// operator=
-		// vector& operator= (vector const& other);
-		// return (*this);
+		vector&	operator=(vector const& other)
+		{
+			if (this != &other)
+			{
+				this->assign(other.begin(), other.end());
+			}
+			return (*this);
+		}
+
 
 
 
