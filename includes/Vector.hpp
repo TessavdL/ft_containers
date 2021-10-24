@@ -6,7 +6,7 @@
 /*   By: tevan-de <tevan-de@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/10/24 13:58:51 by tevan-de      #+#    #+#                 */
-/*   Updated: 2021/10/24 18:28:57 by tevan-de      ########   odam.nl         */
+/*   Updated: 2021/10/24 18:36:25 by tevan-de      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,7 +63,7 @@ class vector
 			// std::cout << "Fill construtor is called" << std::endl;
 		}
 		template <typename InputIterator>
-		vector (InputIterator first, InputIterator last, const allocator_type& alloc = allocator_type()) :
+		vector(InputIterator first, InputIterator last, const allocator_type& alloc = allocator_type()) :
 			_alloc(alloc), _capacity(0), _first_element(nullptr), _size(0)
 		{
 			difference_type n = 0;
@@ -105,18 +105,12 @@ class vector
 			// std::cout << "Destructor is called" << std::endl;
 		}
 
-		// ------------------------ASSIGNMENT OPERATORS-------------------------
+		// -------------------------ASSIGNMENT OPERATOR-------------------------
 		// operator=
 		// vector& operator= (vector const& other);
 		// return (*this);
 
-		// assign
-		// void assign (size_type count, T const& value);
-		// template <class InutIt>
-		// void assign (InputIt first, InputIt last);
 
-		// allocator_type get_allocator() const;
-		// returns the associated allocator
 
 		// ----------------------------ELEMENT ACCESS---------------------------
 		reference	at(size_type pos)
@@ -240,6 +234,13 @@ class vector
 		}
 
 		// ------------------------------MODIFIERS------------------------------
+			// assign
+		// void assign (size_type count, T const& value);
+		// template <class InutIt>
+		// void assign (InputIt first, InputIt last);
+
+
+	
 		void	clear(void)
 		{
 			for (size_type i = 0; i < this->_size; i++)
@@ -444,6 +445,12 @@ class vector
 			std::swap(this->_capacity, other._capacity);
 			std::swap(this->_first_element, other._first_element);
 			std::swap(this->_size, other._size);
+		}
+
+		// ------------------------------MODIFIERS------------------------------
+		allocator_type	get_allocator() const;
+		{
+			return (this->_alloc);
 		}
 
 	private:
