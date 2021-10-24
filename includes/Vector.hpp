@@ -6,7 +6,7 @@
 /*   By: tevan-de <tevan-de@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/10/24 13:58:51 by tevan-de      #+#    #+#                 */
-/*   Updated: 2021/10/24 18:36:25 by tevan-de      ########   odam.nl         */
+/*   Updated: 2021/10/24 18:53:56 by tevan-de      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,7 @@
 # include "./RandomAccessIterator.hpp"
 # include "./InputIterator.hpp"
 # include "./ReverseIterator.hpp"
+# include "./ReimplementedFunctions.hpp"
 
 namespace ft {
 template <class T, class Allocator = std::allocator<T> >
@@ -234,13 +235,40 @@ class vector
 		}
 
 		// ------------------------------MODIFIERS------------------------------
-			// assign
-		// void assign (size_type count, T const& value);
-		// template <class InutIt>
-		// void assign (InputIt first, InputIt last);
-
-
-	
+		template <class InputIterator>
+		void assign (InputIterator first, InputIterator last)
+		{
+			difference_type	n = ft::distance(first, last);
+			size_t			i;
+			
+			this->clear();
+			if (n > this->_capacity)
+			{
+				this->_alloc.deallocate(this->_first_element, this->_capacity);
+				this->_first_element = this->_alloc.allocate(n);
+				this->_capacity = n;
+			}
+			for (InputIterator temp = first, i = 0; first != last; temp++, i++)
+			{
+				this->_alloc.construct(this->_first_element + i, *temp);
+			}
+			this->_size = n;
+		}
+		void assign (size_type n, const value_type& val)
+		{
+			this->clear();
+			if (n > this->_capacity)
+			{
+				this->_alloc.deallocate(this->_first_element, this->_capacity);
+				this->_first_element = this->_alloc.allocate(n);
+				this->_capacity = n;
+			}
+			for (size_type i = 0; i < n; i++)
+			{
+				this->_alloc.construct(this->_first_element + i, val);
+			}
+			this->_size = n;
+		}
 		void	clear(void)
 		{
 			for (size_type i = 0; i < this->_size; i++)
@@ -249,7 +277,6 @@ class vector
 			}
 			this->_size = 0;
 		}
-
 		// insert
 		// if capacity == 0 but pos != begin -> segfault
 		iterator insert(iterator pos, const T& value)
@@ -448,7 +475,7 @@ class vector
 		}
 
 		// ------------------------------MODIFIERS------------------------------
-		allocator_type	get_allocator() const;
+		allocator_type	get_allocator() const
 		{
 			return (this->_alloc);
 		}
