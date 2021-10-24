@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        ::::::::            */
-/*   temp.hpp                                           :+:    :+:            */
+/*   Map.hpp                                            :+:    :+:            */
 /*                                                     +:+                    */
 /*   By: tevan-de <tevan-de@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/10/10 16:45:45 by tevan-de      #+#    #+#                 */
-/*   Updated: 2021/10/14 23:59:36 by tevan-de      ########   odam.nl         */
+/*   Updated: 2021/10/20 14:38:40 by tevan-de      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,13 +15,14 @@
 
 # include <functional>	// for std::less, should include own compare later
 # include <iostream>	// for output, prob remove later
-# include <utility>		// for std::pair, should include own pair later
 # include <memory>		// for std::allocator
 
-#include "./includes/InputIterator.hpp"
-#include "./includes/Pair.hpp"
-#include "./includes/BinarySearchTreeIterator.hpp"
-#include "./includes/ReimplementedFunctions.hpp"
+# include "./includes/BinarySearchTreeIterator.hpp"
+# include "./includes/InputIterator.hpp"
+# include "./includes/Pair.hpp"
+# include "./includes/Node.hpp"
+# include "./includes/ReimplementedFunctions.hpp"
+# include "./includes/ReverseBinarySearchTreeIterator.hpp"
 
 namespace ft {
 template<typename, typename>
@@ -29,143 +30,10 @@ class pair;
 }
 
 namespace ft {
-template <class T = ft::pair<class T1, class T2>>
-class node
-{
-public:
-	// ~~~~~~~~~~~~~~~~~~~~~~~~~~~PUBLIC MEMBER TYPES~~~~~~~~~~~~~~~~~~~~~~~~~~~
-		typedef T			value_type;
-		typedef value_type*	pointer;
-		typedef value_type&	reference;
-
-	// ~~~~~~~~~~~~~~~~~~~~~~~~~~PUBLIC MEMBER OBJECTS~~~~~~~~~~~~~~~~~~~~~~~~~~
-		node*	left;
-		node*	parent;
-		node*	right;
-		pointer	data;
-
-	// ~~~~~~~~~~~~~~~~~~~~~~~~~PUBLIC MEMBER FUNCTIONS~~~~~~~~~~~~~~~~~~~~~~~~~
-		// ----------------------------CONSTRUCTORS-----------------------------
-		// default constructor
-		node(void) : data(nullptr), left(nullptr), parent(nullptr), right(nullptr)
-		{
-			// std::cout << "Default constructor of node called" << std::endl;
-			return ;
-		}
-		// parameter constructor 1, used to make root node
-		node(pointer ptr) : data(ptr), left(nullptr), parent(nullptr), right(nullptr)
-		{
-			// std::cout << "Parameter constructor root of node called" << std::endl;
-			return ;
-		}
-		// parameter constructor 2, used to make leaf node and connect to parent
-		node(node* p, pointer ptr) : data(ptr), left(nullptr), parent(p), right(nullptr)
-		{
-			// std::cout << "Parameter constructor leaf of node called" << std::endl;
-			return ;
-		}
-		// copy constructor
-		node(const node& other) : data(other.data), left(other.left), parent(other.parent), right(other.right)
-		{
-			// std::cout << "Copy constructor of node called" << std::endl;
-			return ;
-		}
-
-		// -----------------------------DESTRUCTOR------------------------------
-		~node(void)
-		{
-			return ;
-		}
-
-		// -------------------------ASSIGNMENT OPERATOR-------------------------
-		node&	operator=(const node& other)
-		{
-			if (this != &other)
-			{
-				this->data = other.data;
-				this->left = other.left;
-				this->parent = other.parent;
-				this->right = other.right;
-			}
-			// std::cout << "Assigment operator of node called" << std::endl;
-			return (*this);
-		}
-
-		// ------------------------MEMBER ACCESS OPERATORS----------------------
-		// arrow operator
-		pointer	operator->(void)
-		{
-			return (this->data);
-		}
-		// dereference operator
-		reference operator*(void)
-		{
-			return (*this->data);
-		}
-
-		// --------------------------UTILITY FUNCTIONS--------------------------
-		node*	next(void)
-		{
-			node*	temp = this;
-	
-			if (temp->right)
-			{
-				if (temp->right->data == nullptr)
-				{
-					return (temp->right);
-				}
-				temp = temp->right;
-				while (temp && temp->left)
-				{
-					temp = temp->left;
-				}
-			}
-			else
-			{
-				while (temp->parent && temp->parent->right == temp)
-				{
-					temp = temp->parent;
-				}
-				temp = temp->parent;
-			}
-			// if (temp->data == nullptr)
-			// 	std::cout << "this is the end in next" << std::endl;
-			return (temp);
-		}
-		node*	previous(void)
-		{
-			node*	temp = this;
-
-			if (temp->left)
-			{
-				temp = temp->left;
-				while (temp && temp->right)
-				{
-					temp = temp->right;
-				}
-			}
-			else
-			{
-				while (temp && temp->parent->left == temp)
-				{
-					temp = temp->parent;
-				}
-				temp = temp->parent;
-			}
-			return (temp);
-		}
-		void	set_data(node* node)
-		{
-			this->data = node->data;
-		}
-};
-}
-
-namespace ft {
 template <	class Key,
 			class T,
 			class Compare = std::less<Key>,
-			class Alloc = std::allocator<ft::pair<const Key, T>>>
+			class Alloc = std::allocator<ft::pair<const Key, T> > >
 class map
 {
 	public:
@@ -181,10 +49,11 @@ class map
 		typedef typename allocator_type::const_pointer		const_pointer;
 		typedef BinarySearchTreeIterator<value_type>		iterator;
 		// typedef BidirectionalIterator<value_type>			const_iterator;
-		// typedef std::reverse_iterator<iterator>				reverse_iterator;
+		// typedef ft::reverse_iterator<iterator>				reverse_iterator;
 		// typedef std::reverse_iterator<const_iterator>		reverse_const_iterator;
 		typedef std::ptrdiff_t								difference_type;
 		typedef std::size_t									size_type;
+		typedef ft::node<value_type>						node;
 
 		typedef enum e_type_of_unbalance
 		{
@@ -199,39 +68,48 @@ class map
 		// empty container construct (default constructor)
 		explicit map(const key_compare& comp = key_compare(), const allocator_type& alloc = allocator_type())
 		{
-			node<value_type>*	new_node = new node<value_type>();
-			
+			std::allocator<node>	allocator;
+			node*					new_begin_node = allocator.allocate(1);
+			node*					new_end_node = allocator.allocate(1);
+
+			allocator.construct(new_begin_node, node());
+			allocator.construct(new_end_node, node());
 			this->_alloc = alloc;
 			this->_compare = comp;
+			this->_begin = new_begin_node;
+			this->_end = new_end_node;
 			this->_root = nullptr;
-			this->_end = new_node;
 			this->_size = 0;
-			return ;
 		}
 		// range constructor
 		template <class InputIterator>
 		map(InputIterator first, InputIterator last, const key_compare& comp = key_compare(), const allocator_type& alloc = allocator_type())
 		{
-			difference_type n = 0;
+			difference_type	n = 0;
 
 			for (InputIterator begin = first; begin != last; begin++, n++) {}
 			this->_alloc = alloc;
 			this->_compare = comp;
-			this->_size = n;
-			return ;
+
+			// /*
+			// this->_size = ft::distance(first, last, ft::input_iterator_tag);
+			// while (first != last)
+			// {
+			// 	insert(first);
+			// 	first++;
+			// }
+			// return ;
 		}
 		// copy constructor
 		map(const map& x)
 		{
 			*this = x;
-			return;
 		}
 
 		// -----------------------------DESTRUCTOR------------------------------
 		~map(void)
 		{
 			this->clear();
-			return ;
 		}
 
 		// -------------------------ASSIGNMENT OPERATOR-------------------------
@@ -242,8 +120,9 @@ class map
 				this->clear();
 				this->_alloc = x._alloc;
 				this->_size = x._size;
-				this->_root = x._root;
+				this->_begin = x._begin;
 				this->_end = x._end;
+				this->_root = x._root;
 			}
 			return (*this);
 		}
@@ -252,19 +131,26 @@ class map
 		// begin
 		iterator	begin(void)
 		{
-			node<value_type>*	most_left = this->_most_left();
-			value_type* 		val = most_left->data;
-
-			std::cout << "most_left_data = " << most_left->data->first << std::endl;
-			return (iterator(val, most_left));
+			return (iterator(this->_most_left()->data, this->_most_left()));
 		}
+
 		iterator	end(void)
 		{
 			return (iterator(nullptr, this->_end));
 		}
 
+		// reverse_iterator	rbegin(void)
+		// {
+		// 	std::cout << "in rbegin = " << this->_most_right()->data->first << std::endl;
+		// 	return (reverse_iterator(this->_most_right()->data, this->_most_right()));
+		// }
+
+		// reverse_iterator	rend(void)
+		// {
+		// 	return (reverse_iterator(nullptr, this->_begin));
+		// }
+
 		// -------------------------------CAPACITY------------------------------
-		// empty
 		bool	empty(void) const
 		{
 			if (this->_size == 0)
@@ -276,12 +162,12 @@ class map
 				return (false);
 			}
 		}
-		// size
+
 		size_type	size(void) const
 		{
 			return (this->_size);
 		}
-		// max_size
+
 		size_type	max_size(void) const
 		{
 			return (this->_alloc.max_size());
@@ -290,15 +176,13 @@ class map
 		// ----------------------------ELEMENT ACCESS---------------------------
 		mapped_type&	operator[](const key_type& k)
 		{
-			node<value_type>*	node = this->_find(this->_root, k);
+			node*	n = this->_find(this->_root, k);
 
-			std::cout << "here" << std::endl;
-			if (node != nullptr)
+			if (n != nullptr)
 			{
 				// if the key is already present in the map
 				// return the second part of the value_type, which is the mapped_type
-				std::cout << "found it = " << node->data->second << std::endl;
-				return (node->data->second);
+				return (n->data->second);
 			}
 			else
 			{
@@ -314,32 +198,36 @@ class map
 		// insert, 1 node based on key
 		ft::pair<iterator, bool>	insert(const value_type& val)
 		{
-			node<value_type>* node;
+			node*	n;
 
-			std::cout << "key = " << val.first << std::endl;
+			// std::cout << "key = " << val.first << std::endl;
 			if (this->_size == 0)
 			{
-				node = this->_create_node(val);
-				this->_root = node;
+				n = this->_create_node(val);
+				this->_root = n;
+				this->_root->left = this->_begin;
 				this->_root->right = this->_end;
+				this->_begin->parent = this->_root;
 				this->_end->parent = this->_root;
 				this->_size++;
-				return (ft::make_pair(iterator(node->data, node), true));
+				return (ft::make_pair(iterator(n->data, n), true));
 			}
-			node = this->_find(this->_root, val.first);
-			if (node != nullptr)
+			n = this->_find(this->_root, val.first);
+			if (n != nullptr)
 			{
-				std::cout << "tried to insert duplicate" << std::endl;
-				return (ft::make_pair(iterator(node->data, node), false)); // change node into map::end
+				// std::cout << "tried to insert duplicate" << std::endl;
+				return (ft::make_pair(iterator(n->data, n), false)); // change node into map::end
 			}
 			else
 			{
-				node = this->_insert_node(this->_root, val);
-				this->_check_if_tree_is_balanced(node);
+				n = this->_insert_node(this->_root, val);
+				this->_check_if_tree_is_balanced(n);
 				this->_size++;
+				this->_most_left()->left = this->_begin;
 				this->_most_right()->right = this->_end;
+				this->_begin->parent = this->_most_left();
 				this->_end->parent = this->_most_right();
-				return (ft::make_pair(iterator(node->data, node), true));
+				return (ft::make_pair(iterator(n->data, n), true));
 			}
 		}
 		// erase, 1 node based on iterator
@@ -358,15 +246,15 @@ class map
 		// erase, 1 node based on key
 		size_type	erase(const key_type& k)
 		{
-			node<value_type>* node = this->_find(this->_root, k);
+			node*	n = this->_find(this->_root, k);
 
-			if (node == nullptr || node == this->_end)
+			if (n == nullptr || n == this->_end)
 			{
 				return (0);
 			}
 			else
 			{
-				this->_erase_node(node);
+				this->_erase_node(n);
 				this->_size--;
 				return (1);
 			}
@@ -374,13 +262,15 @@ class map
 		//clear
 		void	clear(void)
 		{
-			ft::node<value_type>*	node_to_delete = nullptr;
+			node*					node_to_delete = nullptr;
+			std::allocator<node>	alloc;
 
 			while (this->_root != nullptr)
 			{
 				node_to_delete = this->_root;
 				this->_erase_node(node_to_delete);
 			}
+			this->_end = nullptr;
 			this->_size = 0;
 		}
 
@@ -398,12 +288,12 @@ class map
 
 		// -----------------------------OPERATRIONS-----------------------------
 		// find
-		iterator find(const key_type& k)
-		{
+		// iterator find(const key_type& k)
+		// {
 			// if found return iterator to node
 
 			// else return iterator to this->end();
-		}
+		// }
 		// const_iterator find (const key_type& k) const
 		// {
 		// 	// if found return const iterator to node
@@ -423,10 +313,10 @@ class map
 			}
 		}
 		// lower_bound
-		iterator	lower_bound(const key_type& k)
-		{
+		// iterator	lower_bound(const key_type& k)
+		// {
 			// for (iterator = this->begin(); )
-		}
+		// }
 		// const iterator	lower_bound(const key_type& k) const
 		// {
 			
@@ -444,7 +334,7 @@ class map
 
 	private:
 	// ~~~~~~~~~~~~~~~~~~~~~~~~~PRIVATE MEMBER FUNCTIONS~~~~~~~~~~~~~~~~~~~~~~~~
-		t_type_of_unbalance	_get_type_of_unbalance(node<value_type>* unbalanced_node, node<value_type>* child, node<value_type>* grandchild)
+		t_type_of_unbalance	_get_type_of_unbalance(node* unbalanced_node, node* child, node* grandchild)
 		{
 			if (child == unbalanced_node->left && grandchild == child->left)
 			{
@@ -464,15 +354,15 @@ class map
 			}
 		}
 
-		int	_get_height_subtree(node<value_type>* node)
+		int	_get_height_subtree(node* n)
 		{
-			if (node == nullptr || node == this->_end)
+			if (n == nullptr || n == this->_end || n == this->_begin)
 			{
 				return (0);
 			}
 
-			int	height_left_subtree = this->_get_height_subtree(node->left);
-			int	height_right_subtree = this->_get_height_subtree(node->right);
+			int	height_left_subtree = this->_get_height_subtree(n->left);
+			int	height_right_subtree = this->_get_height_subtree(n->right);
 
 			if (height_left_subtree > height_right_subtree)
 			{
@@ -484,7 +374,7 @@ class map
 			}
 		}
 
-		bool	_check_if_node_is_balanced(node<value_type>* node)
+		bool	_check_if_node_is_balanced(node* node)
 		{
 			int	balance_factor;
 			int	left;
@@ -503,12 +393,12 @@ class map
 			}
 		}	
 	
-		void	_check_if_tree_is_balanced(node<value_type>* inserted_node)
+		void	_check_if_tree_is_balanced(node* inserted_node)
 		{
-			node<value_type>*	temp = inserted_node;
-			node<value_type>* 	child = nullptr;
-			node<value_type>* 	grandchild = nullptr;
-			node<value_type>*	unbalanced_node = nullptr;
+			node*				temp = inserted_node;
+			node* 				child = nullptr;
+			node* 				grandchild = nullptr;
+			node*				unbalanced_node = nullptr;
 			size_t				i = 0;
 			t_type_of_unbalance	type_of_unbalance;
 
@@ -532,72 +422,71 @@ class map
 				}
 				temp = temp->parent;
 			}
-			return ;
 		}
 
-		node<value_type>*	_create_node(const value_type& val)
+		node*	_create_node(const value_type& val)
 		{
-			std::allocator<ft::node<value_type>>	alloc;
-			ft::node<value_type>*					new_node = alloc.allocate(1);
-			value_type*								new_pair = this->_alloc.allocate(1);
+			std::allocator<node>	alloc;
+			node*					new_node = alloc.allocate(1);
+			value_type*				new_pair = this->_alloc.allocate(1);
 
 			this->_alloc.construct(new_pair, value_type(val));
-			alloc.construct(new_node, ft::node<value_type>(new_pair));
+			alloc.construct(new_node, node(new_pair));
 			std::cout << "created root node with key " << new_node->data->first << std::endl;
 			return (new_node);
 		}
 
-		node<value_type>*	_create_node(node<value_type>* parent, const value_type& val)
+		node*	_create_node(node* parent, const value_type& val)
 		{
-			std::allocator<ft::node<value_type>>	alloc;
-			ft::node<value_type>*					new_node = alloc.allocate(1);
-			value_type*								new_pair = this->_alloc.allocate(1);
+			std::allocator<node>	alloc;
+			node*					new_node = alloc.allocate(1);
+			value_type*				new_pair = this->_alloc.allocate(1);
 
 			this->_alloc.construct(new_pair, value_type(val));
-			alloc.construct(new_node, ft::node<value_type>(parent, new_pair));
+			alloc.construct(new_node, node(parent, new_pair));
 			std::cout << "created leaf node with key " << new_node->data->first << std::endl;
 			return (new_node);
 		}
 
-		node<value_type>*	_insert_node(node<value_type>* root, const value_type& pair)
+		node*	_insert_node(node* root, const value_type& pair)
 		{
-			node<value_type>*	temp = root;
+			node*	temp = root;
 
 			if (pair.first < temp->data->first)
 			{
-				std::cout << pair.first << " is smaller than " << temp->data->first << std::endl;
-				if (temp->left == nullptr)
+				// std::cout << pair.first << " is smaller than " << temp->data->first << std::endl;
+				if (temp->left == nullptr || temp->left == this->_begin)
 				{
-					root->left = this->_create_node(root, pair);
-					return (root->left);
+					temp->left = this->_create_node(temp, pair);
+					return (temp->left);
 				}
 				else
 				{
 					// std::cout << "move to the left" << std::endl;
-					return (this->_insert_node(root->left, pair));
+					return (this->_insert_node(temp->left, pair));
 				}
 			}
 			else if (pair.first > temp->data->first)
 			{
-				std::cout << pair.first << " is bigger than " << temp->data->first << std::endl;
+				// std::cout << pair.first << " is bigger than " << temp->data->first << std::endl;
 				if (temp->right == nullptr || temp->right == this->_end) 
 				{
-					root->right = this->_create_node(root, pair);
-					return (root->right);
+					temp->right = this->_create_node(temp, pair);
+					return (temp->right);
 				}
 				else
 				{
 					// std::cout << "move to the right" << std::endl;
-					return (this->_insert_node(root->right, pair));
+					return (this->_insert_node(temp->right, pair));
 				}
 			}
-			else // pair.first == (*(*temp)).first
+			else // pair.first == temp->data->first
 			{
 				return (nullptr);
 			}
 		}
 
-		void	_left_rotation(node<value_type>* pivot, node<value_type>* child)
+		void	_left_rotation(node* pivot, node* child)
 		{
 			if (pivot->parent == nullptr)
 			{
@@ -629,7 +518,7 @@ class map
 			pivot->parent = child;
 		}
 
-		void	_right_rotation(node<value_type>* pivot, node<value_type>* child)
+		void	_right_rotation(node* pivot, node* child)
 		{
 			if (pivot->parent == nullptr)
 			{
@@ -661,7 +550,7 @@ class map
 			pivot->parent = child;
 		}
 
-		void	perform_balancing(node<value_type>* unbalanced_node, node<value_type>* child, node<value_type>* grandchild, t_type_of_unbalance type_of_unbalance)
+		void	perform_balancing(node* unbalanced_node, node* child, node* grandchild, t_type_of_unbalance type_of_unbalance)
 		{
 			switch (type_of_unbalance)
 			{
@@ -694,10 +583,10 @@ class map
 			}
 		}
 
-		void	_erase_node(node<value_type>* node_to_delete)
+		void	_erase_node(node* node_to_delete)
 		{
-			std::allocator<node<value_type> >	alloc;
-			node<value_type>*					temp = node_to_delete;
+			std::allocator<node>	alloc;
+			node*					temp = node_to_delete;
 
 			if (!node_to_delete->left && !node_to_delete->right)
 			{
@@ -784,7 +673,7 @@ class map
 			}
 		}
 
-		node<value_type>* _find(node<value_type>* node, const key_type& key)
+		node* _find(node* node, const key_type& key)
 		{
 			if (node == nullptr)
 			{
@@ -808,24 +697,24 @@ class map
 				return (node);
 		}
 
-		node<value_type>*	_most_left(void)
+		node*	_most_left(void)
 		{
-			node<value_type>* temp = this->_root;
+			node*	temp = this->_root;
 
 			if (!temp)
 			{
 				return (nullptr);
 			}
-			while (temp->left)
+			while (temp->left && temp->left != this->_begin)
 			{
 				temp = temp->left;
 			}
 			return (temp);
 		}
 
-		node<value_type>*	_most_right(void)
+		node*	_most_right(void)
 		{
-			node<value_type>* temp = this->_root;
+			node*	temp = this->_root;
 
 			if (!temp)
 			{
@@ -839,13 +728,12 @@ class map
 		}
 
 	// ~~~~~~~~~~~~~~~~~~~~~~~~~~~PRIVATE MEMBER TYPES~~~~~~~~~~~~~~~~~~~~~~~~~~
-		allocator_type		_alloc;
-		key_compare			_compare;
-		node<value_type>*	_root;
-		node<value_type>*	_end;
-		size_type			_size;
-
-	friend class node<value_type>;
+		allocator_type	_alloc;
+		key_compare		_compare;
+		node*			_begin;
+		node*			_end;
+		node*			_root;
+		size_type		_size;
 
 };
 }

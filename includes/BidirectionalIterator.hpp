@@ -6,7 +6,7 @@
 /*   By: tevan-de <tevan-de@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/08/12 15:35:44 by tevan-de      #+#    #+#                 */
-/*   Updated: 2021/08/21 17:07:59 by tevan-de      ########   odam.nl         */
+/*   Updated: 2021/10/20 11:51:58 by tevan-de      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,7 @@ class BidirectionalIterator : public RandomAccessIterator<T>
 		typedef value_type*		pointer;
 		typedef value_type&		reference;
 		typedef std::ptrdiff_t	difference_type;
+		typedef std::size_t		size_type;
 
 	// ~~~~~~~~~~~~~~~~~~~~~~~~~PUBLIC MEMBER FUNCTIONS~~~~~~~~~~~~~~~~~~~~~~~~~
 		// ----------------------------CONSTRUCTORS-----------------------------

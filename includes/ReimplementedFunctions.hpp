@@ -6,14 +6,14 @@
 /*   By: tevan-de <tevan-de@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/08/21 16:11:25 by tevan-de      #+#    #+#                 */
-/*   Updated: 2021/10/13 23:48:56 by tevan-de      ########   odam.nl         */
+/*   Updated: 2021/10/20 14:36:26 by tevan-de      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef REIMPLEMENTED_FUNCTIONS_HPP
 # define REIMPLEMENTED_FUNCTIONS_HPP
 
-# include "InputIterator.hpp"
+# include "IteratorTraits.hpp"
 # include "Pair.hpp"
 
 namespace ft {
@@ -79,6 +79,37 @@ bool	equal(InputIterator1 first1, InputIterator1 last1, InputIterator2 first2, B
 			return (false);
 	}
 	return (true);
+}
+}
+
+namespace ft {
+template <typename Iterator>
+typename ft::iterator_traits<Iterator>::difference_type	distance(Iterator first, Iterator last)
+{
+	return (ft::distance(first, last, ft::iterator_traits<Iterator>::iterator_category()));
+}
+}
+
+namespace ft {
+template <typename RandomAccessIterator>
+typename ft::iterator_traits<RandomAccessIterator>::difference_type	distance(RandomAccessIterator first, RandomAccessIterator last, ft::random_access_iterator_tag)
+{
+	return (last - first);
+}
+}
+
+namespace ft {
+template <typename InputIterator>
+typename ft::iterator_traits<InputIterator>::difference_type	distance(InputIterator first, InputIterator last, ft::input_iterator_tag)
+{
+	typename ft::iterator_traits<InputIterator>::difference_type	n = 0;
+
+	while (first != last)
+	{
+		first++;
+		n++;
+	}
+	return (n);
 }
 }
 

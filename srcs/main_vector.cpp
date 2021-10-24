@@ -6,7 +6,7 @@
 /*   By: tevan-de <tevan-de@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/07/06 20:21:49 by tevan-de      #+#    #+#                 */
-/*   Updated: 2021/10/19 17:02:45 by tevan-de      ########   odam.nl         */
+/*   Updated: 2021/10/24 12:33:15 by tevan-de      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,7 +50,7 @@ void	vector_chars_capacity(void)
 //after clear the size is 0 and therefore empty returns true
 void	vector_integers_empty(void)
 {
-	std::vector<int>	Vector_int {0};
+	std::vector<int>	Vector_int(0);
 
 	std::cout << "size = " << Vector_int.size() << std::endl;
 	std::cout << "is empty = " << std::boolalpha << Vector_int.empty() << std::endl;
@@ -302,91 +302,91 @@ void	vector_resize(void)
 	std::cout << std::endl;
 }
 
-void	vector_swap(void)
-{
-	std::vector<int>	one{1, 2, 3};
-	std::vector<int>	two{4, 5};
+// void	vector_swap(void)
+// {
+// 	std::vector<int>	one = {1, 2, 3};
+// 	std::vector<int>	two = {4, 5};
 
-	std::cout << "one\t\t\t";
-	for (std::vector<int>::iterator it = one.begin(); it != one.end(); it++)
-		std::cout << *it << "\t";
-	std::cout << std::endl;
-	std::cout << "two\t\t\t";
-	for (std::vector<int>::iterator it = two.begin(); it != two.end(); it++)
-		std::cout << *it << "\t";
-	std::cout << std::endl;
-	one.swap(two);
-	std::cout << "one\t\t\t";
-	for (std::vector<int>::iterator it = one.begin(); it != one.end(); it++)
-		std::cout << *it << "\t";
-	std::cout << std::endl;
-	std::cout << "two\t\t\t";
-	for (std::vector<int>::iterator it = two.begin(); it != two.end(); it++)
-		std::cout << *it << "\t";
-	std::cout << std::endl;
+// 	std::cout << "one\t\t\t";
+// 	for (std::vector<int>::iterator it = one.begin(); it != one.end(); it++)
+// 		std::cout << *it << "\t";
+// 	std::cout << std::endl;
+// 	std::cout << "two\t\t\t";
+// 	for (std::vector<int>::iterator it = two.begin(); it != two.end(); it++)
+// 		std::cout << *it << "\t";
+// 	std::cout << std::endl;
+// 	one.swap(two);
+// 	std::cout << "one\t\t\t";
+// 	for (std::vector<int>::iterator it = one.begin(); it != one.end(); it++)
+// 		std::cout << *it << "\t";
+// 	std::cout << std::endl;
+// 	std::cout << "two\t\t\t";
+// 	for (std::vector<int>::iterator it = two.begin(); it != two.end(); it++)
+// 		std::cout << *it << "\t";
+// 	std::cout << std::endl;
 
-	ft::vector<int>	een(3);
-	ft::vector<int>	twee(2);
-	een[0] = 1;
-	een[1] = 2;
-	een[2] = 3;
-	twee[0] = 4;
-	twee[1] = 5;
+// 	Vector<int>	een(3);
+// 	Vector<int>	twee(2);
+// 	een[0] = 1;
+// 	een[1] = 2;
+// 	een[2] = 3;
+// 	twee[0] = 4;
+// 	twee[1] = 5;
 
-	std::cout << "een\t\t\t";
-	for (ft::vector<int>::iterator it = een.begin(); it != een.end(); it++)
-		std::cout << *it << "\t";
-	std::cout << std::endl;
-	std::cout << "twee\t\t\t";
-	for (ft::vector<int>::iterator it = twee.begin(); it != twee.end(); it++)
-		std::cout << *it << "\t";
-	std::cout << std::endl;
-	een.swap(twee);
-	std::cout << "een\t\t\t";
-	for (ft::vector<int>::iterator it = een.begin(); it != een.end(); it++)
-		std::cout << *it << "\t";
-	std::cout << std::endl;
-	std::cout << "twee\t\t\t";
-	for (ft::vector<int>::iterator it = twee.begin(); it != twee.end(); it++)
-		std::cout << *it << "\t";
-	std::cout << std::endl;
-}
+// 	std::cout << "een\t\t\t";
+// 	for (Vector<int>::iterator it = een.begin(); it != een.end(); it++)
+// 		std::cout << *it << "\t";
+// 	std::cout << std::endl;
+// 	std::cout << "twee\t\t\t";
+// 	for (Vector<int>::iterator it = twee.begin(); it != twee.end(); it++)
+// 		std::cout << *it << "\t";
+// 	std::cout << std::endl;
+// 	een.swap(twee);
+// 	std::cout << "een\t\t\t";
+// 	for (Vector<int>::iterator it = een.begin(); it != een.end(); it++)
+// 		std::cout << *it << "\t";
+// 	std::cout << std::endl;
+// 	std::cout << "twee\t\t\t";
+// 	for (Vector<int>::iterator it = twee.begin(); it != twee.end(); it++)
+// 		std::cout << *it << "\t";
+// 	std::cout << std::endl;
+// }
 
 void	vector_insert(void)
 {
-	std::vector<int>	original(10, 42);
-	std::vector<int>	original_empty;
-	std::vector<int>	original_out_of_range(5, 21);
+	// std::vector<int>	original(10, 42);
+	// std::vector<int>	original_empty;
+	// std::vector<int>	original_out_of_range(5, 21);
  
- 	// if you try to insert at a pos that is not in the vector range it segfaults
-	// std::vector<int>::iterator it = original_out_of_range.begin();
-	// original.insert(it, 3);
+ 	// // if you try to insert at a pos that is not in the vector range it segfaults
+	// // std::vector<int>::iterator it = original_out_of_range.begin();
+	// // original.insert(it, 3);
 
-	// you can insert into an empty vector
-	std::vector<int>::iterator	it2 = original_empty.begin();
-	original_empty.insert(it2, 21);
-	std::cout << "proof you can insert into an empty vector " << *original_empty.begin() << std::endl << std::endl;
+	// // you can insert into an empty vector
+	// std::vector<int>::iterator	it2 = original_empty.begin();
+	// original_empty.insert(it2, 21);
+	// std::cout << "proof you can insert into an empty vector " << *original_empty.begin() << std::endl << std::endl;
 
-	std::cout << "If the range iterators are the same, nothing is inserted and the capacity remains the same" << std::endl;
-	std::vector<int>::iterator	it3 = original.begin();
-	std::cout << "capacity " << original.capacity() << std::endl;
-	for (std::vector<int>::iterator it = original.begin(); it != original.end(); it++)
-		std::cout << *it << "\t";
-	std::cout << std::endl;
-	original.insert(original.end(), 3, 21);
-	std::cout << "capacity " << original.capacity() << std::endl;
-	for (std::vector<int>::iterator it = original.begin(); it != original.end(); it++)
-		std::cout << *it << "\t";
-	std::cout << std::endl;
+	// std::cout << "If the range iterators are the same, nothing is inserted and the capacity remains the same" << std::endl;
+	// std::vector<int>::iterator	it3 = original.begin();
+	// std::cout << "capacity " << original.capacity() << std::endl;
+	// for (std::vector<int>::iterator it = original.begin(); it != original.end(); it++)
+	// 	std::cout << *it << "\t";
+	// std::cout << std::endl;
+	// original.insert(original.end(), 3, 21);
+	// std::cout << "capacity " << original.capacity() << std::endl;
+	// for (std::vector<int>::iterator it = original.begin(); it != original.end(); it++)
+	// 	std::cout << *it << "\t";
+	// std::cout << std::endl;
 
-	ft::vector<int>	mine(10);
-	for (size_t i = 0; i < 10; i++)
-		mine[i] = i;
-	mine.insert(mine.begin() + 1, 21);
-	std::cout << "capacity " << mine.capacity() << std::endl;
-	for (ft::vector<int>::iterator it = mine.begin(); it != mine.end(); it++)
-		std::cout << *it << "\t";
-	std::cout << std::endl;
+	// Vector<int>	mine(10);
+	// for (size_t i = 0; i < 10; i++)
+	// 	mine[i] = i;
+	// mine.insert((mine.begin()), 21);
+	// std::cout << "capacity " << mine.capacity() << std::endl;
+	// for (Vector<int>::iterator it = mine.begin(); it != mine.end(); it++)
+	// 	std::cout << *it << "\t";
+	// std::cout << std::endl;
 
 	ft::vector<int>	fill(10);
 	for (size_t i = 0; i < 10; i++)
@@ -412,10 +412,30 @@ void	vector_inputiterator(void)
 		std::cout << *it << "\t";
 	std::cout << std::endl;
 
-	InputIterator<int>	begin = mine.begin();
-	InputIterator<int>	end = mine.end();
+	Vector<int>	test(1);
 
-	ft::vector<int>		mine2(begin, end);
+	Vector<int>::iterator	testbegin = fill.begin();
+	Vector<int>::iterator	testend = fill.end();
+
+	test.insert(test.begin(), testbegin, testend);
+
+	for (Vector<int>::iterator it = test.begin(); it != test.end(); it++)
+		std::cout << *it << "\t";
+	std::cout << std::endl;
+
+	// std::vector<int>	fill(10);
+	// for (size_t i = 0; i < 10; i++)
+	// 	fill[i] = i;
+	// fill.insert(fill.begin(), 3, 21);
+
+	// std::vector<int>	one(1);
+	
+	// std::vector<int>::iterator	b = fill.begin();
+	// std::vector<int>::iterator	e = fill.end();
+
+	// std::cout << "capacity " << one.capacity() << std::endl;
+	// one.insert(one.begin(), b, e);
+	// std::cout << "capacity " << one.capacity() << std::endl;	
 
 }
 
@@ -446,7 +466,6 @@ int	main(void)
 	// vector_erase();
 	// vector_resize();
 	// vector_swap();
-	// vector_insert();
-	vector_inputiterator();
+	vector_insert();
 	return (0);
 }
