@@ -6,7 +6,7 @@
 /*   By: tevan-de <tevan-de@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/10/24 13:58:51 by tevan-de      #+#    #+#                 */
-/*   Updated: 2021/10/24 19:00:21 by tevan-de      ########   odam.nl         */
+/*   Updated: 2021/10/25 16:27:36 by tevan-de      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,53 +46,27 @@ class vector
 	// ~~~~~~~~~~~~~~~~~~~~~~~~~PUBLIC MEMBER FUNCTIONS~~~~~~~~~~~~~~~~~~~~~~~~~
 		// ----------------------------CONSTRUCTORS-----------------------------
 		explicit vector(const allocator_type& alloc = allocator_type()) :
-				_alloc(alloc), _capacity(0), _first_element(nullptr), _size(0)
+			_alloc(alloc), _capacity(0), _first_element(NULL), _size(0)
 		{
 			// std::cout << "Default construtor is called" << std::endl;
 		}
 		explicit vector(size_type n, const value_type& val = value_type(), const allocator_type& alloc = allocator_type()) :
-			_alloc(alloc), _capacity(n), _first_element(nullptr), _size(n)
+			_alloc(alloc), _capacity(0), _first_element(NULL), _size(0)
 		{
-			if (size > 0)
-			{
-				this->_first_element = this->_alloc.allocate(this->_size);
-				for (size_type i = 0; i < this->_size; i++)
-				{
-					this->_alloc.construct(this->_first_element + i, val);
-				}
-			}
+			this->_allocate_new(n, val);
 			// std::cout << "Fill construtor is called" << std::endl;
 		}
 		template <typename InputIterator>
 		vector(InputIterator first, InputIterator last, const allocator_type& alloc = allocator_type()) :
-			_alloc(alloc), _capacity(0), _first_element(nullptr), _size(0)
+			_alloc(alloc), _capacity(0), _first_element(NULL), _size(0)
 		{
-			difference_type	n = ft::distance(first, last);
-			size_t			i;
-			
-			if (n > 0)
-			{
-				this->_first_element = this->_alloc.allocate(n);
-				this->_capacity = n;
-			}
-			for (InputIterator temp = first, i = 0; first != last; temp++, i++)
-			{
-				this->_alloc.construct(this->_first_element + i, *temp);
-			}
-			this->_size = n;
+			this->_allocate_new(first, last);
 			// std::cout << "Range construct is called" << std::endl;
 		}
 		vector(const vector& x) :
-			_alloc(x._alloc), _capacity(x._capacity), _first_element(nullptr), _size(x._size)
+			_alloc(x._alloc), _capacity(0), _first_element(NULL), _size(0)
 		{
-			if (this->_size > 0)
-			{
-				this->_first_element = this->_alloc.allocate(this->_size);
-				for (size_type i = 0; i < this->_size; i++)
-				{
-					this->_alloc.construct(this->_first_element + i, *(x._first_element + i));
-				}
-			}
+			this->_allocate_new(x.begin(), x.end());
 			// std::cout << "Copy construtor is called" << std::endl;
 		}
 
@@ -105,13 +79,12 @@ class vector
 			}
 			if (this->_capacity > 0)
 			{
-				this->_alloc.deallocate(this->_first_element, this->_capacity);
+				this->_deallocate();
 			}
 			// std::cout << "Destructor is called" << std::endl;
 		}
 
 		// -------------------------ASSIGNMENT OPERATOR-------------------------
-		// operator=
 		vector&	operator=(vector const& other)
 		{
 			if (this != &other)
@@ -120,9 +93,6 @@ class vector
 			}
 			return (*this);
 		}
-
-
-
 
 		// ----------------------------ELEMENT ACCESS---------------------------
 		reference	at(size_type pos)
@@ -215,7 +185,10 @@ class vector
 			{
 				return (true);
 			}
-			return (false);
+			else
+			{
+				return (false);
+			}
 		}
 		size_type	size(void) const
 		{
@@ -255,13 +228,13 @@ class vector
 			this->clear();
 			if (n > this->_capacity)
 			{
-				this->_alloc.deallocate(this->_first_element, this->_capacity);
+				this->_deallocate();
 				this->_first_element = this->_alloc.allocate(n);
 				this->_capacity = n;
 			}
-			for (InputIterator temp = first, i = 0; first != last; temp++, i++)
+			for (size_type i = 0; first != last; first++, i++)
 			{
-				this->_alloc.construct(this->_first_element + i, *temp);
+				this->_alloc.construct(this->_first_element + i, *first);
 			}
 			this->_size = n;
 		}
@@ -270,7 +243,7 @@ class vector
 			this->clear();
 			if (n > this->_capacity)
 			{
-				this->_alloc.deallocate(this->_first_element, this->_capacity);
+				this->_deallocate();
 				this->_first_element = this->_alloc.allocate(n);
 				this->_capacity = n;
 			}
@@ -445,6 +418,12 @@ class vector
 		}
 		void	resize(size_type count, T value = T())
 		{
+			if (count == 0)
+			{
+				this->clear();
+				this->_deallocate();
+			}
+			
 			if (count < this->_capacity)
 			{
 				for (size_type i = count; i < this->_size; i++)
@@ -485,67 +464,83 @@ class vector
 			std::swap(this->_size, other._size);
 		}
 
-		// ------------------------------MODIFIERS------------------------------
-		allocator_type	get_allocator() const
+		// ------------------------------ALLOCATOR------------------------------
+		allocator_type	get_allocator(void) const
 		{
 			return (this->_alloc);
 		}
 
 	private:
 	// ~~~~~~~~~~~~~~~~~~~~~~~~~PRIVATE MEMBER FUNCTIONS~~~~~~~~~~~~~~~~~~~~~~~~
-		// template<class InputIt>
-		// void	_allocate_new(InputIt first, InputIt last)
-		// {
-		// 	difference_type new_capacity = last - first;
+		void	_allocate_new(const_iterator first, const_iterator last)
+		{
+			difference_type	new_capacity = ft::distance(first, last);
 			
-		// 	this->_first_element = this->_alloc.allocate(new_capacity);
-		// 	for (size_type i = 0; i < new_capacity; i++)
-		// 	{
-		// 		this->_alloc.construct(this->_first_element + i, *(first + i));
-		// 	}
-		// 	this->_capacity = new_capacity;
-		// 	this->_size = new_capacity;
-		// }
+			if (new_capacity > 0)
+			{
+				this->_first_element = this->_alloc.allocate(new_capacity);
+				this->_capacity = new_capacity;
+				for (size_type i = 0; first != last; first++, i++)
+				{
+					this->_alloc.construct(this->_first_element + i, *first);
+				}
+				this->_size = new_capacity;
+			}
+		}
+
 		void	_allocate_new(iterator first, iterator last)
 		{
-			difference_type new_capacity = last - first;
+			difference_type	new_capacity = ft::distance(first, last);
 			
-			this->_first_element = this->_alloc.allocate(new_capacity);
-			for (size_type i = 0; i < new_capacity; i++)
+			if (new_capacity > 0)
 			{
-				this->_alloc.construct(this->_first_element + i, *(first + i));
+				this->_first_element = this->_alloc.allocate(new_capacity);
+				this->_capacity = new_capacity;
+				for (size_type i = 0; first != last; first++, i++)
+				{
+					this->_alloc.construct(this->_first_element + i, *first);
+				}
+				this->_size = new_capacity;
 			}
-			this->_capacity = new_capacity;
-			this->_size = new_capacity;
 		}
 
 		void	_allocate_new(size_type new_capacity, const T& value)
 		{
-			this->_first_element = this->_alloc.allocate(new_capacity);
-			for (size_type i = 0; i < new_capacity; i++)
+			if (new_capacity > 0)
 			{
-				this->_alloc.construct(this->_first_element + i, value);
+				this->_first_element = this->_alloc.allocate(new_capacity);
+				for (size_type i = 0; i < new_capacity; i++)
+				{
+					this->_alloc.construct(this->_first_element + i, value);
+				}
+				this->_capacity = new_capacity;
+				this->_size = new_capacity;
 			}
-			this->_capacity = new_capacity;
-			this->_size = new_capacity;
 		}
 
-		// _reallocate
-		//	allocates memory for a new container and constructs the elements based on the old container
-		//	destroys the old container elements and deallocates its memory
-		//	sets the new capacity but does not set the size
+		void	_deallocate(void)
+		{
+			this->_alloc.deallocate(this->_first_element, this->_capacity);
+			this->_first_element = NULL;
+			this->_capacity = 0;
+		}
+
 		void	_reallocate(size_type new_capacity)
 		{
-			value_type*	temp = this->_alloc.allocate(new_capacity);
-
-			for (size_type i = 0; i < this->_size; i++)
+			value_type*	temp = NULL;
+			
+			if (new_capacity > 0)
 			{
-				this->_alloc.construct(temp + i, *(this->_first_element + i));
-				this->_alloc.destroy(this->_first_element + i);
+				temp = this->_alloc.allocate(new_capacity);
+				for (size_type i = 0; i < this->_size; i++)
+				{
+					this->_alloc.construct(temp + i, *(this->_first_element + i));
+					this->_alloc.destroy(this->_first_element + i);
+				}
+				this->_deallocate();
+				this->_first_element = temp;
+				this->_capacity = new_capacity;
 			}
-			this->_alloc.deallocate(this->_first_element, this->_capacity);
-			this->_first_element = temp;
-			this->_capacity = new_capacity;
 		}
 
 	// ~~~~~~~~~~~~~~~~~~~~~~~~~~PRIVATE MEMBER OBJECTS~~~~~~~~~~~~~~~~~~~~~~~~~

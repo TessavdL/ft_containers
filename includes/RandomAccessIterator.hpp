@@ -6,7 +6,7 @@
 /*   By: tevan-de <tevan-de@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/07/26 21:51:11 by tevan-de      #+#    #+#                 */
-/*   Updated: 2021/10/24 18:25:22 by tevan-de      ########   odam.nl         */
+/*   Updated: 2021/10/25 15:02:06 by tevan-de      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,7 @@ class RandomAccessIterator
 
 	// ~~~~~~~~~~~~~~~~~~~~~~~~~PUBLIC MEMBER FUNCTIONS~~~~~~~~~~~~~~~~~~~~~~~~~
 		// ----------------------------CONSTRUCTORS-----------------------------
-		RandomAccessIterator(void) : _ptr(nullptr)
+		RandomAccessIterator(void) : _ptr(NULL)
 		{
 			// std::cout << "Default Constructor of RAI called" << std::endl;
 		}

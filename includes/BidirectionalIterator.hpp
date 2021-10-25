@@ -6,7 +6,7 @@
 /*   By: tevan-de <tevan-de@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/08/12 15:35:44 by tevan-de      #+#    #+#                 */
-/*   Updated: 2021/10/24 18:25:43 by tevan-de      ########   odam.nl         */
+/*   Updated: 2021/10/25 15:02:13 by tevan-de      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@ class BidirectionalIterator
 
 	// ~~~~~~~~~~~~~~~~~~~~~~~~~PUBLIC MEMBER FUNCTIONS~~~~~~~~~~~~~~~~~~~~~~~~~
 		// ----------------------------CONSTRUCTORS-----------------------------
-		BidirectionalIterator(void) : _ptr(nullptr)
+		BidirectionalIterator(void) : _ptr(NULL)
 		{
 			// std::cout << "Default Constructor of BI called" << std::endl;
 		}

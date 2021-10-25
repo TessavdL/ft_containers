@@ -6,7 +6,7 @@
 /*   By: tevan-de <tevan-de@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/08/12 17:52:57 by tevan-de      #+#    #+#                 */
-/*   Updated: 2021/10/24 18:26:02 by tevan-de      ########   odam.nl         */
+/*   Updated: 2021/10/25 15:05:50 by tevan-de      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -96,7 +96,7 @@ class InputIterator
 		pointer	_ptr;
 
 	// ~~~~~~~~~~~~~~~~~~~~~~~~~PRIVATE MEMBER FUNCTION~~~~~~~~~~~~~~~~~~~~~~~~~
-		InputIterator(void) : _ptr(nullptr)
+		InputIterator(void) : _ptr(NULL)
 		{
 			// std::cout << "Default Constructor of II called" << std::endl;
 		}

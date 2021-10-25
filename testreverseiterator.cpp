@@ -6,7 +6,7 @@
 /*   By: tevan-de <tevan-de@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/10/16 22:08:50 by tevan-de      #+#    #+#                 */
-/*   Updated: 2021/10/24 15:55:34 by tevan-de      ########   odam.nl         */
+/*   Updated: 2021/10/25 15:05:27 by tevan-de      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ int main(void)
 	std::vector<int>			v;
 	std::vector<int>::iterator	vIter;
 
-	for (int i = 1; i < 6; i++)
+	for (size_t i = 1; i < 6; i++)
 		v.push_back(2 * i + 1);
 
 	// --------------------------PRINT WITH DEREFERENCED NORMAL ITERATOR------------------------
@@ -42,7 +42,7 @@ int main(void)
 	ft::vector<int>				mv;
 	ft::vector<int>::iterator	mvIter;
 
-	for (int i = 0; i < v.size(); i++)
+	for (size_t i = 0; i < v.size(); i++)
 		mv.push_back(v[i]);
 
 	// --------------------------PRINT WITH MY OWN DEREFERENCED NORMAL ITERATOR------------------------

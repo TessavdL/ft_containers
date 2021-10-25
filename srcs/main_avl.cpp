@@ -6,7 +6,7 @@
 /*   By: tevan-de <tevan-de@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/10/04 11:06:41 by tevan-de      #+#    #+#                 */
-/*   Updated: 2021/10/14 00:27:58 by tevan-de      ########   odam.nl         */
+/*   Updated: 2021/10/25 15:04:07 by tevan-de      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,10 +53,10 @@ t_type_of_unbalance	get_type_of_unbalance(Node<std::pair<int, int> >* unbalanced
 
 void	left_rotation(Node<std::pair<int, int> >* pivot, Node<std::pair<int, int> >* child, Node<std::pair<int, int> >** root)
 {
-	if (pivot->parent == nullptr)
+	if (pivot->parent == NULL)
 	{
 		*root = child;
-		child->parent = nullptr;
+		child->parent = NULL;
 	}
 	else
 	{
@@ -70,14 +70,14 @@ void	left_rotation(Node<std::pair<int, int> >* pivot, Node<std::pair<int, int> >
 			pivot->parent->right = child;
 		}
 	}
-	if (child->left != nullptr) // if child has left subtree, connect it to the right side of pivot_node
+	if (child->left != NULL) // if child has left subtree, connect it to the right side of pivot_node
 	{
 		pivot->right = child->left;
 		child->left->parent = pivot;
 	}
 	else // child does not have left subtree
 	{
-		pivot->right = nullptr;
+		pivot->right = NULL;
 	}
 	child->left = pivot;
 	pivot->parent = child;
@@ -85,10 +85,10 @@ void	left_rotation(Node<std::pair<int, int> >* pivot, Node<std::pair<int, int> >
 
 void	right_rotation(Node<std::pair<int, int> >* pivot, Node<std::pair<int, int> >* child, Node<std::pair<int, int> >** root)
 {
-	if (pivot->parent == nullptr)
+	if (pivot->parent == NULL)
 	{
 		*root = child;
-		child->parent = nullptr;
+		child->parent = NULL;
 	}
 	else
 	{
@@ -102,14 +102,14 @@ void	right_rotation(Node<std::pair<int, int> >* pivot, Node<std::pair<int, int> 
 			pivot->parent->right = child;
 		}
 	}
-	if (child->right != nullptr) // if child has right subtree, connect it to the left side of pivot_node
+	if (child->right != NULL) // if child has right subtree, connect it to the left side of pivot_node
 	{
 		pivot->left = child->right;
 		child->right->parent = pivot;
 	}	
 	else
 	{
-		pivot->left = nullptr; // child does not have right subtree
+		pivot->left = NULL; // child does not have right subtree
 	}
 	child->right = pivot;
 	pivot->parent = child;
@@ -117,7 +117,7 @@ void	right_rotation(Node<std::pair<int, int> >* pivot, Node<std::pair<int, int> 
 
 int	get_height_subtree(Node<std::pair<int, int> >* node)
 {
-	if (node == nullptr)
+	if (node == NULL)
 	{
 		return (0);
 	}
@@ -200,9 +200,9 @@ void	perform_balacing(Node<std::pair<int, int> >* unbalanced_node, Node<std::pai
 bool	check_subtree_balance(Node<std::pair<int, int> >* inserted_node, Node<std::pair<int, int> >** root)
 {
 	Node<std::pair<int, int> >*	temp = inserted_node;
-	Node<std::pair<int, int> >* child = nullptr;
-	Node<std::pair<int, int> >* grandchild = nullptr;
-	Node<std::pair<int, int> >*	unbalanced_node = nullptr;
+	Node<std::pair<int, int> >* child = NULL;
+	Node<std::pair<int, int> >* grandchild = NULL;
+	Node<std::pair<int, int> >*	unbalanced_node = NULL;
 	size_t						i = 0;
 	t_type_of_unbalance			type_of_unbalance;
 
@@ -247,7 +247,7 @@ Node<std::pair<int, int> >*	insert(Node<std::pair<int, int> >* root, std::pair<i
 
 	// if (pair.first == (*(*temp)).first)
 	// {
-	// 	return (nullptr);
+	// 	return (NULL);
 	// }
 	if (pair.first < (*(*temp)).first)
 	{
@@ -279,7 +279,7 @@ Node<std::pair<int, int> >*	insert(Node<std::pair<int, int> >* root, std::pair<i
 	}
 	else // pair.first == (*(*temp)).first
 	{
-		return (nullptr);
+		return (NULL);
 	}
 }
 
@@ -289,7 +289,7 @@ Node<std::pair<int, int>>*	most_right(Node<std::pair<int, int>>* root)
 	
 	if (!root)
 	{
-		return (nullptr);
+		return (NULL);
 	}
 	while (temp->right)
 	{
@@ -304,7 +304,7 @@ Node<std::pair<int, int>>*	most_left(Node<std::pair<int, int>>* root)
 	
 	if (!root)
 	{
-		return (nullptr);
+		return (NULL);
 	}
 	while (temp->left)
 	{
@@ -335,7 +335,7 @@ Node<std::pair<int, int>>*	next(Node<std::pair<int, int>>* root)
 		}
 		return (temp->parent);
 	}
-	return (nullptr); // remove?
+	return (NULL); // remove?
 }
 
 int	main(void)
@@ -382,7 +382,7 @@ int	main(void)
 		{
 			std::cout << "tree needs to be balanced"  << std::endl << std::endl;
 		}
-		inserted_node = nullptr;
+		inserted_node = NULL;
 	}
 
 	Node<std::pair<int, int>>*	begin = most_left(root);

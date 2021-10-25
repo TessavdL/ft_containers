@@ -6,7 +6,7 @@
 /*   By: tevan-de <tevan-de@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/08/12 17:51:07 by tevan-de      #+#    #+#                 */
-/*   Updated: 2021/10/24 18:25:51 by tevan-de      ########   odam.nl         */
+/*   Updated: 2021/10/25 15:02:44 by tevan-de      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@ class ForwardIterator
 
 	// ~~~~~~~~~~~~~~~~~~~~~~~~~PUBLIC MEMBER FUNCTIONS~~~~~~~~~~~~~~~~~~~~~~~~~
 		// ----------------------------CONSTRUCTORS-----------------------------
-		ForwardIterator() : _ptr(nullptr)
+		ForwardIterator() : _ptr(NULL)
 		{
 			// std::cout << "Default Constructor of FI called" << std::endl;
 		}

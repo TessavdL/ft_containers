@@ -6,7 +6,7 @@
 /*   By: tevan-de <tevan-de@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/08/22 19:00:43 by tevan-de      #+#    #+#                 */
-/*   Updated: 2021/08/25 19:12:03 by tevan-de      ########   odam.nl         */
+/*   Updated: 2021/10/25 15:04:23 by tevan-de      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,14 +25,14 @@ Node<std::pair<int, int>>* find(Node<std::pair<int, int>>* root, int key)
 		if (root->left)
 			return (find(root->left, key));
 		else
-			return (nullptr);
+			return (NULL);
 	}
 	else if (key > (*(*root)).first)
 	{
 		if (root->right)
 			return (find(root->right, key));
 		else
-			return (nullptr);
+			return (NULL);
 	}
 	else // key == node_key
 		return (root);
@@ -47,17 +47,17 @@ void	erase_node(Node<std::pair<int, int>>** root, Node<std::pair<int, int>>* nod
 	{
 		if (node_to_delete == *root)
 		{
-			*root = nullptr;
+			*root = NULL;
 		}
 		else
 		{
 			if (temp->parent->left == temp)
 			{
-				temp->parent->left = nullptr;
+				temp->parent->left = NULL;
 			}
 			else
 			{
-				temp->parent->right = nullptr;
+				temp->parent->right = NULL;
 			}
 		}
 		std::cout << "erasing node without a child" << std::endl;
@@ -69,7 +69,7 @@ void	erase_node(Node<std::pair<int, int>>** root, Node<std::pair<int, int>>* nod
 		if (node_to_delete == *root)
 		{
 			*root = temp->left;
-			temp->left->parent = nullptr;
+			temp->left->parent = NULL;
 		}	
 		else
 		{
@@ -93,7 +93,7 @@ void	erase_node(Node<std::pair<int, int>>** root, Node<std::pair<int, int>>* nod
 		if (node_to_delete == *root)
 		{
 			*root = temp->right;
-			temp->right->parent = nullptr;
+			temp->right->parent = NULL;
 		}
 		else
 		{
@@ -144,7 +144,7 @@ Node<std::pair<int, int>>*	next(Node<std::pair<int, int>>* root)
 		}
 		return (temp->parent);
 	}
-	return (nullptr);
+	return (NULL);
 }
 
 Node<std::pair<int, int>>*	previous(Node<std::pair<int, int>>* root)
@@ -168,7 +168,7 @@ Node<std::pair<int, int>>*	previous(Node<std::pair<int, int>>* root)
 		}
 		return (temp->parent);
 	}
-	return (nullptr);
+	return (NULL);
 }
 
 Node<std::pair<int, int>>*	most_right(Node<std::pair<int, int>>* root)
@@ -177,7 +177,7 @@ Node<std::pair<int, int>>*	most_right(Node<std::pair<int, int>>* root)
 	
 	if (!root)
 	{
-		return (nullptr);
+		return (NULL);
 	}
 	while (temp->right)
 	{
@@ -192,7 +192,7 @@ Node<std::pair<int, int>>*	most_left(Node<std::pair<int, int>>* root)
 	
 	if (!root)
 	{
-		return (nullptr);
+		return (NULL);
 	}
 	while (temp->left)
 	{
@@ -381,11 +381,11 @@ int main(void)
 
 	// CLEAR
 
-	while (root != nullptr)
+	while (root != NULL)
 	{
 		erase_node(&root, (root));
 	}
-	if (root == nullptr)
+	if (root == NULL)
 		std::cout << "empty" << std::endl;
 	return (0);
 }

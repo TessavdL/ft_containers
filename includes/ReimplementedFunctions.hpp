@@ -6,7 +6,7 @@
 /*   By: tevan-de <tevan-de@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/08/21 16:11:25 by tevan-de      #+#    #+#                 */
-/*   Updated: 2021/10/20 14:36:26 by tevan-de      ########   odam.nl         */
+/*   Updated: 2021/10/25 14:58:07 by tevan-de      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,23 +86,23 @@ namespace ft {
 template <typename Iterator>
 typename ft::iterator_traits<Iterator>::difference_type	distance(Iterator first, Iterator last)
 {
-	return (ft::distance(first, last, ft::iterator_traits<Iterator>::iterator_category()));
+	return (distance(first, last, typename ft::iterator_traits<Iterator>::iterator_category()));
 }
 }
 
 namespace ft {
-template <typename RandomAccessIterator>
-typename ft::iterator_traits<RandomAccessIterator>::difference_type	distance(RandomAccessIterator first, RandomAccessIterator last, ft::random_access_iterator_tag)
+template <typename Iterator>
+typename ft::iterator_traits<Iterator>::difference_type	distance(Iterator first, Iterator last, ft::random_access_iterator_tag)
 {
 	return (last - first);
 }
 }
 
 namespace ft {
-template <typename InputIterator>
-typename ft::iterator_traits<InputIterator>::difference_type	distance(InputIterator first, InputIterator last, ft::input_iterator_tag)
+template <typename Iterator>
+typename ft::iterator_traits<Iterator>::difference_type	distance(Iterator first, Iterator last, ft::input_iterator_tag)
 {
-	typename ft::iterator_traits<InputIterator>::difference_type	n = 0;
+	typename ft::iterator_traits<Iterator>::difference_type	n = 0;
 
 	while (first != last)
 	{

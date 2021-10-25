@@ -14,8 +14,8 @@ class BinTree {
     struct Node {
         T value;
         Node *left,*right;
-        Node() : left(nullptr),right(nullptr) {}
-        Node(const T& value) :value(value),left(nullptr),right(nullptr) {}
+        Node() : left(NULL),right(NULL) {}
+        Node(const T& value) :value(value),left(NULL),right(NULL) {}
         // stack-abusing recursion everywhere, for small code
         ~Node() { delete left; delete right; }
         int max_depth() const {
@@ -28,11 +28,11 @@ class BinTree {
     Node *root;
 
 public:
-    BinTree() : root(nullptr) {}
+    BinTree() : root(NULL) {}
     ~BinTree() { delete root; }
 
     int get_max_depth() const { return root ? root->max_depth() : 0; }
-    void clear() { delete root; root = nullptr; }
+    void clear() { delete root; root = NULL; }
     void insert() {}
     template <typename ...Args>
     void insert(const T& value, Args...more) {

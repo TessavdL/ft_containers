@@ -6,7 +6,7 @@
 /*   By: tevan-de <tevan-de@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/10/10 16:45:45 by tevan-de      #+#    #+#                 */
-/*   Updated: 2021/10/20 14:38:40 by tevan-de      ########   odam.nl         */
+/*   Updated: 2021/10/25 15:05:06 by tevan-de      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,7 +78,7 @@ class map
 			this->_compare = comp;
 			this->_begin = new_begin_node;
 			this->_end = new_end_node;
-			this->_root = nullptr;
+			this->_root = NULL;
 			this->_size = 0;
 		}
 		// range constructor
@@ -136,7 +136,7 @@ class map
 
 		iterator	end(void)
 		{
-			return (iterator(nullptr, this->_end));
+			return (iterator(NULL, this->_end));
 		}
 
 		// reverse_iterator	rbegin(void)
@@ -147,7 +147,7 @@ class map
 
 		// reverse_iterator	rend(void)
 		// {
-		// 	return (reverse_iterator(nullptr, this->_begin));
+		// 	return (reverse_iterator(NULL, this->_begin));
 		// }
 
 		// -------------------------------CAPACITY------------------------------
@@ -178,7 +178,7 @@ class map
 		{
 			node*	n = this->_find(this->_root, k);
 
-			if (n != nullptr)
+			if (n != NULL)
 			{
 				// if the key is already present in the map
 				// return the second part of the value_type, which is the mapped_type
@@ -213,7 +213,7 @@ class map
 				return (ft::make_pair(iterator(n->data, n), true));
 			}
 			n = this->_find(this->_root, val.first);
-			if (n != nullptr)
+			if (n != NULL)
 			{
 				// std::cout << "tried to insert duplicate" << std::endl;
 				return (ft::make_pair(iterator(n->data, n), false)); // change node into map::end
@@ -248,7 +248,7 @@ class map
 		{
 			node*	n = this->_find(this->_root, k);
 
-			if (n == nullptr || n == this->_end)
+			if (n == NULL || n == this->_end)
 			{
 				return (0);
 			}
@@ -262,15 +262,15 @@ class map
 		//clear
 		void	clear(void)
 		{
-			node*					node_to_delete = nullptr;
+			node*					node_to_delete = NULL;
 			std::allocator<node>	alloc;
 
-			while (this->_root != nullptr)
+			while (this->_root != NULL)
 			{
 				node_to_delete = this->_root;
 				this->_erase_node(node_to_delete);
 			}
-			this->_end = nullptr;
+			this->_end = NULL;
 			this->_size = 0;
 		}
 
@@ -356,7 +356,7 @@ class map
 
 		int	_get_height_subtree(node* n)
 		{
-			if (n == nullptr || n == this->_end || n == this->_begin)
+			if (n == NULL || n == this->_end || n == this->_begin)
 			{
 				return (0);
 			}
@@ -396,9 +396,9 @@ class map
 		void	_check_if_tree_is_balanced(node* inserted_node)
 		{
 			node*				temp = inserted_node;
-			node* 				child = nullptr;
-			node* 				grandchild = nullptr;
-			node*				unbalanced_node = nullptr;
+			node* 				child = NULL;
+			node* 				grandchild = NULL;
+			node*				unbalanced_node = NULL;
 			size_t				i = 0;
 			t_type_of_unbalance	type_of_unbalance;
 
@@ -455,7 +455,7 @@ class map
 			if (pair.first < temp->data->first)
 			{
 				// std::cout << pair.first << " is smaller than " << temp->data->first << std::endl;
-				if (temp->left == nullptr || temp->left == this->_begin)
+				if (temp->left == NULL || temp->left == this->_begin)
 				{
 					temp->left = this->_create_node(temp, pair);
 					return (temp->left);
@@ -469,7 +469,7 @@ class map
 			else if (pair.first > temp->data->first)
 			{
 				// std::cout << pair.first << " is bigger than " << temp->data->first << std::endl;
-				if (temp->right == nullptr || temp->right == this->_end) 
+				if (temp->right == NULL || temp->right == this->_end) 
 				{
 					temp->right = this->_create_node(temp, pair);
 					return (temp->right);
@@ -482,16 +482,16 @@ class map
 			}
 			else // pair.first == temp->data->first
 			{
-				return (nullptr);
+				return (NULL);
 			}
 		}
 
 		void	_left_rotation(node* pivot, node* child)
 		{
-			if (pivot->parent == nullptr)
+			if (pivot->parent == NULL)
 			{
 				this->_root = child;
-				child->parent = nullptr;
+				child->parent = NULL;
 			}
 			else
 			{
@@ -505,14 +505,14 @@ class map
 					pivot->parent->right = child;
 				}
 			}
-			if (child->left != nullptr) // if child has left subtree, connect it to the right side of pivot_node
+			if (child->left != NULL) // if child has left subtree, connect it to the right side of pivot_node
 			{
 				pivot->right = child->left;
 				child->left->parent = pivot;
 			}
 			else // child does not have left subtree
 			{
-				pivot->right = nullptr;
+				pivot->right = NULL;
 			}
 			child->left = pivot;
 			pivot->parent = child;
@@ -520,10 +520,10 @@ class map
 
 		void	_right_rotation(node* pivot, node* child)
 		{
-			if (pivot->parent == nullptr)
+			if (pivot->parent == NULL)
 			{
 				this->_root = child;
-				child->parent = nullptr;
+				child->parent = NULL;
 			}
 			else
 			{
@@ -537,14 +537,14 @@ class map
 					pivot->parent->right = child;
 				}
 			}
-			if (child->right != nullptr) // if child has right subtree, connect it to the left side of pivot_node
+			if (child->right != NULL) // if child has right subtree, connect it to the left side of pivot_node
 			{
 				pivot->left = child->right;
 				child->right->parent = pivot;
 			}	
 			else
 			{
-				pivot->left = nullptr; // child does not have right subtree
+				pivot->left = NULL; // child does not have right subtree
 			}
 			child->right = pivot;
 			pivot->parent = child;
@@ -592,17 +592,17 @@ class map
 			{
 				if (node_to_delete == this->_root)
 				{
-					this->_root = nullptr;
+					this->_root = NULL;
 				}
 				else
 				{
 					if (temp->parent->left == temp)
 					{
-						temp->parent->left = nullptr;
+						temp->parent->left = NULL;
 					}
 					else
 					{
-						temp->parent->right = nullptr;
+						temp->parent->right = NULL;
 					}
 				}
 				std::cout << "erasing node without a child" << std::endl;
@@ -616,7 +616,7 @@ class map
 				if (node_to_delete == this->_root)
 				{
 					this->_root = temp->left;
-					temp->left->parent = nullptr;
+					temp->left->parent = NULL;
 				}	
 				else
 				{
@@ -642,7 +642,7 @@ class map
 				if (node_to_delete == this->_root)
 				{
 					this->_root = temp->right;
-					temp->right->parent = nullptr;
+					temp->right->parent = NULL;
 				}
 				else
 				{
@@ -675,23 +675,23 @@ class map
 
 		node* _find(node* node, const key_type& key)
 		{
-			if (node == nullptr)
+			if (node == NULL)
 			{
-				return (nullptr);
+				return (NULL);
 			}
 			if (key < node->data->first)
 			{
 				if (node->left)
 					return (this->_find(node->left, key));
 				else
-					return (nullptr);
+					return (NULL);
 			}
 			else if (key > node->data->first)
 			{
-				if (node->right && node->right->data != nullptr)
+				if (node->right && node->right->data != NULL)
 					return (this->_find(node->right, key));
 				else
-					return (nullptr);
+					return (NULL);
 			}
 			else // key == node_key
 				return (node);
@@ -703,7 +703,7 @@ class map
 
 			if (!temp)
 			{
-				return (nullptr);
+				return (NULL);
 			}
 			while (temp->left && temp->left != this->_begin)
 			{
@@ -718,7 +718,7 @@ class map
 
 			if (!temp)
 			{
-				return (nullptr);
+				return (NULL);
 			}
 			while (temp->right && temp->right != this->_end)
 			{

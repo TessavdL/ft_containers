@@ -6,7 +6,7 @@
 /*   By: tevan-de <tevan-de@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/08/26 11:30:29 by tevan-de      #+#    #+#                 */
-/*   Updated: 2021/10/20 11:51:46 by tevan-de      ########   odam.nl         */
+/*   Updated: 2021/10/25 15:02:30 by tevan-de      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,7 +43,7 @@ class BinarySearchTreeIterator
 	// ~~~~~~~~~~~~~~~~~~~~~~~~~PUBLIC MEMBER FUNCTIONS~~~~~~~~~~~~~~~~~~~~~~~~~
 		// ----------------------------CONSTRUCTORS-----------------------------
 		// default
-		BinarySearchTreeIterator(void) : _ptr(nullptr), _node(nullptr)
+		BinarySearchTreeIterator(void) : _ptr(NULL), _node(NULL)
 		{
 			// std::cout << "Default Constructor of BSTI called" << std::endl;
 			return ;
@@ -112,7 +112,7 @@ class BinarySearchTreeIterator
 
 			this->_node = this->_node->next();
 			this->_ptr = this->_node->data;
-			if (this->_ptr == nullptr)
+			if (this->_ptr == NULL)
 				std::cout << "this is end" << std::endl;
 			return (bsti);
 		}

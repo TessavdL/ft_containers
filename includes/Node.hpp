@@ -6,7 +6,7 @@
 /*   By: tevan-de <tevan-de@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/08/20 16:45:32 by tevan-de      #+#    #+#                 */
-/*   Updated: 2021/10/20 11:54:46 by tevan-de      ########   odam.nl         */
+/*   Updated: 2021/10/25 15:03:16 by tevan-de      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,19 +46,19 @@ public:
 	// ~~~~~~~~~~~~~~~~~~~~~~~~~PUBLIC MEMBER FUNCTIONS~~~~~~~~~~~~~~~~~~~~~~~~~
 		// ----------------------------CONSTRUCTORS-----------------------------
 		// default constructor
-		node(void) : left(nullptr), parent(nullptr), right(nullptr), data(nullptr)
+		node(void) : left(NULL), parent(NULL), right(NULL), data(NULL)
 		{
 			// std::cout << "Default constructor of node called" << std::endl;
 			return ;
 		}
 		// parameter constructor 1, used to make root node
-		node(pointer ptr) : left(nullptr), parent(nullptr), right(nullptr), data(ptr)
+		node(pointer ptr) : left(NULL), parent(NULL), right(NULL), data(ptr)
 		{
 			// std::cout << "Parameter constructor root of node called" << std::endl;
 			return ;
 		}
 		// parameter constructor 2, used to make leaf node and connect to parent
-		node(node* p, pointer ptr) : left(nullptr), parent(p), right(nullptr), data(ptr)
+		node(node* p, pointer ptr) : left(NULL), parent(p), right(NULL), data(ptr)
 		{
 			// std::cout << "Parameter constructor leaf of node called" << std::endl;
 			return ;
@@ -109,7 +109,7 @@ public:
 	
 			if (temp->right)
 			{
-				if (temp->right->data == nullptr)
+				if (temp->right->data == NULL)
 				{
 					return (temp->right);
 				}
@@ -135,7 +135,7 @@ public:
 
 			if (temp->left)
 			{
-				if (temp->left->data == nullptr)
+				if (temp->left->data == NULL)
 				{
 					return (temp->left);
 				}
