@@ -6,7 +6,7 @@
 /*   By: tevan-de <tevan-de@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/08/19 13:47:30 by tevan-de      #+#    #+#                 */
-/*   Updated: 2021/08/20 16:44:25 by tevan-de      ########   odam.nl         */
+/*   Updated: 2021/10/27 00:03:58 by tevan-de      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,7 +49,7 @@ void	map_basic(void)
 
 void	my_map_basic(void)
 {
-	Map<std::string, int>		my_map_default;
+	ft::map<std::string, int>	my_map_default;
 	std::map<std::string, int>	map_default;
 
 	map_default["apple"] = 10;
@@ -62,15 +62,20 @@ void	my_map_basic(void)
 	{
 		std::cout << it->first << " " << it->second << std::endl;
 	}
-	std::cout << "size of my_map_default = " << my_map_default.size() << std::endl;
 
-	Map<std::string, int> my_map_range(map_default.begin(), map_default.end());
-	// Map<std::string, int>::iterator it = my_map_range.begin();
-	// std::cout << it->first << " " << it->second << std::endl;
-	// for (std::map<std::string, int>::iterator it = my_map_range.begin(); it != map_range.end(); it++)
-	// {
-		// std::cout << it->first << " " << it->second << std::endl;
-	// }
+	my_map_default["apple"] = 10;
+	my_map_default["banana"] = 20;
+	my_map_default["kiwi"] = 30;
+	my_map_default["orange"] = 40;
+	my_map_default["peach"] = 50;
+	my_map_default["mango"] = 60;
+
+	std::cout << "size of my_map_default = " << my_map_default.size() << std::endl;
+	ft::map<std::string, int> my_map_range(my_map_default.begin(), my_map_default.end());
+	for (ft::map<std::string, int>::iterator it = my_map_range.begin(); it != my_map_range.end(); it++)
+	{
+		std::cout << it->first << " " << it->second << std::endl;
+	}
 	std::cout << "size of my_map_range after calling range constructor " << my_map_range.size() << std::endl;
 	std::cout << std::boolalpha << ("apple" < "banana") << std::endl;
 	return ;

@@ -6,7 +6,7 @@
 /*   By: tevan-de <tevan-de@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/08/26 11:30:29 by tevan-de      #+#    #+#                 */
-/*   Updated: 2021/10/25 15:02:30 by tevan-de      ########   odam.nl         */
+/*   Updated: 2021/10/26 22:18:45 by tevan-de      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,7 @@
 
 # include "./Pair.hpp"
 # include "./Node.hpp"
+# include "./ReimplementedFunctions.hpp"
 
 namespace ft {
 template<typename, typename>
@@ -34,11 +35,11 @@ class BinarySearchTreeIterator
 {
 	public:
 	// ~~~~~~~~~~~~~~~~~~~~~~~~~~~PUBLIC MEMBER TYPES~~~~~~~~~~~~~~~~~~~~~~~~~~~
-		typedef T				value_type;
-		typedef value_type*		pointer;
-		typedef value_type&		reference;
-		typedef std::ptrdiff_t	difference_type;
-		typedef std::size_t		size_type;
+		typedef T								value_type;
+		typedef value_type*						pointer;
+		typedef value_type&						reference;
+		typedef std::ptrdiff_t					difference_type;
+		typedef ft::bidirectional_iterator_tag	iterator_category;
 
 	// ~~~~~~~~~~~~~~~~~~~~~~~~~PUBLIC MEMBER FUNCTIONS~~~~~~~~~~~~~~~~~~~~~~~~~
 		// ----------------------------CONSTRUCTORS-----------------------------
@@ -119,12 +120,12 @@ class BinarySearchTreeIterator
 
 		// ------------------------MEMBER ACCESS OPERATORS----------------------
 		// arrow operator
-		pointer	operator->(void) const
+		pointer	operator->(void)
 		{
 			return (this->_ptr);
 		}
 		// dereference operator
-		reference	operator*(void) const
+		reference	operator*(void)
 		{
 			return (*this->_ptr);
 		}
