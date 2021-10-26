@@ -6,7 +6,7 @@
 /*   By: tevan-de <tevan-de@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/10/24 13:58:51 by tevan-de      #+#    #+#                 */
-/*   Updated: 2021/10/25 16:27:36 by tevan-de      ########   odam.nl         */
+/*   Updated: 2021/10/26 15:40:11 by tevan-de      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,7 +61,7 @@ class vector
 			_alloc(alloc), _capacity(0), _first_element(NULL), _size(0)
 		{
 			this->_allocate_new(first, last);
-			// std::cout << "Range construct is called" << std::endl;
+			// std::cout << "Range constructor is called" << std::endl;
 		}
 		vector(const vector& x) :
 			_alloc(x._alloc), _capacity(0), _first_element(NULL), _size(0)
@@ -91,6 +91,7 @@ class vector
 			{
 				this->assign(other.begin(), other.end());
 			}
+			// std::cout << "Assignment operator is called" << std::endl;
 			return (*this);
 		}
 
