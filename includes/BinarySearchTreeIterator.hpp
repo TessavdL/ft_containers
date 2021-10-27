@@ -6,7 +6,7 @@
 /*   By: tevan-de <tevan-de@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/08/26 11:30:29 by tevan-de      #+#    #+#                 */
-/*   Updated: 2021/10/26 22:18:45 by tevan-de      ########   odam.nl         */
+/*   Updated: 2021/10/27 16:36:38 by tevan-de      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -103,7 +103,10 @@ class BinarySearchTreeIterator
 		BinarySearchTreeIterator&	operator++(void)
 		{
 			this->_node = this->_node->next();
-			this->_ptr = this->_node->data;
+			if (this->_node == NULL)
+				this->_ptr = NULL;
+			else
+				this->_ptr = this->_node->data;
 			return (*this);
 		}
 		// postfix increment
@@ -112,9 +115,10 @@ class BinarySearchTreeIterator
 			BinarySearchTreeIterator	bsti = (*this);
 
 			this->_node = this->_node->next();
-			this->_ptr = this->_node->data;
-			if (this->_ptr == NULL)
-				std::cout << "this is end" << std::endl;
+			if (this->_node == NULL)
+				this->_ptr = NULL;
+			else
+				this->_ptr = this->_node->data;
 			return (bsti);
 		}
 

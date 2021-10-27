@@ -6,7 +6,7 @@
 /*   By: tevan-de <tevan-de@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/08/20 16:45:32 by tevan-de      #+#    #+#                 */
-/*   Updated: 2021/10/27 00:13:29 by tevan-de      ########   odam.nl         */
+/*   Updated: 2021/10/27 18:55:07 by tevan-de      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -111,7 +111,7 @@ public:
 			{
 				if (temp->right->data == NULL)
 				{
-					return (temp->right);
+					return (NULL);
 				}
 				temp = temp->right;
 				while (temp && temp->left)
@@ -137,7 +137,7 @@ public:
 			{
 				if (temp->left->data == NULL)
 				{
-					return (temp->left);
+					return (NULL);
 				}
 				temp = temp->left;
 				while (temp && temp->right)
@@ -154,10 +154,6 @@ public:
 				temp = temp->parent;
 			}
 			return (temp);
-		}
-		void	set_data(node* node)
-		{
-			this->data = node->data;
 		}
 };
 }

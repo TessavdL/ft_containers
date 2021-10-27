@@ -6,7 +6,7 @@
 /*   By: tevan-de <tevan-de@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/10/10 16:45:45 by tevan-de      #+#    #+#                 */
-/*   Updated: 2021/10/27 11:37:14 by tevan-de      ########   odam.nl         */
+/*   Updated: 2021/10/27 20:49:24 by tevan-de      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,8 +76,6 @@ class map
 		{
 			typename ft::iterator_traits<InputIterator>::difference_type n = ft::distance(first, last);
 
-			std::cout << n << std::endl;
-			std::cout << (*first).first << std::endl;
 			if (n > 0)
 			{
 				this->_create_begin_and_end_node();
@@ -108,10 +106,10 @@ class map
 			{
 				this->clear();
 				this->_alloc = x._alloc;
-				this->_size = x._size;
-				this->_begin = x._begin;
-				this->_end = x._end;
-				this->_root = x._root;
+				for (iterator first = x.begin(); first != x.end(); first++)
+				{
+					this->insert(*first);
+				}
 			}
 			// std::cout << "Assignment operator is called" << std::endl;
 			return (*this);
@@ -191,8 +189,8 @@ class map
 				n = this->_create_node(val);
 				this->_create_begin_and_end_node();
 				this->_root = n;
-				this->_root->left = this->_begin;
-				this->_root->right = this->_end;
+				// this->_root->left = this->_begin;
+				// this->_root->right = this->_end;
 				this->_begin->parent = this->_root;
 				this->_end->parent = this->_root;
 				this->_size++;
@@ -208,8 +206,8 @@ class map
 				n = this->_insert_node(this->_root, val);
 				this->_check_if_tree_is_balanced(n);
 				this->_size++;
-				this->_find_most_left_node()->left = this->_begin;
-				this->_find_most_right_node()->right = this->_end;
+				// this->_find_most_left_node()->left = this->_begin;
+				// this->_find_most_right_node()->right = this->_end;
 				this->_begin->parent = this->_find_most_left_node();
 				this->_end->parent = this->_find_most_right_node();
 				return (ft::make_pair(iterator(n->data, n), true));
@@ -228,7 +226,7 @@ class map
 		{
 			for (; first != last; first++)
 			{
-				this->insert(*first);
+				this->insert(*first);		
 			}
 		}
 		void	erase(iterator position)
@@ -247,7 +245,7 @@ class map
 			node*	n = this->_find_node(this->_root, k);
 			node*	parent;
 
-			if (n == NULL || n == this->_begin || n == this->_end)
+			if (n == NULL)
 			{
 				return (0);
 			}
@@ -257,8 +255,8 @@ class map
 				this->_erase_node(n);
 				this->_size--;
 				this->_check_if_tree_is_balanced(parent);
-				this->_find_most_left_node()->left = this->_begin;
-				this->_find_most_right_node()->right = this->_end;
+				// this->_find_most_left_node()->left = this->_begin;
+				// this->_find_most_right_node()->right = this->_end;
 				this->_begin->parent = this->_find_most_left_node();
 				this->_end->parent = this->_find_most_right_node();
 				return (1);
@@ -272,7 +270,6 @@ class map
 			while (this->_root != NULL)
 			{
 				node_to_delete = this->_root;
-				std::cout << "root" << (*node_to_delete->data).first << std::endl;
 				this->_erase_node(node_to_delete);
 			}
 			this->_begin = NULL;
@@ -384,7 +381,7 @@ class map
 			if (pair.first < temp->data->first)
 			{
 				// std::cout << pair.first << " is smaller than " << temp->data->first << std::endl;
-				if (temp->left == NULL || temp->left == this->_begin)
+				if (temp->left == NULL)
 				{
 					temp->left = this->_create_node(temp, pair);
 					return (temp->left);
@@ -398,7 +395,7 @@ class map
 			else if (pair.first > temp->data->first)
 			{
 				// std::cout << pair.first << " is bigger than " << temp->data->first << std::endl;
-				if (temp->right == NULL || temp->right == this->_end) 
+				if (temp->right == NULL) 
 				{
 					temp->right = this->_create_node(temp, pair);
 					return (temp->right);
@@ -421,25 +418,24 @@ class map
 			std::allocator<node>	alloc;
 			node*					temp = node_to_delete;
 
-			std::cout << "start " << (*node_to_delete->data).first << std::endl;
+			// std::cout << "node to delete in _erase_node "  << (*node_to_delete->data).first << std::endl;
+			// std::cout << "root in _erase_node " << (*this->_root->data).first << std::endl;
 			if (node_to_delete == NULL)
 			{
 				return ;
 			}
-			if ((!node_to_delete->left || node_to_delete->left == this->_begin) && (!node_to_delete->right || node_to_delete->right == this->_end))
+			if (!node_to_delete->left && !node_to_delete->right)
 			{
+				// std::cout << "node to delete LEFT NO RIGHT NO " << (*node_to_delete->data).first << std::endl;				
 				if (node_to_delete == this->_root)
 				{
+					// std::cout << "node to delete is equal to root" << std::endl;
 					this->_root = NULL;
-					this->_alloc.destroy(node_to_delete->left->data);
-					this->_alloc.deallocate(node_to_delete->left->data, 1);
-					alloc.destroy(node_to_delete->left);
-					alloc.deallocate(node_to_delete->left, 1);
+					alloc.destroy(this->_begin);
+					alloc.deallocate(this->_begin, 1);
 					this->_begin = NULL;
-					this->_alloc.destroy(node_to_delete->right->data);
-					this->_alloc.deallocate(node_to_delete->right->data, 1);
-					alloc.destroy(node_to_delete->right);
-					alloc.deallocate(node_to_delete->right, 1);
+					alloc.destroy(this->_end);
+					alloc.deallocate(this->_end, 1);
 					this->_end = NULL;
 				}
 				else
@@ -453,44 +449,49 @@ class map
 						temp->parent->right = NULL;
 					}
 				}
-				std::cout << "erasing node without a child "  << (*node_to_delete->data).first << std::endl;
+				// std::cout << "erasing node without a child "  << (*node_to_delete->data).first << std::endl;
 				this->_alloc.destroy(node_to_delete->data);
 				this->_alloc.deallocate(node_to_delete->data, 1);
 				alloc.destroy(node_to_delete);
 				alloc.deallocate(node_to_delete, 1);
+				// std::cout << "erased node" << std::endl;
 			}
-			else if ((node_to_delete->left && node_to_delete->left != this->_begin) && (!node_to_delete->right || node_to_delete->right == this->_end))
+			else if (!node_to_delete->left && node_to_delete->right)
 			{
+				// std::cout << "node to delete LEFT NO RIGHT YES " << (*node_to_delete->data).first << std::endl;
 				if (node_to_delete == this->_root)
 				{
-					this->_root = temp->left;
-					temp->left->parent = NULL;
+					this->_root = temp->right;
+					temp->right->parent = NULL;
 				}	
 				else
 				{
 					if (temp->parent->left == temp)
 					{
-						temp->parent->left = temp->left;
-						temp->left->parent = temp->parent;
+						temp->parent->left = temp->right;
+						temp->right->parent = temp->parent;
 					}
 					else
 					{
-						temp->parent->right = temp->left;
-						temp->left->parent = temp->parent;
+						temp->parent->right = temp->right;
+						temp->right->parent = temp->parent;
 					}
 				}
-				std::cout << "erasing node with left child " << (*node_to_delete->data).first << std::endl;
+				// std::cout << "erasing node with left child " << (*node_to_delete->data).first << std::endl;
 				this->_alloc.destroy(node_to_delete->data);
 				this->_alloc.deallocate(node_to_delete->data, 1);
 				alloc.destroy(node_to_delete);
 				alloc.deallocate(node_to_delete, 1);
+				// std::cout << "erased node" << std::endl;
 			}
-			else if ((!node_to_delete->left || node_to_delete->left == this->_begin) && (node_to_delete->right && node_to_delete->right != this->_end))
+			else if (node_to_delete->left && !node_to_delete->right)
 			{
+				// std::cout << "node to delete LEFT YES RIGHT NO " << (*node_to_delete->data).first << std::endl;
 				if (node_to_delete == this->_root)
 				{
-					this->_root = temp->right;
-					temp->right->parent = NULL;
+					// std::cout << "YES" << std::endl;
+					this->_root = temp->left;
+					temp->left->parent = NULL;
 				}
 				else
 				{
@@ -505,19 +506,21 @@ class map
 						temp->right->parent = temp->parent;
 					}
 				}
-				std::cout << "erasing node with right child "  << (*node_to_delete->data).first << std::endl;
+				// std::cout << "erasing node with right child "  << (*node_to_delete->data).first << std::endl;
 				this->_alloc.destroy(node_to_delete->data);
 				this->_alloc.deallocate(node_to_delete->data, 1);
 				alloc.destroy(node_to_delete);
 				alloc.deallocate(node_to_delete, 1);
+				// std::cout << "erased node" << std::endl;
 			}
-			else if (node_to_delete->left && node_to_delete->left != this->_begin && node_to_delete->right && node_to_delete->right != this->_end)
+			else if (node_to_delete->left && node_to_delete->right)
 			{
-				std::cout << "both" << std::endl;
+				// std::cout << "both" << std::endl;
 				temp = temp->right;
 				while (temp->left)
 					temp = temp->left;
-				node_to_delete->set_data(temp);
+				this->_alloc.destroy(node_to_delete->data);
+				this->_alloc.construct(node_to_delete->data, (*temp->data));
 				this->_erase_node(temp);
 			}
 		}
@@ -555,7 +558,7 @@ class map
 			{
 				return (NULL);
 			}
-			while (temp->left && temp->left != this->_begin)
+			while (temp->left)
 			{
 				temp = temp->left;
 			}
@@ -570,7 +573,7 @@ class map
 			{
 				return (NULL);
 			}
-			while (temp->right && temp->right != this->_end)
+			while (temp->right)
 			{
 				temp = temp->right;
 			}
@@ -582,25 +585,29 @@ class map
 		{
 			if (child == unbalanced_node->left && grandchild == child->left)
 			{
+				// std::cout << "left left" << std::endl;
 				return (LEFT_LEFT);
 			}
 			else if (child == unbalanced_node->left && grandchild == child->right)
 			{
+				// std::cout << "left right" << std::endl;
 				return (LEFT_RIGHT);
 			}
 			else if (child == unbalanced_node->right && grandchild == child->left)
 			{
+				// std::cout << "right left" << std::endl;
 				return (RIGHT_LEFT);
 			}
 			else // child == unbalanced_node->right && grandchild == child->right
 			{
+				// std::cout << "right right" << std::endl;
 				return (RIGHT_RIGHT);
 			}
 		}
 
 		int	_get_height_subtree(node* n)
 		{
-			if (n == NULL || n == this->_end)
+			if (n == NULL)
 			{
 				return (0);
 			}
@@ -627,6 +634,7 @@ class map
 			left = this->_get_height_subtree(node->left);
 			right = this->_get_height_subtree(node->right);
 			balance_factor = left - right;
+			// std::cout << "key = " << (*node->data).first << " balance_factor " << balance_factor << std::endl;
 			if (balance_factor > 1 || balance_factor < -1)
 			{
 				return (false);
@@ -650,9 +658,11 @@ class map
 			{
 				if (this->_check_if_node_is_balanced(temp) == false)
 				{
+					// std::cout << "unbalanced node = " << (*temp->data).first << " child node = " << (*child->data).first <<" grandchild node = " << (*grandchild->data).first << std::endl;
 					unbalanced_node = temp;
 					type_of_unbalance = this->_get_type_of_unbalance(unbalanced_node, child, grandchild);
 					perform_balancing(unbalanced_node, child, grandchild, type_of_unbalance);
+					return ;
 				}
 				i++;
 				if (i == 1)
@@ -764,10 +774,6 @@ class map
 				}
 			}
 		}
-
-
-
-
 
 	// ~~~~~~~~~~~~~~~~~~~~~~~~~~~PRIVATE MEMBER TYPES~~~~~~~~~~~~~~~~~~~~~~~~~~
 		allocator_type	_alloc;
