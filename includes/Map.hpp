@@ -6,7 +6,7 @@
 /*   By: tevan-de <tevan-de@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/10/10 16:45:45 by tevan-de      #+#    #+#                 */
-/*   Updated: 2021/10/27 00:11:13 by tevan-de      ########   odam.nl         */
+/*   Updated: 2021/10/27 11:37:14 by tevan-de      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,6 +86,7 @@ class map
 					this->insert(*first);
 				}
 			}
+			// std::cout << "Range construtor is called" << std::endl;
 		}
 		map(const map& x)
 		{
@@ -214,10 +215,12 @@ class map
 				return (ft::make_pair(iterator(n->data, n), true));
 			}
 		}
+		// this function can be used to optimize insertion, removing the need to use find
 		iterator	insert(iterator position, const value_type& val)
 		{
 			ft::pair<iterator, bool>	ret = this->insert(val);
 
+			(void)position;
 			return (ret.first);
 		}
 		template <class InputIterator>

@@ -6,7 +6,7 @@
 /*   By: tevan-de <tevan-de@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/08/19 13:47:30 by tevan-de      #+#    #+#                 */
-/*   Updated: 2021/10/27 00:03:58 by tevan-de      ########   odam.nl         */
+/*   Updated: 2021/10/27 11:32:36 by tevan-de      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,7 +77,7 @@ void	my_map_basic(void)
 		std::cout << it->first << " " << it->second << std::endl;
 	}
 	std::cout << "size of my_map_range after calling range constructor " << my_map_range.size() << std::endl;
-	std::cout << std::boolalpha << ("apple" < "banana") << std::endl;
+	// std::cout << std::boolalpha << ("apple" < "banana") << std::endl;
 	return ;
 }
 
