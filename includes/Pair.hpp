@@ -6,7 +6,7 @@
 /*   By: tevan-de <tevan-de@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/08/20 17:09:30 by tevan-de      #+#    #+#                 */
-/*   Updated: 2021/10/26 22:49:23 by tevan-de      ########   odam.nl         */
+/*   Updated: 2021/10/29 12:27:59 by tevan-de      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,22 +30,22 @@ class pair
 		// ----------------------------CONSTRUCTORS-----------------------------
 		pair(void) : first(), second()
 		{
-			return ;
+			// std::cout << "Default construtor of pair is called" << std::endl;
 		}
 		pair(const first_type& a, const second_type& b) : first(a), second(b)
 		{
-			return ;
+			// std::cout << "Parameter construtor of pair is called" << std::endl;
 		}
 		template<class U, class V>
 		pair(const pair<U, V>& pr) : first(pr.first), second(pr.second)
 		{
-			return ;
+			// std::cout << "Copy of pair is called" << std::endl;
 		}
 
 		// -----------------------------DESTRUCTOR------------------------------
 		~pair(void)
 		{
-			return ;
+			// std::cout << "Destructor of pair is called" << std::endl;
 		}
 
 		// -------------------------ASSIGNMENT OPERATOR-------------------------
@@ -56,6 +56,7 @@ class pair
 				this->first = pr.first;
 				this->second = pr.second;
 			}
+			// std::cout << "Assignment operator of pair is called" << std::endl;
 			return (*this);
 		}
 };
@@ -64,10 +65,7 @@ class pair
 template <class T1, class T2>
 bool	operator==(const pair<T1, T2>& lhs, const pair<T1, T2>& rhs)
 {
-	if (lhs.first == rhs.first && lhs.second == rhs.second)
-		return (true);
-	else
-		return (false);
+	return (lhs.first == rhs.first && lhs.second == rhs.second);
 }
 
 template <class T1, class T2>
