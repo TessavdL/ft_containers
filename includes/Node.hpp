@@ -6,7 +6,7 @@
 /*   By: tevan-de <tevan-de@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/08/20 16:45:32 by tevan-de      #+#    #+#                 */
-/*   Updated: 2021/10/29 12:06:07 by tevan-de      ########   odam.nl         */
+/*   Updated: 2021/10/29 12:09:48 by tevan-de      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 
 # include <iostream>	// for output, prob remove later
 
-#include "./Pair.hpp"
+# include "./Pair.hpp"
 
 namespace ft {
 template<typename, typename>
@@ -31,8 +31,6 @@ public:
 		typedef T				value_type;
 		typedef value_type*		pointer;
 		typedef value_type&		reference;
-		typedef std::ptrdiff_t	difference_type;
-		typedef std::size_t		size_type;
 
 	// ~~~~~~~~~~~~~~~~~~~~~~~~~~PUBLIC MEMBER OBJECTS~~~~~~~~~~~~~~~~~~~~~~~~~~
 		node*	left;
@@ -42,22 +40,18 @@ public:
 
 	// ~~~~~~~~~~~~~~~~~~~~~~~~~PUBLIC MEMBER FUNCTIONS~~~~~~~~~~~~~~~~~~~~~~~~~
 		// ----------------------------CONSTRUCTORS-----------------------------
-		// default constructor
 		node(void) : left(NULL), parent(NULL), right(NULL), data(NULL)
 		{
 			// std::cout << "Default constructor of node called" << std::endl;
 		}
-		// parameter constructor 1, used to make root node
 		node(pointer ptr) : left(NULL), parent(NULL), right(NULL), data(ptr)
 		{
 			// std::cout << "Parameter constructor root of node called" << std::endl;
 		}
-		// parameter constructor 2, used to make leaf node and connect to parent
 		node(node* p, pointer ptr) : left(NULL), parent(p), right(NULL), data(ptr)
 		{
 			// std::cout << "Parameter constructor leaf of node called" << std::endl;
 		}
-		// copy constructor
 		node(const node& other) : left(other.left), parent(other.parent), right(other.right), data(other.data)
 		{
 			// std::cout << "Copy constructor of node called" << std::endl;
@@ -93,7 +87,7 @@ public:
 			return (*this->data);
 		}
 
-		// --------------------------UTILITY FUNCTIONS--------------------------
+		// --------------------------NEXT AND PREVIOUS--------------------------
 		node*	next(void)
 		{
 			node*	temp = this;
