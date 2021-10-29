@@ -6,7 +6,7 @@
 /*   By: tevan-de <tevan-de@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/08/20 16:45:32 by tevan-de      #+#    #+#                 */
-/*   Updated: 2021/10/29 14:19:33 by tevan-de      ########   odam.nl         */
+/*   Updated: 2021/10/29 15:39:15 by tevan-de      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,13 +14,6 @@
 # define NODE_HPP
 
 # include <iostream>	// for output, prob remove later
-
-// # include "Pair.hpp"
-
-// namespace ft {
-// template<typename, typename>
-// class pair;
-// }
 
 namespace ft {
 template <class T>
