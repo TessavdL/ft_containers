@@ -6,17 +6,14 @@
 /*   By: tevan-de <tevan-de@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/08/20 16:45:32 by tevan-de      #+#    #+#                 */
-/*   Updated: 2021/10/27 18:55:07 by tevan-de      ########   odam.nl         */
+/*   Updated: 2021/10/29 12:06:07 by tevan-de      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef NODE_HPP
 # define NODE_HPP
 
-# include <functional>	// for std::less, should include own compare later
 # include <iostream>	// for output, prob remove later
-# include <utility>		// for std::pair, should include own pair later
-# include <memory>		// for std::allocator
 
 #include "./Pair.hpp"
 
@@ -49,31 +46,27 @@ public:
 		node(void) : left(NULL), parent(NULL), right(NULL), data(NULL)
 		{
 			// std::cout << "Default constructor of node called" << std::endl;
-			return ;
 		}
 		// parameter constructor 1, used to make root node
 		node(pointer ptr) : left(NULL), parent(NULL), right(NULL), data(ptr)
 		{
 			// std::cout << "Parameter constructor root of node called" << std::endl;
-			return ;
 		}
 		// parameter constructor 2, used to make leaf node and connect to parent
 		node(node* p, pointer ptr) : left(NULL), parent(p), right(NULL), data(ptr)
 		{
 			// std::cout << "Parameter constructor leaf of node called" << std::endl;
-			return ;
 		}
 		// copy constructor
 		node(const node& other) : left(other.left), parent(other.parent), right(other.right), data(other.data)
 		{
 			// std::cout << "Copy constructor of node called" << std::endl;
-			return ;
 		}
 
 		// -----------------------------DESTRUCTOR------------------------------
 		~node(void)
 		{
-			return ;
+			// std::cout << "Destructor of node called" << std::endl;
 		}
 
 		// -------------------------ASSIGNMENT OPERATOR-------------------------
@@ -91,12 +84,10 @@ public:
 		}
 
 		// ------------------------MEMBER ACCESS OPERATORS----------------------
-		// arrow operator
 		pointer	operator->(void)
 		{
 			return (this->data);
 		}
-		// dereference operator
 		reference operator*(void)
 		{
 			return (*this->data);
