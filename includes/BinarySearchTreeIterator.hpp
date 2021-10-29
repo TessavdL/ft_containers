@@ -6,7 +6,7 @@
 /*   By: tevan-de <tevan-de@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/08/26 11:30:29 by tevan-de      #+#    #+#                 */
-/*   Updated: 2021/10/29 12:19:33 by tevan-de      ########   odam.nl         */
+/*   Updated: 2021/10/29 12:32:59 by tevan-de      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,11 +85,11 @@ class BinarySearchTreeIterator
 			this->_node = this->_node->previous();
 			if (this->_node == NULL)
 			{
-				this->_ptr = NULL:
+				this->_ptr = NULL;
 			}
 			else
 			{
-				this->_ptr = this->node->data;
+				this->_ptr = this->_node->data;
 			}
 			return (*this);
 		}
@@ -100,11 +100,11 @@ class BinarySearchTreeIterator
 			this->_node = this->_node->previous();
 			if (this->_node == NULL)
 			{
-				this->_ptr = NULL:
+				this->_ptr = NULL;
 			}
 			else
 			{
-				this->_ptr = this->node->data;
+				this->_ptr = this->_node->data;
 			}
 			return (bsti);
 		}
@@ -113,11 +113,11 @@ class BinarySearchTreeIterator
 			this->_node = this->_node->next();
 			if (this->_node == NULL)
 			{
-				this->_ptr = NULL:
+				this->_ptr = NULL;
 			}
 			else
 			{
-				this->_ptr = this->node->data;
+				this->_ptr = this->_node->data;
 			}
 			return (*this);
 		}
@@ -128,11 +128,11 @@ class BinarySearchTreeIterator
 			this->_node = this->_node->next();
 			if (this->_node == NULL)
 			{
-				this->_ptr = NULL:
+				this->_ptr = NULL;
 			}
 			else
 			{
-				this->_ptr = this->node->data;
+				this->_ptr = this->_node->data;
 			}
 			return (bsti);
 		}
