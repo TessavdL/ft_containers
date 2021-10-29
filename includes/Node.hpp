@@ -6,7 +6,7 @@
 /*   By: tevan-de <tevan-de@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/08/20 16:45:32 by tevan-de      #+#    #+#                 */
-/*   Updated: 2021/10/29 12:18:36 by tevan-de      ########   odam.nl         */
+/*   Updated: 2021/10/29 14:19:33 by tevan-de      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,15 +15,15 @@
 
 # include <iostream>	// for output, prob remove later
 
-# include "Pair.hpp"
+// # include "Pair.hpp"
+
+// namespace ft {
+// template<typename, typename>
+// class pair;
+// }
 
 namespace ft {
-template<typename, typename>
-class pair;
-}
-
-namespace ft {
-template <class T = ft::pair<class T1, class T2> >
+template <class T>
 class node
 {
 public:

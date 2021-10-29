@@ -6,7 +6,7 @@
 /*   By: tevan-de <tevan-de@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/08/26 11:30:29 by tevan-de      #+#    #+#                 */
-/*   Updated: 2021/10/29 12:32:59 by tevan-de      ########   odam.nl         */
+/*   Updated: 2021/10/29 15:29:15 by tevan-de      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,20 +17,20 @@
 
 # include "IteratorTraits.hpp"
 # include "Node.hpp"
-# include "Pair.hpp"
+// # include "Pair.hpp"
 # include "ReimplementedFunctions.hpp" // redundant?
 
-namespace ft {
-template<typename, typename>
-class pair;
-}
+// namespace ft {
+// template<typename, typename>
+// class pair;
+// }
 
 namespace ft {
 template<typename>
 class node;
 }
 
-template <class T = ft::node<ft::pair<class T1, class T2> > >
+template <class T, class U>
 class BinarySearchTreeIterator
 {
 	public:
@@ -40,6 +40,7 @@ class BinarySearchTreeIterator
 		typedef value_type&						reference;
 		typedef std::ptrdiff_t					difference_type;
 		typedef ft::bidirectional_iterator_tag	iterator_category;
+		typedef U								node;
 
 	// ~~~~~~~~~~~~~~~~~~~~~~~~~PUBLIC MEMBER FUNCTIONS~~~~~~~~~~~~~~~~~~~~~~~~~
 		// ----------------------------CONSTRUCTORS-----------------------------
@@ -48,7 +49,7 @@ class BinarySearchTreeIterator
 			// std::cout << "Default Constructor of BSTI called" << std::endl;
 			return ;
 		}
-		BinarySearchTreeIterator(pointer val, ft::node<value_type>* n) : _ptr(val), _node(n)
+		BinarySearchTreeIterator(pointer val, node* n) : _ptr(val), _node(n)
 		{
 			// std::cout << "Parameter Constructor of BSTI called" << std::endl;
 			return ;
@@ -159,8 +160,8 @@ class BinarySearchTreeIterator
 
 	private:
 	// ~~~~~~~~~~~~~~~~~~~~~~~~~~~PRIVATE MEMBER TYPE~~~~~~~~~~~~~~~~~~~~~~~~~~~
-		pointer					_ptr;
-		ft::node<value_type>*	_node;
+		pointer	_ptr;
+		node*	_node;
 };
 
 #endif

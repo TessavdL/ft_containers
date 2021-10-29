@@ -6,7 +6,7 @@
 /*   By: tevan-de <tevan-de@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/10/10 16:45:45 by tevan-de      #+#    #+#                 */
-/*   Updated: 2021/10/27 20:49:24 by tevan-de      ########   odam.nl         */
+/*   Updated: 2021/10/29 15:32:53 by tevan-de      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,6 +30,11 @@ class pair;
 }
 
 namespace ft {
+template<typename>
+class node;
+}
+
+namespace ft {
 template <	class Key,
 			class T,
 			class Compare = std::less<Key>,
@@ -38,22 +43,22 @@ class map
 {
 	public:
 	// ~~~~~~~~~~~~~~~~~~~~~~~~~~~PUBLIC MEMBER TYPES~~~~~~~~~~~~~~~~~~~~~~~~~~~
-		typedef Key												key_type;
-		typedef T												mapped_type;
-		typedef ft::pair<const key_type, mapped_type>			value_type;
-		typedef Compare											key_compare;
-		typedef Alloc											allocator_type;
-		typedef typename allocator_type::reference				reference;
-		typedef typename allocator_type::const_reference		const_reference;
-		typedef typename allocator_type::pointer				pointer;
-		typedef typename allocator_type::const_pointer			const_pointer;
-		typedef BinarySearchTreeIterator<value_type>			iterator;
-		typedef BinarySearchTreeIterator<const value_type>		const_iterator;
-		typedef ft::reverse_iterator<iterator>					reverse_iterator;
-		typedef ft::reverse_iterator<const_iterator>			reverse_const_iterator;
-		typedef std::ptrdiff_t									difference_type;
-		typedef std::size_t										size_type;
-		typedef ft::node<value_type>							node;
+		typedef Key														key_type;
+		typedef T														mapped_type;
+		typedef ft::pair<const key_type, mapped_type>					value_type;
+		typedef Compare													key_compare;
+		typedef Alloc													allocator_type;
+		typedef typename allocator_type::reference						reference;
+		typedef typename allocator_type::const_reference				const_reference;
+		typedef typename allocator_type::pointer						pointer;
+		typedef typename allocator_type::const_pointer					const_pointer;
+		typedef ft::node<value_type>									node;
+		typedef BinarySearchTreeIterator<value_type, node>				iterator;
+		typedef BinarySearchTreeIterator<const value_type, node>		const_iterator;
+		typedef ft::reverse_iterator<iterator>							reverse_iterator;
+		typedef ft::reverse_iterator<const_iterator>					const_reverse_iterator;
+		typedef std::ptrdiff_t											difference_type;
+		typedef std::size_t												size_type;
 
 		typedef enum e_type_of_unbalance
 		{
@@ -78,7 +83,6 @@ class map
 
 			if (n > 0)
 			{
-				this->_create_begin_and_end_node();
 				for (; first != last; first++)
 				{
 					this->insert(*first);
@@ -86,7 +90,8 @@ class map
 			}
 			// std::cout << "Range construtor is called" << std::endl;
 		}
-		map(const map& x)
+		map(const map& x) :
+			_alloc(x._alloc), _compare(x._compare), _root(NULL), _size(0)
 		{
 			*this = x;
 			// std::cout << "Copy construtor is called" << std::endl;
@@ -105,11 +110,7 @@ class map
 			if (this != &x)
 			{
 				this->clear();
-				this->_alloc = x._alloc;
-				for (iterator first = x.begin(); first != x.end(); first++)
-				{
-					this->insert(*first);
-				}
+				this->insert(x.begin(), x.end());
 			}
 			// std::cout << "Assignment operator is called" << std::endl;
 			return (*this);
@@ -120,19 +121,33 @@ class map
 		{
 			return (iterator(this->_find_most_left_node()->data, this->_find_most_left_node()));
 		}
-
+		const_iterator	begin(void) const
+		{
+			return (const_iterator(const_cast<value_type*>(this->_find_most_left_node()->data), this->_find_most_left_node()));
+		}
 		iterator	end(void)
 		{
 			return (iterator(NULL, this->_end));
+		}
+		const_iterator	end(void) const
+		{
+			return (const_iterator(NULL, this->_end));
 		}
 		reverse_iterator	rbegin(void)
 		{
 			return (reverse_iterator(this->_find_most_right_node()->data, this->_find_most_right_node()));
 		}
-
+		const_reverse_iterator	rbegin(void) const
+		{
+			return (const_iterator(const_cast<value_type*>(this->_find_most_right_node()->data), this->_find_most_right_node()));
+		}
 		reverse_iterator	rend(void)
 		{
 			return (reverse_iterator(NULL, this->_begin));
+		}
+		const_reverse_iterator	rend(void) const
+		{
+			return (const_reverse_iterator(NULL, this->_begin));
 		}
 
 		// -------------------------------CAPACITY------------------------------
@@ -189,8 +204,6 @@ class map
 				n = this->_create_node(val);
 				this->_create_begin_and_end_node();
 				this->_root = n;
-				// this->_root->left = this->_begin;
-				// this->_root->right = this->_end;
 				this->_begin->parent = this->_root;
 				this->_end->parent = this->_root;
 				this->_size++;
@@ -206,8 +219,6 @@ class map
 				n = this->_insert_node(this->_root, val);
 				this->_check_if_tree_is_balanced(n);
 				this->_size++;
-				// this->_find_most_left_node()->left = this->_begin;
-				// this->_find_most_right_node()->right = this->_end;
 				this->_begin->parent = this->_find_most_left_node();
 				this->_end->parent = this->_find_most_right_node();
 				return (ft::make_pair(iterator(n->data, n), true));
@@ -255,8 +266,6 @@ class map
 				this->_erase_node(n);
 				this->_size--;
 				this->_check_if_tree_is_balanced(parent);
-				// this->_find_most_left_node()->left = this->_begin;
-				// this->_find_most_right_node()->right = this->_end;
 				this->_begin->parent = this->_find_most_left_node();
 				this->_end->parent = this->_find_most_right_node();
 				return (1);
@@ -526,7 +535,7 @@ class map
 		}
 
 		// ------------------------------FIND NODE------------------------------
-		node* _find_node(node* node, const key_type& key)
+		node* _find_node(node* node, const key_type& key) const
 		{
 			if (node == NULL)
 			{
@@ -550,7 +559,7 @@ class map
 				return (node);
 		}
 
-		node*	_find_most_left_node(void)
+		node*	_find_most_left_node(void) const
 		{
 			node*	temp = this->_root;
 
@@ -565,7 +574,7 @@ class map
 			return (temp);
 		}
 
-		node*	_find_most_right_node(void)
+		node*	_find_most_right_node(void) const
 		{
 			node*	temp = this->_root;
 
