@@ -6,21 +6,16 @@
 /*   By: tevan-de <tevan-de@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/07/26 21:51:11 by tevan-de      #+#    #+#                 */
-/*   Updated: 2021/10/25 15:02:06 by tevan-de      ########   odam.nl         */
+/*   Updated: 2021/10/29 12:29:47 by tevan-de      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef RANDOM_ACCESS_ITERATOR_HPP
 # define RANDOM_ACCESS_ITERATOR_HPP
 
-# include <iostream>
+# include <iostream>	// for output, remove later
 
 # include "./IteratorTraits.hpp"
-
-// Random Access Iterator (RAI) is the most complete iterator in terms of functionality
-// RAI allows reading, incrementing (with/without multiple passes), decrementing and random access
-// https://users.cs.northwestern.edu/~riesbeck/programming/c++/stl-iterator-define.html
-// https://internalpointers.com/post/writing-custom-iterators-modern-cpp
 
 template <class T>
 class RandomAccessIterator
@@ -47,14 +42,12 @@ class RandomAccessIterator
 		{
 			*this = other;
 			// std::cout << "Copy Constructor of RAI called" << std::endl;
-			return ;
 		}
 
 		// -----------------------------DESTRUCTOR------------------------------
 		~RandomAccessIterator(void)
 		{
 			// std::cout << "Destructor of RAI called" << std::endl;
-			return ;
 		}
 
 		// ------------------------ASSIGNMENT OPERATORS-------------------------
@@ -115,7 +108,6 @@ class RandomAccessIterator
 		}
 
 		// -------------------DECREMENT AND INCREMENT OPERATORS-----------------
-		// article about prefix and postfix increments https://hownot2code.com/2016/06/30/use-a-prefix-increment-operator-i-in-iterators-instead-of-a-postfix-i-operator/
 		RandomAccessIterator&	operator--(void)
 		{
 			this->_ptr--;
