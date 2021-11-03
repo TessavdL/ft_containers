@@ -6,7 +6,7 @@
 /*   By: tevan-de <tevan-de@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/10/10 16:45:45 by tevan-de      #+#    #+#                 */
-/*   Updated: 2021/10/29 15:32:53 by tevan-de      ########   odam.nl         */
+/*   Updated: 2021/11/03 17:34:58 by tevan-de      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -117,13 +117,13 @@ class map
 		}
 
 		// -------------------------------ITERATORS-----------------------------
-		iterator	begin(void)
-		{
-			return (iterator(this->_find_most_left_node()->data, this->_find_most_left_node()));
-		}
 		const_iterator	begin(void) const
 		{
 			return (const_iterator(const_cast<value_type*>(this->_find_most_left_node()->data), this->_find_most_left_node()));
+		}
+		iterator	begin(void)
+		{
+			return (iterator(this->_find_most_left_node()->data, this->_find_most_left_node()));
 		}
 		iterator	end(void)
 		{

@@ -6,11 +6,11 @@
 /*   By: tevan-de <tevan-de@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/10/10 17:41:27 by tevan-de      #+#    #+#                 */
-/*   Updated: 2021/10/20 12:21:08 by tevan-de      ########   odam.nl         */
+/*   Updated: 2021/11/03 17:39:49 by tevan-de      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "Map.hpp"
+#include "./includes/Map.hpp"
 #include "./includes/Pair.hpp"
 #include <map>
 #include <iostream>
@@ -37,6 +37,11 @@ int main(void)
 	}
 	std::cout << std::endl;
 
+	for (ft::map<int,int>::const_iterator it = m.begin(); it != m.end(); it++)
+	{
+		std::cout << it->first << std::endl;
+	}
+
 	// ----------------------------------------------------------------------------
 
 	// for (ft::map<int,int>::reverse_iterator it = m.rbegin(); it != m.rend(); it++)
@@ -56,6 +61,7 @@ int main(void)
 	std::cout << "value of m[1] after assignment = " << m_test_brackets[1] << std::endl << std::endl;
 
 	// ----------------------------------------------------------------------------
+
 
 	// mit = m.begin();
 	// m.erase(mit->first);

@@ -6,7 +6,7 @@
 /*   By: tevan-de <tevan-de@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/07/06 20:21:49 by tevan-de      #+#    #+#                 */
-/*   Updated: 2021/10/24 12:33:15 by tevan-de      ########   odam.nl         */
+/*   Updated: 2021/11/03 13:41:20 by tevan-de      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -235,7 +235,7 @@ void	vector_erase(void)
 void	vector_resize(void)
 {
 	std::vector<int>	original(10);
-	ft::vector<int>			mine(10);
+	ft::vector<int>		mine(10);
 
 	std::cout << original.size() << std::endl;
 	for (size_t i = 0; i < 10; i++)
@@ -325,8 +325,8 @@ void	vector_resize(void)
 // 		std::cout << *it << "\t";
 // 	std::cout << std::endl;
 
-// 	Vector<int>	een(3);
-// 	Vector<int>	twee(2);
+// 	vector<int>	een(3);
+// 	vector<int>	twee(2);
 // 	een[0] = 1;
 // 	een[1] = 2;
 // 	een[2] = 3;
@@ -334,27 +334,27 @@ void	vector_resize(void)
 // 	twee[1] = 5;
 
 // 	std::cout << "een\t\t\t";
-// 	for (Vector<int>::iterator it = een.begin(); it != een.end(); it++)
+// 	for (vector<int>::iterator it = een.begin(); it != een.end(); it++)
 // 		std::cout << *it << "\t";
 // 	std::cout << std::endl;
 // 	std::cout << "twee\t\t\t";
-// 	for (Vector<int>::iterator it = twee.begin(); it != twee.end(); it++)
+// 	for (vector<int>::iterator it = twee.begin(); it != twee.end(); it++)
 // 		std::cout << *it << "\t";
 // 	std::cout << std::endl;
 // 	een.swap(twee);
 // 	std::cout << "een\t\t\t";
-// 	for (Vector<int>::iterator it = een.begin(); it != een.end(); it++)
+// 	for (vector<int>::iterator it = een.begin(); it != een.end(); it++)
 // 		std::cout << *it << "\t";
 // 	std::cout << std::endl;
 // 	std::cout << "twee\t\t\t";
-// 	for (Vector<int>::iterator it = twee.begin(); it != twee.end(); it++)
+// 	for (vector<int>::iterator it = twee.begin(); it != twee.end(); it++)
 // 		std::cout << *it << "\t";
 // 	std::cout << std::endl;
 // }
 
 void	vector_insert(void)
 {
-	// std::vector<int>	original(10, 42);
+	std::vector<int>	original(10, 42);
 	// std::vector<int>	original_empty;
 	// std::vector<int>	original_out_of_range(5, 21);
  
@@ -373,32 +373,32 @@ void	vector_insert(void)
 	// for (std::vector<int>::iterator it = original.begin(); it != original.end(); it++)
 	// 	std::cout << *it << "\t";
 	// std::cout << std::endl;
-	// original.insert(original.end(), 3, 21);
+	original.insert(original.end(), 3, 21);
 	// std::cout << "capacity " << original.capacity() << std::endl;
-	// for (std::vector<int>::iterator it = original.begin(); it != original.end(); it++)
-	// 	std::cout << *it << "\t";
-	// std::cout << std::endl;
+	for (std::vector<int>::iterator it = original.begin(); it != original.end(); it++)
+		std::cout << *it << "\t";
+	std::cout << std::endl;
 
-	// Vector<int>	mine(10);
+	// vector<int>	mine(10);
 	// for (size_t i = 0; i < 10; i++)
 	// 	mine[i] = i;
 	// mine.insert((mine.begin()), 21);
 	// std::cout << "capacity " << mine.capacity() << std::endl;
-	// for (Vector<int>::iterator it = mine.begin(); it != mine.end(); it++)
+	// for (vector<int>::iterator it = mine.begin(); it != mine.end(); it++)
 	// 	std::cout << *it << "\t";
 	// std::cout << std::endl;
 
 	ft::vector<int>	fill(10);
-	for (size_t i = 0; i < 10; i++)
+	for (int i = 0; i < 10; i++)
 		fill[i] = i;
-	fill.insert(fill.begin(), (size_t)3, 21);
+	fill.insert(fill.begin(), 3, 21);
 	std::cout << "capacity " << fill.capacity() << std::endl;
 	for (ft::vector<int>::iterator it = fill.begin(); it != fill.end(); it++)
 		std::cout << *it << "\t";
 	std::cout << std::endl;
 }
 
-#include "../includes/InputIterator.hpp"
+// #include "../includes/InputIterator.hpp"
 
 void	vector_inputiterator(void)
 {
@@ -412,21 +412,24 @@ void	vector_inputiterator(void)
 		std::cout << *it << "\t";
 	std::cout << std::endl;
 
-	Vector<int>	test(1);
+	ft::vector<int>	fill(10);
+	for (size_t i = 0; i < 10; i++)
+		fill[i] = i;
+	size_t var = 3;
+	fill.insert(fill.begin(), var, 21);
 
-	Vector<int>::iterator	testbegin = fill.begin();
-	Vector<int>::iterator	testend = fill.end();
+	ft::vector<int>	test(1);
+
+	ft::vector<int>::iterator	testbegin = fill.begin();
+	ft::vector<int>::iterator	testend = fill.end();
 
 	test.insert(test.begin(), testbegin, testend);
 
-	for (Vector<int>::iterator it = test.begin(); it != test.end(); it++)
+	for (ft::vector<int>::iterator it = test.begin(); it != test.end(); it++)
 		std::cout << *it << "\t";
 	std::cout << std::endl;
 
-	// std::vector<int>	fill(10);
-	// for (size_t i = 0; i < 10; i++)
-	// 	fill[i] = i;
-	// fill.insert(fill.begin(), 3, 21);
+
 
 	// std::vector<int>	one(1);
 	
@@ -467,5 +470,6 @@ int	main(void)
 	// vector_resize();
 	// vector_swap();
 	vector_insert();
+
 	return (0);
 }
