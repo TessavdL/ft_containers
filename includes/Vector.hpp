@@ -6,7 +6,7 @@
 /*   By: tevan-de <tevan-de@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/10/24 13:58:51 by tevan-de      #+#    #+#                 */
-/*   Updated: 2021/11/03 19:12:29 by tevan-de      ########   odam.nl         */
+/*   Updated: 2021/11/03 20:15:08 by tevan-de      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,10 +21,10 @@
 
 // https://eli.thegreenplace.net/2014/sfinae-and-enable_if/
 
+# include "./IteratorTraits.hpp"
 # include "./RandomAccessIterator.hpp"
-# include "./InputIterator.hpp"
-# include "./ReverseIterator.hpp"
 # include "./ReimplementedFunctions.hpp"
+# include "./ReverseIterator.hpp"
 
 namespace ft {
 template <class T, class Allocator = std::allocator<T> >
@@ -334,7 +334,7 @@ class vector
 		}
 
 		template<class InputIt>
-		void	insert(iterator pos, InputIt first, InputIt last)
+		void	insert(iterator pos, InputIt first, InputIt last, typename ft::iterator_traits<InputIt>::iterator_category* = NULL)
 		{
 			difference_type	n = pos - this->begin();
 			difference_type	count = 0;
