@@ -6,59 +6,46 @@
 /*   By: tevan-de <tevan-de@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/10/10 16:45:45 by tevan-de      #+#    #+#                 */
-/*   Updated: 2021/10/29 15:32:53 by tevan-de      ########   odam.nl         */
+/*   Updated: 2021/11/01 17:53:03 by tevan-de      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef MAP_HPP
 # define MAP_HPP
 
-# include <functional>	// for std::less, should include own compare later
+# include <functional>	// for std::less, should include own compare later and for std::binary_function
 # include <iostream>	// for output, prob remove later
 # include <memory>		// for std::allocator
 
 # include "./BinarySearchTreeIterator.hpp"
-# include "./Pair.hpp"
+# include "./IteratorTraits.hpp"
 # include "./Node.hpp"
+# include "./Pair.hpp"
 # include "./ReimplementedFunctions.hpp"
 # include "./ReverseIterator.hpp"
-# include "./IteratorTraits.hpp"
 
 namespace ft {
-template<typename, typename>
-class pair;
-}
-
-namespace ft {
-template<typename>
-class node;
-}
-
-namespace ft {
-template <	class Key,
-			class T,
-			class Compare = std::less<Key>,
-			class Alloc = std::allocator<ft::pair<const Key, T> > >
+template <class Key, class T, class Compare = std::less<Key>, class Alloc = std::allocator<ft::pair<const Key, T> > >
 class map
 {
 	public:
 	// ~~~~~~~~~~~~~~~~~~~~~~~~~~~PUBLIC MEMBER TYPES~~~~~~~~~~~~~~~~~~~~~~~~~~~
-		typedef Key														key_type;
-		typedef T														mapped_type;
-		typedef ft::pair<const key_type, mapped_type>					value_type;
-		typedef Compare													key_compare;
-		typedef Alloc													allocator_type;
-		typedef typename allocator_type::reference						reference;
-		typedef typename allocator_type::const_reference				const_reference;
-		typedef typename allocator_type::pointer						pointer;
-		typedef typename allocator_type::const_pointer					const_pointer;
-		typedef ft::node<value_type>									node;
-		typedef BinarySearchTreeIterator<value_type, node>				iterator;
-		typedef BinarySearchTreeIterator<const value_type, node>		const_iterator;
-		typedef ft::reverse_iterator<iterator>							reverse_iterator;
-		typedef ft::reverse_iterator<const_iterator>					const_reverse_iterator;
-		typedef std::ptrdiff_t											difference_type;
-		typedef std::size_t												size_type;
+		typedef Key													key_type;
+		typedef T													mapped_type;
+		typedef ft::pair<const key_type, mapped_type>				value_type;
+		typedef Compare												key_compare;
+		typedef Alloc												allocator_type;
+		typedef typename allocator_type::reference					reference;
+		typedef typename allocator_type::const_reference			const_reference;
+		typedef typename allocator_type::pointer					pointer;
+		typedef typename allocator_type::const_pointer				const_pointer;
+		typedef ft::node<value_type>								node;
+		typedef BinarySearchTreeIterator<value_type, node>			iterator;
+		typedef BinarySearchTreeIterator<const value_type, node>	const_iterator;
+		typedef ft::reverse_iterator<iterator>						reverse_iterator;
+		typedef ft::reverse_iterator<const_iterator>				const_reverse_iterator;
+		typedef std::ptrdiff_t										difference_type;
+		typedef std::size_t											size_type;
 
 		typedef enum e_type_of_unbalance
 		{
@@ -68,16 +55,33 @@ class map
 			RIGHT_RIGHT = 4
 		}	t_type_of_unbalance;
 
+	// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~NESTED CLASS~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+		class value_compare : std::binary_function<value_type, value_type, bool>
+		{
+			friend class map;
+			public:
+				typedef bool		result_type;
+				typedef value_type	first_argument_type;
+				typedef value_type	second_argument_type;
+				bool	operator()(const value_type& x, const value_type& y) const
+				{
+					return (comp(x.first, y.first));
+				}
+			protected:
+				key_compare	comp;
+				value_compare (key_compare c) : comp(c) {}
+		};
+
 	// ~~~~~~~~~~~~~~~~~~~~~~~~~PUBLIC MEMBER FUNCTIONS~~~~~~~~~~~~~~~~~~~~~~~~~
 		// ----------------------------CONSTRUCTORS-----------------------------
 		explicit map(const key_compare& comp = key_compare(), const allocator_type& alloc = allocator_type()) :
-			_alloc(alloc), _compare(comp), _root(NULL), _size(0)
+			_alloc(alloc), _compare(comp), _begin(NULL), _end(NULL), _root(NULL), _size(0)
 		{
 			// std::cout << "Default construtor is called" << std::endl;
 		}
 		template <class InputIterator>
 		map(InputIterator first, InputIterator last, const key_compare& comp = key_compare(), const allocator_type& alloc = allocator_type()) :
-			_alloc(alloc), _compare(comp), _root(NULL), _size(0)
+			_alloc(alloc), _compare(comp), _begin(NULL), _end(NULL), _root(NULL), _size(0)
 		{
 			typename ft::iterator_traits<InputIterator>::difference_type n = ft::distance(first, last);
 
@@ -91,7 +95,7 @@ class map
 			// std::cout << "Range construtor is called" << std::endl;
 		}
 		map(const map& x) :
-			_alloc(x._alloc), _compare(x._compare), _root(NULL), _size(0)
+			_alloc(x._alloc), _compare(x._compare), _begin(NULL), _end(NULL), _root(NULL), _size(0)
 		{
 			*this = x;
 			// std::cout << "Copy construtor is called" << std::endl;
@@ -110,6 +114,8 @@ class map
 			if (this != &x)
 			{
 				this->clear();
+				this->_alloc = x._alloc;
+				this->_compare = x._compare;
 				this->insert(x.begin(), x.end());
 			}
 			// std::cout << "Assignment operator is called" << std::endl;
@@ -119,10 +125,18 @@ class map
 		// -------------------------------ITERATORS-----------------------------
 		iterator	begin(void)
 		{
+			if (this->_size == 0)
+			{
+				return (iterator(NULL, this->_find_most_left_node()));
+			}
 			return (iterator(this->_find_most_left_node()->data, this->_find_most_left_node()));
 		}
 		const_iterator	begin(void) const
 		{
+			if (this->_size == 0)
+			{
+				return (const_iterator(NULL, this->_find_most_left_node()));
+			}
 			return (const_iterator(const_cast<value_type*>(this->_find_most_left_node()->data), this->_find_most_left_node()));
 		}
 		iterator	end(void)
@@ -135,19 +149,27 @@ class map
 		}
 		reverse_iterator	rbegin(void)
 		{
-			return (reverse_iterator(this->_find_most_right_node()->data, this->_find_most_right_node()));
+			return (reverse_iterator(iterator(NULL, this->_end)));
 		}
 		const_reverse_iterator	rbegin(void) const
 		{
-			return (const_iterator(const_cast<value_type*>(this->_find_most_right_node()->data), this->_find_most_right_node()));
+			return (const_reverse_iterator(const_iterator(NULL, this->_end)));
 		}
 		reverse_iterator	rend(void)
 		{
-			return (reverse_iterator(NULL, this->_begin));
+			if (this->_size == 0)
+			{
+				return (reverse_iterator(iterator(NULL, this->_find_most_left_node())));
+			}
+			return (reverse_iterator(iterator(this->_find_most_left_node()->data, this->_find_most_left_node())));
 		}
 		const_reverse_iterator	rend(void) const
 		{
-			return (const_reverse_iterator(NULL, this->_begin));
+			if (this->_size == 0)
+			{
+				return (const_reverse_iterator(const_iterator(NULL, this->find_most_left_node())));
+			}
+			return (const_reverse_iterator(const_iterator(NULL, this->_begin)));
 		}
 
 		// -------------------------------CAPACITY------------------------------
@@ -287,32 +309,42 @@ class map
 		}
 
 		// ------------------------------OBSERVERS------------------------------
-		// key comparison object
 		key_compare	key_comp(void) const
 		{
 			return (this->_compare);
 		}
-		// value comparison object ???
-		// value_compare	value_compe(void) const
-		// {
-
-		// }
+		value_compare	value_comp(void) const
+		{
+			return (value_compare(this->_compare));
+		}
 
 		// ------------------------------OPERATIONS-----------------------------
-		// find
-		// iterator find(const key_type& k)
-		// {
-			// if found return iterator to node
+		iterator find(const key_type& k)
+		{
+			node*	n = this->_find_node(this->_root, k);
 
-			// else return iterator to this->end();
-		// }
-		// const_iterator find (const key_type& k) const
-		// {
-		// 	// if found return const iterator to node
+			if (n == NULL)
+			{
+				return (this->end());
+			}
+			else
+			{
+				return (iterator(n->data, n));
+			}
+		}
+		const_iterator find (const key_type& k) const
+		{
+			node*	n = this->_find_node(this->_root, k);
 
-		// 	// else return const iterator to this->end();
-		// }
-		// count
+			if (n == NULL)
+			{
+				return (this->end());
+			}
+			else
+			{
+				return (const_iterator(const_cast<value_type*>(n->data), n));
+			}
+		}
 		size_type	count(const key_type& k) const
 		{
 			if (this->_find_node(this->_root, k))
@@ -324,19 +356,75 @@ class map
 				return (0);
 			}
 		}
-		// lower_bound
-		// iterator	lower_bound(const key_type& k)
-		// {
-			// for (iterator = this->begin(); )
-		// }
-		// const iterator	lower_bound(const key_type& k) const
-		// {
-			
-		// }
-		// upper_bound
+		iterator	lower_bound(const key_type& k)
+		{
+			iterator	lower_bound = this->find(k);
 
-		// equal_range
-		
+			if (lower_bound != this->end())
+			{
+				return (lower_bound);
+			}
+			else
+			{
+				for (lower_bound = this->begin(); lower_bound != this->end(); lower_bound++)
+				{
+					if ((*lower_bound).first > k)
+					{
+						break ;
+					}
+				}
+				return (lower_bound);
+			}
+		}
+		const_iterator	lower_bound(const key_type& k) const
+		{
+			const_iterator	lower_bound = this->find(k);
+
+			if (lower_bound != this->end())
+			{
+				return (lower_bound);
+			}
+			else
+			{
+				for (lower_bound = this->begin(); lower_bound != this->end(); lower_bound++)
+				{
+					if ((*lower_bound).first > k)
+					{
+						break ;
+					}
+				}
+				return (lower_bound);
+			}
+		}
+		iterator	upper_bound (const key_type& k)
+		{
+			iterator	upper_bound = this->find(k);
+
+			if (upper_bound != this->end())
+			{
+				return (upper_bound);
+			}
+			else
+			{
+				for (reverse_iterator rit = this->rbegin(); rit != this->rend(); rit++)
+				{
+
+				}
+				return (upper_bound);
+			}
+		}
+		// const_iterator	upper_bound (const key_type& k) const
+		// {
+
+		// }
+		// ft::pair<iterator,iterator>	equal_range (const key_type& k)
+		// {
+
+		// }
+		// ft::pair<const_iterator,const_iterator>	equal_range (const key_type& k) const
+		// {
+
+		// }
 
 		// ------------------------------ALLOCATOR------------------------------
 		allocator_type get_allocator(void) const

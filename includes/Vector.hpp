@@ -6,7 +6,7 @@
 /*   By: tevan-de <tevan-de@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/10/24 13:58:51 by tevan-de      #+#    #+#                 */
-/*   Updated: 2021/10/26 15:40:11 by tevan-de      ########   odam.nl         */
+/*   Updated: 2021/11/02 23:28:25 by tevan-de      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,7 @@
 # include "./InputIterator.hpp"
 # include "./ReverseIterator.hpp"
 # include "./ReimplementedFunctions.hpp"
+# include "./IteratorTraits.hpp"
 
 namespace ft {
 template <class T, class Allocator = std::allocator<T> >
@@ -46,28 +47,33 @@ class vector
 	// ~~~~~~~~~~~~~~~~~~~~~~~~~PUBLIC MEMBER FUNCTIONS~~~~~~~~~~~~~~~~~~~~~~~~~
 		// ----------------------------CONSTRUCTORS-----------------------------
 		explicit vector(const allocator_type& alloc = allocator_type()) :
-			_alloc(alloc), _capacity(0), _first_element(NULL), _size(0)
-		{
-			// std::cout << "Default construtor is called" << std::endl;
-		}
+			_alloc(alloc), _capacity(0), _first_element(NULL), _size(0) {}
 		explicit vector(size_type n, const value_type& val = value_type(), const allocator_type& alloc = allocator_type()) :
 			_alloc(alloc), _capacity(0), _first_element(NULL), _size(0)
 		{
 			this->_allocate_new(n, val);
-			// std::cout << "Fill construtor is called" << std::endl;
 		}
 		template <typename InputIterator>
 		vector(InputIterator first, InputIterator last, const allocator_type& alloc = allocator_type()) :
 			_alloc(alloc), _capacity(0), _first_element(NULL), _size(0)
 		{
-			this->_allocate_new(first, last);
-			// std::cout << "Range constructor is called" << std::endl;
+			typename ft::iterator_traits<InputIterator>::difference_type	new_capacity = ft::distance(first, last);
+			
+			if (new_capacity > 0)
+			{
+				this->_first_element = this->_alloc.allocate(new_capacity);
+				this->_capacity = new_capacity;
+				for (size_type i = 0; first != last; first++, i++)
+				{
+					this->_alloc.construct(this->_first_element + i, *first);
+				}
+				this->_size = new_capacity;
+			}
 		}
 		vector(const vector& x) :
 			_alloc(x._alloc), _capacity(0), _first_element(NULL), _size(0)
 		{
-			this->_allocate_new(x.begin(), x.end());
-			// std::cout << "Copy construtor is called" << std::endl;
+			this->_allocate_new(x.cbegin(), x.cend());
 		}
 
 		// -----------------------------DESTRUCTOR------------------------------
@@ -85,11 +91,11 @@ class vector
 		}
 
 		// -------------------------ASSIGNMENT OPERATOR-------------------------
-		vector&	operator=(vector const& other)
+		vector&	operator=(const vector& other)
 		{
 			if (this != &other)
 			{
-				this->assign(other.begin(), other.end());
+				this->assign(other.cbegin(), other.cend());
 			}
 			// std::cout << "Assignment operator is called" << std::endl;
 			return (*this);
@@ -150,7 +156,7 @@ class vector
 		{
 			return (iterator(this->_first_element));
 		}
-		const_iterator	begin(void) const
+		const_iterator	cbegin(void) const
 		{
 			return (const_iterator(this->_first_element));
 		}
@@ -158,7 +164,7 @@ class vector
 		{
 			return (iterator(this->_first_element + this->_size));
 		}
-		const_iterator	end(void) const
+		const_iterator	cend(void) const
 		{
 			return (const_iterator(this->_first_element + this->_size));
 		}
@@ -166,7 +172,7 @@ class vector
 		{
 			return (reverse_iterator(this->_first_element + this->_size));
 		}
-		const_reverse_iterator	rbegin(void) const
+		const_reverse_iterator	crbegin(void) const
 		{
 			return (const_reverse_iterator(this->_first_element + this->_size));
 		}
@@ -174,7 +180,7 @@ class vector
 		{
 			return (reverse_iterator(this->_first_element));
 		}
-		const_reverse_iterator	rend(void) const
+		const_reverse_iterator	crend(void) const
 		{
 			return (const_reverse_iterator(this->_first_element));
 		}
@@ -201,6 +207,10 @@ class vector
 		}
 		void	reserve(size_type new_cap)
 		{
+			if (new_cap > this->max_size())
+			{
+				throw (std::length_error("ft::vector::reserve(size_type new_cap) length error"));
+			}
 			if (new_cap > this->_capacity)
 			{
 				if (this->_capacity == 0)
@@ -475,7 +485,7 @@ class vector
 	// ~~~~~~~~~~~~~~~~~~~~~~~~~PRIVATE MEMBER FUNCTIONS~~~~~~~~~~~~~~~~~~~~~~~~
 		void	_allocate_new(const_iterator first, const_iterator last)
 		{
-			difference_type	new_capacity = ft::distance(first, last);
+			typename ft::iterator_traits<const_iterator>::difference_type	new_capacity = ft::distance(first, last);
 			
 			if (new_capacity > 0)
 			{
@@ -491,7 +501,7 @@ class vector
 
 		void	_allocate_new(iterator first, iterator last)
 		{
-			difference_type	new_capacity = ft::distance(first, last);
+			typename ft::iterator_traits<iterator>::difference_type	new_capacity = ft::distance(first, last);
 			
 			if (new_capacity > 0)
 			{

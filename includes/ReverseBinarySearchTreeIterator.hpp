@@ -5,147 +5,177 @@
 /*                                                     +:+                    */
 /*   By: tevan-de <tevan-de@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
-/*   Created: 2021/10/15 18:02:23 by tevan-de      #+#    #+#                 */
-/*   Updated: 2021/10/20 11:52:51 by tevan-de      ########   odam.nl         */
+/*   Created: 2021/10/16 21:09:41 by tevan-de      #+#    #+#                 */
+/*   Updated: 2021/10/30 15:40:46 by tevan-de      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef REVERSE_BINARY_SEARCH_TREE_ITERATOR_HPP
-# define REVERSE_BINARY_SEARCH_TREE_ITERATOR_HPP
+#ifndef	REVERSE_ITERATOR
+# define REVERSE_ITERATOR
 
-# include <functional>
 # include <iostream>
 
-# include "./BinarySearchTreeIterator.hpp"
-# include "./Node.hpp"
-# include "./Pair.hpp"
+# include "./IteratorTraits.hpp"
 
 namespace ft {
-template<typename, typename>
-class pair;
-}
-
-namespace ft {
-template<typename>
-class node;
-}
-
-template <class T = ft::node<ft::pair<class T1, class T2> > >
-class ReverseBinarySearchTreeIterator : public BinarySearchTreeIterator<T>
+template <class Iterator>
+class reverse_iterator
 {
 	public:
 	// ~~~~~~~~~~~~~~~~~~~~~~~~~~~PUBLIC MEMBER TYPES~~~~~~~~~~~~~~~~~~~~~~~~~~~
-		typedef T				value_type;
-		typedef value_type*		pointer;
-		typedef value_type&		reference;
-		typedef std::ptrdiff_t	difference_type;
-		typedef std::size_t		size_type;
+		typedef Iterator 													iterator_type;
+		typedef typename ft::iterator_traits<Iterator>::value_type			value_type;
+		typedef typename ft::iterator_traits<Iterator>::pointer				pointer;
+		typedef typename ft::iterator_traits<Iterator>::reference			reference;
+		typedef typename ft::iterator_traits<Iterator>::difference_type		difference_type;
+		typedef typename ft::iterator_traits<Iterator>::iterator_category	iterator_category;
 
 	// ~~~~~~~~~~~~~~~~~~~~~~~~~PUBLIC MEMBER FUNCTIONS~~~~~~~~~~~~~~~~~~~~~~~~~
 		// ----------------------------CONSTRUCTORS-----------------------------
-		// default
-		ReverseBinarySearchTreeIterator(void) : BinarySearchTreeIterator<T>()
+		reverse_iterator(void) : _base()
 		{
-			// std::cout << "Default Constructor of RBSTI called" << std::endl;
-			return ;
+			// std::cout << "Default constructor of RI called" << std::endl;
 		}
-		// parameter
-		ReverseBinarySearchTreeIterator(pointer val, ft::node<value_type>* n) : BinarySearchTreeIterator<T>(val, n)
+		explicit reverse_iterator(iterator_type it) : _base(it)
 		{
-			std::cout << this->_ptr->first << std::endl;
-			std::cout << "Parameter Constructor of RBSTI called" << std::endl;
-			return ;
+			// std::cout << "Parameter constructor of RI called" << std::endl;
 		}
-		// copy
-		ReverseBinarySearchTreeIterator(const ReverseBinarySearchTreeIterator& other) : BinarySearchTreeIterator<T>(other)
+		template<class Iter>
+		reverse_iterator(const reverse_iterator<Iter>& rev_it) : _base(rev_it._base)
 		{
-			// std::cout << "Copy Constructor of RBSTI called" << std::endl;
-			return ;
+			// std::cout << "Copy constructor of RI called" << std::endl;
 		}
 
 		// -----------------------------DESTRUCTOR------------------------------
-		~ReverseBinarySearchTreeIterator(void)
+		~reverse_iterator(void)
 		{
-			// std::cout << "Destructor of RBSTI called" << std::endl;
-			return ;
+			//std::cout << "Destructor of RI called" << std::endl;
 		}
 
-		// ------------------------ASSIGNMENT OPERATOR--------------------------
-		ReverseBinarySearchTreeIterator&	operator=(const ReverseBinarySearchTreeIterator& other)
+		// ------------------------ASSIGNMENT OPERATORS-------------------------
+		reverse_iterator&	operator=(const reverse_iterator& other)
 		{
 			if (this != &other)
 			{
-				this->_ptr = other._ptr;
-				this->_node = other._node;
+				this->_base = other._base;
 			}
-			// std::cout << "Assignment Operator of RBSTI called" << std::endl;
+			// std::cout << "Assignment Operator of RI called" << std::endl;
 			return (*this);
+		}
+		reverse_iterator	operator+(difference_type n) const
+		{
+			return (reverse_iterator(this->_base - n));
+		}
+		reverse_iterator	operator-(difference_type n) const
+		{
+			return (reverse_iterator(this->_base + n));
+		}
+		reverse_iterator&	operator+=(difference_type n)
+		{
+			return (*(this->_base -= n));
+		}
+		reverse_iterator&	operator-=(difference_type n)
+		{
+			return (*(this->_base += n));
+		}
+
+		// ------------------------MEMBER ACCESS OPERATORS----------------------	
+		iterator_type	base(void) const
+		{
+			return (this->_base);
+		}
+		reference	operator*(void)
+		{
+			iterator_type		temp = this->_base;
+
+			return (*--temp);
+		}
+		pointer	operator->(void)
+		{
+			return (&(this->operator*()));
+		}
+		reference	operator[](difference_type n)
+		{
+			return (this->base()[-n-1]);
 		}
 
 		// -------------------DECREMENT AND INCREMENT OPERATORS-----------------
-		// prefix decrement
-		ReverseBinarySearchTreeIterator&	operator--(void)
+		reverse_iterator&	operator++(void)
 		{
-			this->_node = this->_node->next();
-			this->_ptr = this->_node->data;
+			this->_base--;
 			return (*this);
 		}
-		// postfix decrement
-		ReverseBinarySearchTreeIterator	operator--(int)
+		reverse_iterator	operator++(int)
 		{
-			ReverseBinarySearchTreeIterator	bsti = (*this);
+			reverse_iterator temp = *this;
 
-			this->_node = this->_node->next();
-			this->_ptr = this->_node->data;
-			if (this->_ptr == nullptr)
-				std::cout << "this is end" << std::endl;
-			return (bsti);
+			++(*this);
+			return temp;
 		}
-		// prefix increment
-		ReverseBinarySearchTreeIterator&	operator++(void)
+		reverse_iterator	operator--(void)
 		{
-			this->_node = this->_node->previous();
-			this->_ptr = this->node->data;
+			this->_base++;
+			return (*this);
 		}
-		// postfix increment
-		ReverseBinarySearchTreeIterator	operator++(int)
+		reverse_iterator operator--(int)
 		{
-			ReverseBinarySearchTreeIterator	bsti = (*this);
+			reverse_iterator temp = *this;
 
-			this->_node = this->_node->previous();
-			this->_ptr = this->_node->data;
-			return (bsti);
+			--(*this);
+			return temp;
 		}
 
-		// ------------------------MEMBER ACCESS OPERATORS----------------------
-		// arrow operator
-		pointer	operator->(void) const
-		{
-			return (this->_node->data);
-		}
-		// dereference operator
-		reference	operator*(void) const
-		{
-			return (*this->_node->data);
-		}
-
-		// -------------------------RELATIONAL OPERATORS------------------------
-		// == operator, is equal to
-		bool	operator==(const ReverseBinarySearchTreeIterator& other) const
-		{
-			return (BinarySearchTreeIterator<T>::operator==(other));
-		}
-		// != operator, is not equal to
-		bool	operator!=(const ReverseBinarySearchTreeIterator& other) const
-		{
-			return (BinarySearchTreeIterator<T>::operator!=(other));
-		}
-
-	private:
-	// ~~~~~~~~~~~~~~~~~~~~~~~~~~~PRIVATE MEMBER TYPE~~~~~~~~~~~~~~~~~~~~~~~~~~~
-		pointer					_ptr;
-		ft::node<value_type>*	_node;
-
+	protected:
+	// ~~~~~~~~~~~~~~~~~~~~~~~~~PROTECTED MEMBER OBJECT~~~~~~~~~~~~~~~~~~~~~~~~~
+		iterator_type	_base;
 };
+
+// ~~~~~~~~~~~~~~~~~~~~~~~~~~NON-MEMBER FUCTION OVERLOADS~~~~~~~~~~~~~~~~~~~~~~~
+// ----------------------------RELATIONAL OPERATORS-----------------------------
+template<class Iter>
+bool	operator==(const reverse_iterator<Iter>& lhs, const reverse_iterator<Iter>& rhs)
+{
+	return (lhs.base() == rhs.base());
+}
+template<class Iter>
+bool	operator!=(const reverse_iterator<Iter>& lhs, const reverse_iterator<Iter>& rhs)
+{
+	return (!(lhs == rhs));
+}
+template<class Iter>
+bool	operator>(const reverse_iterator<Iter>& lhs, const reverse_iterator<Iter>& rhs)
+{
+	return (lhs.base() > rhs.base());
+}	
+template<class Iter>
+bool	operator<(const reverse_iterator<Iter>& lhs, const reverse_iterator<Iter>& rhs)
+{
+	return (lhs.base() < rhs.base());
+}	
+template<class Iter>
+bool	operator>=(const reverse_iterator<Iter>& lhs, const reverse_iterator<Iter>& rhs)
+{
+	return (!(lhs < rhs));
+}
+template<class Iter>
+bool	operator<=(const reverse_iterator<Iter>& lhs, const reverse_iterator<Iter>& rhs)
+{
+	return (!(lhs > rhs));
+}
+
+// ------------------------------ADDITION OPERATOR------------------------------
+template <class Iter>
+reverse_iterator<Iter>	operator+(typename reverse_iterator<Iter>::difference_type n, const reverse_iterator<Iter>& rev_it)
+{
+	return (rev_it + n);
+}
+
+// ----------------------------SUBSTRACTION OPERATOR----------------------------
+template <class Iter>
+typename reverse_iterator<Iter>::difference_type	operator-(const reverse_iterator<Iter>& lhs, const reverse_iterator<Iter>& rhs)
+{
+	return (lhs.base() - rhs.base());
+}
+}
 
 #endif

@@ -6,7 +6,7 @@
 /*   By: tevan-de <tevan-de@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/10/16 21:09:41 by tevan-de      #+#    #+#                 */
-/*   Updated: 2021/10/24 18:24:53 by tevan-de      ########   odam.nl         */
+/*   Updated: 2021/11/01 20:54:35 by tevan-de      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,9 +41,9 @@ class reverse_iterator
 			// std::cout << "Parameter constructor of RI called" << std::endl;
 		}
 		template<class Iter>
-		reverse_iterator(const reverse_iterator<Iter>& rev_it) : _base(rev_it._base)
+		reverse_iterator(const reverse_iterator<Iter>& rev_it) : _base(rev_it.base())
 		{
-			// std::cout << "Copy constructor of RI called" << std::endl;
+			// std::cout << "Copy constructor 2 of RI called" << std::endl;
 		}
 
 		// -----------------------------DESTRUCTOR------------------------------
@@ -57,7 +57,7 @@ class reverse_iterator
 		{
 			if (this != &other)
 			{
-				this->_base = other._base;
+				this->_base = other.base();
 			}
 			// std::cout << "Assignment Operator of RI called" << std::endl;
 			return (*this);
@@ -124,6 +124,15 @@ class reverse_iterator
 			--(*this);
 			return temp;
 		}
+
+		bool	operator==(const reverse_iterator& other)
+		{
+			return (this->_base == other._base);
+		}
+		bool	operator!=(const reverse_iterator& other)
+		{
+			return (!(*this == other));
+		}		
 
 	protected:
 	// ~~~~~~~~~~~~~~~~~~~~~~~~~PROTECTED MEMBER OBJECT~~~~~~~~~~~~~~~~~~~~~~~~~

@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        ::::::::            */
-/*   testreverseiterator.cpp                            :+:    :+:            */
+/*   testreverseiteratorvector.cpp                      :+:    :+:            */
 /*                                                     +:+                    */
 /*   By: tevan-de <tevan-de@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/10/16 22:08:50 by tevan-de      #+#    #+#                 */
-/*   Updated: 2021/10/25 15:05:27 by tevan-de      ########   odam.nl         */
+/*   Updated: 2021/11/01 21:27:19 by tevan-de      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,38 +17,57 @@
 
 int main(void)
 {
-	int i = 0;
-	
 	// --------------------------VECTOR OF INTS------------------------
-	std::vector<int>			v;
-	std::vector<int>::iterator	vIter;
+	std::vector<int>							v;
+	std::vector<int>::iterator					Iter;
+	std::vector<int>::reverse_iterator			revIter;
+	std::vector<int>::const_iterator			constIter;
+	std::vector<int>::const_reverse_iterator	constrevIter;
 
 	for (size_t i = 1; i < 6; i++)
 		v.push_back(2 * i + 1);
 
 	// --------------------------PRINT WITH DEREFERENCED NORMAL ITERATOR------------------------
 	std::cout << "ORIGINAL - * normal iterator" << std::endl;
-	for (vIter = v.begin(); vIter != v.end(); vIter++)
-		std::cout << *vIter << "\t";
+	for (Iter = v.begin(); Iter != v.end(); Iter++)
+		std::cout << *Iter << "\t";
 	std::cout << std::endl;
 
 	// --------------------------PRINT WITH DEREFERENCED REVERSE ITERATOR------------------------
 	std::cout << "ORIGINAL - * reverse iterator" << std::endl;
-	for (std::vector<int>::reverse_iterator revIter = v.rbegin(); revIter != v.rend(); revIter++)
+	for (revIter = v.rbegin(); revIter != v.rend(); revIter++)
 		std::cout << *revIter << "\t";
 	std::cout << std::endl;
 
+	// --------------------------PRINT WITH DEREFERENCED CONST ITERATOR------------------------
+	std::cout << "ORIGINAL - * const iterator" << std::endl;	
+	for (constIter = v.begin(); constIter != v.end(); constIter++)
+		std::cout << *constIter << "\t";
+	std::cout << std::endl;
+
+	// --------------------------PRINT WITH DEREFERENCED CONST REVERSE ITERATOR------------------------
+	std::cout << "ORIGINAL - * const reverse iterator" << std::endl;
+	for (constrevIter = v.rbegin(); revIter != v.rend(); revIter++)
+		std::cout << *revIter << "\t";
+	std::cout << std::endl;
+
+	// the constiterator does not allow the value to be changed -> compilation error
+	// *constIter = 4;
+
 	// --------------------------MY VECTOR OF INTS------------------------
-	ft::vector<int>				mv;
-	ft::vector<int>::iterator	mvIter;
+	ft::vector<int>							mv;
+	ft::vector<int>::iterator				mIter;
+	ft::vector<int>::reverse_iterator		revmIter;
+	ft::vector<int>::const_iterator			constmIter;
+	ft::vector<int>::const_reverse_iterator	constrevmIter;
 
 	for (size_t i = 0; i < v.size(); i++)
 		mv.push_back(v[i]);
 
 	// --------------------------PRINT WITH MY OWN DEREFERENCED NORMAL ITERATOR------------------------
 	std::cout << "MINE - * normal iterator" << std::endl;	
-	for (mvIter = mv.begin(); mvIter != mv.end(); mvIter++)
-		std::cout << *mvIter << "\t";
+	for (mIter = mv.begin(); mIter != mv.end(); mIter++)
+		std::cout << *mIter << "\t";
 	std::cout << std::endl;
 
 	// --------------------------PRINT WITH MY OWN DEREFERENCED REVERSE ITERATOR------------------------
@@ -57,10 +76,26 @@ int main(void)
 			std::cout << *mrevIter << "\t";
 	std::cout << std::endl;
 
+	// --------------------------PRINT WITH DEREFERENCED CONST ITERATOR------------------------
+	std::cout << "MINE - * const iterator" << std::endl;
+	for (constmIter = mv.cbegin(); constmIter != mv.cend(); constmIter++)
+		std::cout << *constmIter << "\t";
+	std::cout << std::endl;
+
+	// --------------------------PRINT WITH DEREFERENCED CONST REVERSE ITERATOR------------------------
+	std::cout << "MINE - * const reverse iterator" << std::endl;
+	for (constrevmIter = mv.crbegin(); constrevmIter != mv.crend(); constrevmIter++)
+		std::cout << *constrevmIter << "\t";
+	std::cout << std::endl;
+
+
+	// the constiterator does not allow the value to be changed -> compilation error
+	// *constmIter = 4
+
 	// --------------------------VECTOR OF PAIRS------------------------
 	std::vector<std::pair<int, int> >					vp;
 	std::vector<std::pair<int, int> >::iterator			vpIter;
-	std::vector<std::pair<int, int> >::reverse_iterator	revpIter;	
+	std::vector<std::pair<int, int> >::reverse_iterator	revpIter;
 	std::pair<int, int> pair(0, 1);
 	std::pair<int, int> pair2(2, 3);
 	std::pair<int, int> pair3(4, 5);
@@ -116,9 +151,9 @@ int main(void)
 	std::cout << std::endl;
 
 	// --------------------------MY VECTOR OF PAIRS------------------------
-	ft::vector<std::pair<int, int>>						mvp;
-	ft::vector<std::pair<int, int>>::iterator			mvpIter;
-	ft::vector<std::pair<int, int>>::reverse_iterator	mrevpIter;	
+	ft::vector<std::pair<int, int> >						mvp;
+	ft::vector<std::pair<int, int> >::iterator			mvpIter;
+	ft::vector<std::pair<int, int> >::reverse_iterator	mrevpIter;
 	mvp.push_back(pair);
 	mvp.push_back(pair2);
 	mvp.push_back(pair3);

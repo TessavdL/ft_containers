@@ -6,7 +6,7 @@
 /*   By: tevan-de <tevan-de@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/08/26 11:30:29 by tevan-de      #+#    #+#                 */
-/*   Updated: 2021/10/29 15:37:40 by tevan-de      ########   odam.nl         */
+/*   Updated: 2021/10/30 16:09:06 by tevan-de      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -153,5 +153,7 @@ class BinarySearchTreeIterator
 		pointer	_ptr;
 		node*	_node;
 };
+
+
 
 #endif
