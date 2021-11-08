@@ -6,7 +6,7 @@
 /*   By: tevan-de <tevan-de@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/07/26 21:51:11 by tevan-de      #+#    #+#                 */
-/*   Updated: 2021/10/29 12:29:47 by tevan-de      ########   odam.nl         */
+/*   Updated: 2021/11/03 19:09:51 by tevan-de      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,11 +22,12 @@ class RandomAccessIterator
 {
 	public:
 	// ~~~~~~~~~~~~~~~~~~~~~~~~~~~PUBLIC MEMBER TYPES~~~~~~~~~~~~~~~~~~~~~~~~~~~
-		typedef T								value_type;
-		typedef value_type*						pointer;
-		typedef value_type&						reference;
-		typedef std::ptrdiff_t					difference_type;
-		typedef ft::random_access_iterator_tag	iterator_category;
+		typedef T										value_type;
+		typedef value_type*								pointer;
+		typedef value_type&								reference;
+		typedef std::ptrdiff_t							difference_type;
+		typedef ft::random_access_iterator_tag			iterator_category;
+		typedef	RandomAccessIterator<const value_type>	const_iterator;
 
 	// ~~~~~~~~~~~~~~~~~~~~~~~~~PUBLIC MEMBER FUNCTIONS~~~~~~~~~~~~~~~~~~~~~~~~~
 		// ----------------------------CONSTRUCTORS-----------------------------
@@ -38,7 +39,7 @@ class RandomAccessIterator
 		{
 			// std::cout << "Parameter Constructor of RAI called" << std::endl;
 		}
-		RandomAccessIterator(const RandomAccessIterator& other)
+		RandomAccessIterator(const RandomAccessIterator& other) : _ptr(const_cast<pointer>(other._ptr))
 		{
 			*this = other;
 			// std::cout << "Copy Constructor of RAI called" << std::endl;
@@ -89,15 +90,17 @@ class RandomAccessIterator
 		}
 		RandomAccessIterator&	operator+(difference_type n)
 		{
-			RandomAccessIterator	it = *this;
+			RandomAccessIterator&	it(*this);
 
-			return (it += n);
+			it._ptr += n;
+			return (it);
 		}
 		RandomAccessIterator&	operator-(difference_type n)
 		{
-			RandomAccessIterator	it = *this;
+			RandomAccessIterator&	it(*this);
 
-			return (it -= n);
+			it._ptr -= n;
+			return (it);
 		}
 		difference_type	operator-(const RandomAccessIterator& other)
 		{

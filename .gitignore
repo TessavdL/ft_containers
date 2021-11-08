@@ -36,3 +36,4 @@
 testing/
 *.dSYM/*
 .vscode
+*.txt

@@ -6,7 +6,7 @@
 /*   By: tevan-de <tevan-de@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/10/24 13:58:51 by tevan-de      #+#    #+#                 */
-/*   Updated: 2021/11/02 23:28:25 by tevan-de      ########   odam.nl         */
+/*   Updated: 2021/11/08 16:25:09 by tevan-de      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,8 @@
 # include <iostream>	// for output
 # include <memory>		// for std::allocator
 # include <exception>	// for out of range exception
+
+// https://eli.thegreenplace.net/2014/sfinae-and-enable_if/
 
 # include "./RandomAccessIterator.hpp"
 # include "./InputIterator.hpp"
@@ -209,7 +211,7 @@ class vector
 		{
 			if (new_cap > this->max_size())
 			{
-				throw (std::length_error("ft::vector::reserve(size_type new_cap) length error"));
+				throw (std::length_error("ft::vector::reserver(size_type new_cap) length error"));
 			}
 			if (new_cap > this->_capacity)
 			{
@@ -234,7 +236,6 @@ class vector
 		void assign (InputIterator first, InputIterator last)
 		{
 			difference_type	n = ft::distance(first, last);
-			size_t			i;
 			
 			this->clear();
 			if (n > this->_capacity)
@@ -272,13 +273,13 @@ class vector
 			}
 			this->_size = 0;
 		}
-		// insert
-		// if capacity == 0 but pos != begin -> segfault
+
 		iterator insert(iterator pos, const T& value)
 		{
-			difference_type	n = pos - this->begin();
+			difference_type	n = ft::distance(this->begin(), pos);
 
-			std::cout << "n = " << n << " val = " << value << std::endl;
+			// if (pos != NULL)
+				// std::cout << "at pos" << *pos << " n = " << n << " val = " << value << std::endl;
 
 			// allocate space for one and construct the value - if the capacity is zero
 			if (this->_capacity == 0)
@@ -305,6 +306,7 @@ class vector
 			this->_size++;
 			return (pos);
 		}
+
 		void	insert(iterator pos, size_type count, const T& value)
 		{
 			difference_type	n = pos - this->begin();
@@ -336,6 +338,7 @@ class vector
 				this->_alloc.construct(this->_first_element + n + i, value);
 			}
 		}
+
 		template<class InputIt>
 		void	insert(iterator pos, InputIt first, InputIt last)
 		{
@@ -350,7 +353,7 @@ class vector
 			}
 			if (this->_capacity == 0)
 			{
-				this->_allocate_new(count, *first);
+				this->_allocate_new(first, last);
 				return ;
 			}
 			if (this->_size + count > this->_capacity)
@@ -374,13 +377,14 @@ class vector
 				this->_alloc.construct(this->_first_element + new_end, *(this->_first_element + old_end));
 				this->_alloc.destroy(this->_first_element + old_end);
 			}
-			for (size_type i = 0; i < count; i++)
+			for (difference_type i = 0; i < count; i++)
 			{
 				this->_alloc.destroy(this->_first_element + n + i);
 				this->_alloc.construct(this->_first_element + n + i, *first);
 				first++;
 			}
 		}
+
 		iterator	erase(iterator pos)
 		{
 			return (this->erase(pos, pos + 1));
@@ -432,10 +436,9 @@ class vector
 			if (count == 0)
 			{
 				this->clear();
-				this->_deallocate();
 			}
 			
-			if (count < this->_capacity)
+			if (count < this->_size)
 			{
 				for (size_type i = count; i < this->_size; i++)
 				{
@@ -449,7 +452,7 @@ class vector
 				{
 					this->_allocate_new(count, value);
 				}
-				else if (this->_capacity > 0)
+				else // this->_capacity > 0
 				{
 					if (count > this->_capacity * 2)
 					{
@@ -567,8 +570,13 @@ template <typename T, class Allocator >
 bool	operator==(const vector<T, Allocator>& lhs, const vector<T, Allocator>& rhs)
 {
 	if (lhs.size() != rhs.size())
+	{
 		return (false);
-	return (true);
+	}
+	else
+	{
+		return (ft::equal(lhs.begin(), lhs.end(), rhs.begin(), rhs.end()));
+	}
 }
 
 template <typename T, class Allocator >
@@ -580,13 +588,13 @@ bool	operator!=(const vector<T, Allocator>& lhs, const vector<T, Allocator>& rhs
 template <typename T, class Allocator >
 bool	operator<(const vector<T, Allocator>& lhs, const vector<T, Allocator>& rhs)
 {
-	return (true);
+	return (ft::lexicographical_compare(lhs.begin(), lhs.end(), rhs.begin(), rhs.end(), std::less<T>()));
 }
 
 template <typename T, class Allocator >
 bool	operator>(const vector<T, Allocator>& lhs, const vector<T, Allocator>& rhs)
 {
-	return (true);
+	return (ft::lexicographical_compare(lhs.begin(), lhs.end(), rhs.begin(), rhs.end(), std::less<T>()));
 }
 
 template <typename T, class Allocator  >

@@ -6,7 +6,7 @@
 /*   By: tevan-de <tevan-de@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/08/19 13:47:30 by tevan-de      #+#    #+#                 */
-/*   Updated: 2021/10/27 20:31:59 by tevan-de      ########   odam.nl         */
+/*   Updated: 2021/11/03 17:36:55 by tevan-de      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -103,6 +103,7 @@ void	my_map_basic(void)
 		std::cout << it->first << "\t" << it->second << std::endl;
 	}
 	return ;
+
 }
 
 int	main(void)
