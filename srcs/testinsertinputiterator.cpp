@@ -6,7 +6,7 @@
 /*   By: tevan-de <tevan-de@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/10/25 14:00:03 by tevan-de      #+#    #+#                 */
-/*   Updated: 2021/10/25 20:55:25 by tevan-de      ########   odam.nl         */
+/*   Updated: 2021/11/12 17:44:17 by tevan-de      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,7 +66,7 @@ int	main(void)
 	mvIter3 = mvIter + 2;
 	std::cout << *mvIter << "\t" << *mvIter2 << "\t" << *mvIter3 << std::endl;
 
-	ft::vector<int>				mtest(mvIter, mvIter3);
+	ft::vector<int>				mtest(mv.begin(), mvIter3);
 	ft::vector<int>::iterator	mtestiterator;
 
 	std::cout << "MINE - testing range constructor" << std::endl;	

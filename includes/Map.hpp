@@ -6,15 +6,13 @@
 /*   By: tevan-de <tevan-de@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/10/10 16:45:45 by tevan-de      #+#    #+#                 */
-/*   Updated: 2021/11/08 16:24:43 by tevan-de      ########   odam.nl         */
+/*   Updated: 2021/11/30 16:11:25 by tevan-de      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef MAP_HPP
 # define MAP_HPP
 
-# include <functional>	// for std::less, should include own compare later and for std::binary_function
-# include <iostream>	// for output, prob remove later
 # include <memory>		// for std::allocator
 
 # include "./BinarySearchTreeIterator.hpp"
@@ -25,7 +23,8 @@
 # include "./ReverseIterator.hpp"
 
 namespace ft {
-template <class Key, class T, class Compare = std::less<Key>, class Alloc = std::allocator<ft::pair<const Key, T> > >
+
+template <class Key, class T, class Compare = ft::less<Key>, class Alloc = std::allocator<ft::pair<const Key, T> > >
 class map
 {
 	public:
@@ -55,30 +54,35 @@ class map
 			RIGHT_RIGHT = 4
 		}	t_type_of_unbalance;
 
-	// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~NESTED CLASS~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-		class value_compare : std::binary_function<value_type, value_type, bool>
+	// ~~~~~~~~~~~~~~~~~~~~~~~~~~~NESTED FUNCTION CLASS~~~~~~~~~~~~~~~~~~~~~~~~~
+		class value_compare : ft::binary_function<value_type, value_type, bool>
 		{
 			friend class map;
 			public:
+			// ~~~~~~~~~~~~~~~~~~~~~~~PUBLIC MEMBER TYPES~~~~~~~~~~~~~~~~~~~~~~~
 				typedef bool		result_type;
 				typedef value_type	first_argument_type;
 				typedef value_type	second_argument_type;
+
+			// ~~~~~~~~~~~~~~~~~~~~~PUBLIC MEMBER FUNCTIONS~~~~~~~~~~~~~~~~~~~~~
 				bool	operator()(const value_type& x, const value_type& y) const
 				{
-					return (comp(x.first, y.first));
+					return (this->comp(x.first, y.first));
 				}
+
 			protected:
+			// ~~~~~~~~~~~~~~~~~~~~~~PROTECTED MEMBER TYPES~~~~~~~~~~~~~~~~~~~~~
 				key_compare	comp;
-				value_compare (key_compare c) : comp(c) {}
+
+			// ~~~~~~~~~~~~~~~~~~~~PROTECTED MEMBER FUNCTIONS~~~~~~~~~~~~~~~~~~~
+				value_compare(key_compare c) : comp(c) {}
 		};
 
 	// ~~~~~~~~~~~~~~~~~~~~~~~~~PUBLIC MEMBER FUNCTIONS~~~~~~~~~~~~~~~~~~~~~~~~~
 		// ----------------------------CONSTRUCTORS-----------------------------
 		explicit map(const key_compare& comp = key_compare(), const allocator_type& alloc = allocator_type()) :
-			_alloc(alloc), _compare(comp), _begin(NULL), _end(NULL), _root(NULL), _size(0)
-		{
-			// std::cout << "Default construtor is called" << std::endl;
-		}
+			_alloc(alloc), _compare(comp), _begin(NULL), _end(NULL), _root(NULL), _size(0) {}
+
 		template <class InputIterator>
 		map(InputIterator first, InputIterator last, const key_compare& comp = key_compare(), const allocator_type& alloc = allocator_type()) :
 			_alloc(alloc), _compare(comp), _begin(NULL), _end(NULL), _root(NULL), _size(0)
@@ -92,20 +96,18 @@ class map
 					this->insert(*first);
 				}
 			}
-			// std::cout << "Range construtor is called" << std::endl;
 		}
+
 		map(const map& x) :
 			_alloc(x._alloc), _compare(x._compare), _begin(NULL), _end(NULL), _root(NULL), _size(0)
 		{
 			*this = x;
-			// std::cout << "Copy construtor is called" << std::endl;
 		}
 
 		// -----------------------------DESTRUCTOR------------------------------
 		~map(void)
 		{
 			this->clear();
-			// std::cout << "Destructor is called" << std::endl;
 		}
 
 		// -------------------------ASSIGNMENT OPERATOR-------------------------
@@ -118,39 +120,48 @@ class map
 				this->_compare = x._compare;
 				this->insert(x.begin(), x.end());
 			}
-			// std::cout << "Assignment operator is called" << std::endl;
 			return (*this);
 		}
 
 		// -------------------------------ITERATORS-----------------------------
+		iterator	begin(void)
+		{
+			if (this->_size == 0)
+			{
+				return (iterator(NULL, this->_find_most_left_node()));
+			}
+			return (iterator(this->_find_most_left_node()->data, this->_find_most_left_node()));
+		}
+
 		const_iterator	begin(void) const
 		{
 			if (this->_size == 0)
 			{
 				return (const_iterator(NULL, this->_find_most_left_node()));
 			}
-			return (const_iterator(const_cast<value_type*>(this->_find_most_left_node()->data), this->_find_most_left_node()));
+			return (const_iterator(this->_find_most_left_node()->data, this->_find_most_left_node()));
 		}
-		iterator	begin(void)
-		{
-			return (iterator(this->_find_most_left_node()->data, this->_find_most_left_node()));
-		}
+
 		iterator	end(void)
 		{
 			return (iterator(NULL, this->_end));
 		}
+	
 		const_iterator	end(void) const
 		{
 			return (const_iterator(NULL, this->_end));
 		}
+	
 		reverse_iterator	rbegin(void)
 		{
 			return (reverse_iterator(iterator(NULL, this->_end)));
 		}
+	
 		const_reverse_iterator	rbegin(void) const
 		{
 			return (const_reverse_iterator(const_iterator(NULL, this->_end)));
 		}
+	
 		reverse_iterator	rend(void)
 		{
 			if (this->_size == 0)
@@ -159,13 +170,14 @@ class map
 			}
 			return (reverse_iterator(iterator(this->_find_most_left_node()->data, this->_find_most_left_node())));
 		}
+	
 		const_reverse_iterator	rend(void) const
 		{
 			if (this->_size == 0)
 			{
 				return (const_reverse_iterator(const_iterator(NULL, this->find_most_left_node())));
 			}
-			return (const_reverse_iterator(const_iterator(NULL, this->_begin)));
+			return (const_reverse_iterator(const_iterator(this->_find_most_left_node()->data, this->_find_most_left_node())));
 		}
 
 		// -------------------------------CAPACITY------------------------------
@@ -228,21 +240,21 @@ class map
 				return (ft::make_pair(iterator(n->data, n), true));
 			}
 			n = this->_find_node(this->_root, val.first);
-			if (n != NULL)
+			if (n != NULL)	// val already exists
 			{
 				return (ft::make_pair(iterator(n->data, n), false));
 			}
 			else
 			{
 				n = this->_insert_node(this->_root, val);
-				this->_check_if_tree_is_balanced(n);
-				this->_size++;
+				this->_check_balance_after_insertion(n);
 				this->_begin->parent = this->_find_most_left_node();
 				this->_end->parent = this->_find_most_right_node();
+				this->_size++;
 				return (ft::make_pair(iterator(n->data, n), true));
 			}
 		}
-		// this function can be used to optimize insertion, removing the need to use find
+
 		iterator	insert(iterator position, const value_type& val)
 		{
 			ft::pair<iterator, bool>	ret = this->insert(val);
@@ -250,25 +262,33 @@ class map
 			(void)position;
 			return (ret.first);
 		}
+
 		template <class InputIterator>
   		void	insert(InputIterator first, InputIterator last)
 		{
 			for (; first != last; first++)
 			{
-				this->insert(*first);		
+				this->insert(*first);
 			}
 		}
+
 		void	erase(iterator position)
 		{
-			this->erase(*position);
+			this->erase((*position).first);
 		}
+
 		void	erase(iterator first, iterator last)
 		{
-			for (; first != last; first++)
+			iterator	del;
+
+			while (first != last)
 			{
-				this->erase(*first);
+				del = first;
+				first++;
+				this->erase((*del).first);
 			}
 		}
+
 		size_type	erase(const key_type& k)
 		{
 			node*	n = this->_find_node(this->_root, k);
@@ -281,14 +301,15 @@ class map
 			else
 			{
 				parent = n->parent;
-				this->_erase_node(n);
+				this->_delete_node(n);
 				this->_size--;
-				this->_check_if_tree_is_balanced(parent);
+				this->_check_balance_after_deletion(parent);
 				this->_begin->parent = this->_find_most_left_node();
 				this->_end->parent = this->_find_most_right_node();
 				return (1);
 			}
 		}
+
 		void	clear(void)
 		{
 			node*					node_to_delete = NULL;
@@ -297,7 +318,7 @@ class map
 			while (this->_root != NULL)
 			{
 				node_to_delete = this->_root;
-				this->_erase_node(node_to_delete);
+				this->_delete_node(node_to_delete);
 			}
 			this->_begin = NULL;
 			this->_end = NULL;
@@ -309,6 +330,7 @@ class map
 		{
 			return (this->_compare);
 		}
+
 		value_compare	value_comp(void) const
 		{
 			return (value_compare(this->_compare));
@@ -328,7 +350,8 @@ class map
 				return (iterator(n->data, n));
 			}
 		}
-		const_iterator find (const key_type& k) const
+
+		const_iterator find(const key_type& k) const
 		{
 			node*	n = this->_find_node(this->_root, k);
 
@@ -338,9 +361,10 @@ class map
 			}
 			else
 			{
-				return (const_iterator(const_cast<value_type*>(n->data), n));
+				return (const_iterator(n->data, n));
 			}
 		}
+
 		size_type	count(const key_type& k) const
 		{
 			if (this->_find_node(this->_root, k))
@@ -352,75 +376,78 @@ class map
 				return (0);
 			}
 		}
+
 		iterator	lower_bound(const key_type& k)
 		{
-			iterator	lower_bound = this->find(k);
+			iterator	lower_bound = this->begin();
 
-			if (lower_bound != this->end())
+			for (; lower_bound != this->end(); lower_bound++)
 			{
-				return (lower_bound);
-			}
-			else
-			{
-				for (lower_bound = this->begin(); lower_bound != this->end(); lower_bound++)
+				if (key_comp()((*lower_bound).first, k) == false)
 				{
-					if ((*lower_bound).first > k)
-					{
-						break ;
-					}
+					break ;
 				}
-				return (lower_bound);
 			}
+			return (lower_bound);
 		}
+
 		const_iterator	lower_bound(const key_type& k) const
 		{
-			const_iterator	lower_bound = this->find(k);
+			const_iterator	lower_bound = this->begin();
 
-			if (lower_bound != this->end())
+			for (; lower_bound != this->end(); lower_bound++)
 			{
-				return (lower_bound);
-			}
-			else
-			{
-				for (lower_bound = this->begin(); lower_bound != this->end(); lower_bound++)
+				if (key_comp()((*lower_bound).first, k) == false)
 				{
-					if ((*lower_bound).first > k)
-					{
-						break ;
-					}
+					break ;
 				}
-				return (lower_bound);
 			}
+			return (lower_bound);
 		}
-		iterator	upper_bound (const key_type& k)
+
+		iterator	upper_bound(const key_type& k)
 		{
-			iterator	upper_bound = this->find(k);
+			iterator	upper_bound = this->begin();
 
-			if (upper_bound != this->end())
+			for (; upper_bound != this->end(); upper_bound++)
 			{
-				return (upper_bound);
-			}
-			else
-			{
-				for (reverse_iterator rit = this->rbegin(); rit != this->rend(); rit++)
+				if (key_comp()(k, (*upper_bound).first) == true)
 				{
-
+					break ;
 				}
-				return (upper_bound);
 			}
+			return (upper_bound);
 		}
-		// const_iterator	upper_bound (const key_type& k) const
-		// {
 
-		// }
-		// ft::pair<iterator,iterator>	equal_range (const key_type& k)
-		// {
+		const_iterator	upper_bound(const key_type& k) const
+		{
+			const_iterator	upper_bound = this->begin();
 
-		// }
-		// ft::pair<const_iterator,const_iterator>	equal_range (const key_type& k) const
-		// {
+			for (; upper_bound != this->end(); upper_bound++)
+			{
+				if (key_comp()(k, (*upper_bound).first) == true)
+				{
+					break ;
+				}
+			}
+			return (upper_bound);
+		}
 
-		// }
+		ft::pair<iterator,iterator>	equal_range(const key_type& k)
+		{
+			iterator	lower_bound = this->lower_bound(k);
+			iterator	upper_bound = this->upper_bound(k);
+
+			return (ft::make_pair(lower_bound, upper_bound));
+		}
+
+		ft::pair<const_iterator,const_iterator>	equal_range(const key_type& k) const
+		{
+			const_iterator	lower_bound = this->lower_bound(k);
+			const_iterator	upper_bound = this->upper_bound(k);
+
+			return (ft::make_pair(lower_bound, upper_bound));
+		}
 
 		// ------------------------------ALLOCATOR------------------------------
 		allocator_type get_allocator(void) const
@@ -439,7 +466,6 @@ class map
 
 			this->_alloc.construct(new_pair, value_type(val));
 			alloc.construct(new_node, node(new_pair));
-			std::cout << "created root node with key " << new_node->data->first << std::endl;
 			return (new_node);
 		}
 
@@ -451,9 +477,9 @@ class map
 
 			this->_alloc.construct(new_pair, value_type(val));
 			alloc.construct(new_node, node(parent, new_pair));
-			std::cout << "created leaf node with key " << new_node->data->first << std::endl;
 			return (new_node);
 		}
+
 		void	_create_begin_and_end_node(void)
 		{
 			std::allocator<node>	allocator;
@@ -473,7 +499,6 @@ class map
 
 			if (pair.first < temp->data->first)
 			{
-				// std::cout << pair.first << " is smaller than " << temp->data->first << std::endl;
 				if (temp->left == NULL)
 				{
 					temp->left = this->_create_node(temp, pair);
@@ -481,13 +506,11 @@ class map
 				}
 				else
 				{
-					// std::cout << "move to the left" << std::endl;
 					return (this->_insert_node(temp->left, pair));
 				}
 			}
 			else if (pair.first > temp->data->first)
 			{
-				// std::cout << pair.first << " is bigger than " << temp->data->first << std::endl;
 				if (temp->right == NULL) 
 				{
 					temp->right = this->_create_node(temp, pair);
@@ -495,126 +518,128 @@ class map
 				}
 				else
 				{
-					// std::cout << "move to the right" << std::endl;
 					return (this->_insert_node(temp->right, pair));
 				}
 			}
-			// else // pair.first == temp->data->first
+			else	// pair.first == temp->data->first
 			{
 				return (NULL);
 			}
 		}
 
 		// ------------------------------ERASE NODE-----------------------------
-		void	_erase_node(node* node_to_delete)
+		void	_delete_node_without_subtree(node* node_to_delete, std::allocator<node>& alloc)
+		{
+			if (node_to_delete == this->_root)
+			{
+				this->_root = NULL;
+				alloc.destroy(this->_begin);
+				alloc.deallocate(this->_begin, 1);
+				this->_begin = NULL;
+				alloc.destroy(this->_end);
+				alloc.deallocate(this->_end, 1);
+				this->_end = NULL;
+			}
+			else
+			{
+				if (node_to_delete->parent->left == node_to_delete)
+				{
+					node_to_delete->parent->left = NULL;
+				}
+				else
+				{
+					node_to_delete->parent->right = NULL;
+				}
+			}
+			this->_alloc.destroy(node_to_delete->data);
+			this->_alloc.deallocate(node_to_delete->data, 1);
+			alloc.destroy(node_to_delete);
+			alloc.deallocate(node_to_delete, 1);
+		}
+
+		void	_delete_node_with_left_subtree(node* node_to_delete, std::allocator<node>& alloc)
+		{
+			if (node_to_delete == this->_root)
+			{
+				this->_root = node_to_delete->left;
+				node_to_delete->left->parent = NULL;
+			}
+			else
+			{
+				if (node_to_delete->parent->left == node_to_delete)
+				{
+					node_to_delete->parent->left = node_to_delete->right;
+					node_to_delete->right->parent = node_to_delete->parent;
+				}
+				else
+				{
+					node_to_delete->parent->right = node_to_delete->right;
+					node_to_delete->right->parent = node_to_delete->parent;
+				}
+			}
+			this->_alloc.destroy(node_to_delete->data);
+			this->_alloc.deallocate(node_to_delete->data, 1);
+			alloc.destroy(node_to_delete);
+			alloc.deallocate(node_to_delete, 1);
+		}
+
+		void	_delete_node_with_right_subtree(node* node_to_delete, std::allocator<node>& alloc)
+		{
+			if (node_to_delete == this->_root)
+			{
+				this->_root = node_to_delete->right;
+				node_to_delete->right->parent = NULL;
+			}	
+			else
+			{
+				if (node_to_delete->parent->left == node_to_delete)
+				{
+					node_to_delete->parent->left = node_to_delete->right;
+					node_to_delete->right->parent = node_to_delete->parent;
+				}
+				else
+				{
+					node_to_delete->parent->right = node_to_delete->right;
+					node_to_delete->right->parent = node_to_delete->parent;
+				}
+			}
+			this->_alloc.destroy(node_to_delete->data);
+			this->_alloc.deallocate(node_to_delete->data, 1);
+			alloc.destroy(node_to_delete);
+			alloc.deallocate(node_to_delete, 1);
+		}
+
+		void	_delete_node(node* node_to_delete)
 		{
 			std::allocator<node>	alloc;
 			node*					temp = node_to_delete;
 
-			// std::cout << "node to delete in _erase_node "  << (*node_to_delete->data).first << std::endl;
-			// std::cout << "root in _erase_node " << (*this->_root->data).first << std::endl;
 			if (node_to_delete == NULL)
 			{
 				return ;
 			}
 			if (!node_to_delete->left && !node_to_delete->right)
 			{
-				// std::cout << "node to delete LEFT NO RIGHT NO " << (*node_to_delete->data).first << std::endl;				
-				if (node_to_delete == this->_root)
-				{
-					// std::cout << "node to delete is equal to root" << std::endl;
-					this->_root = NULL;
-					alloc.destroy(this->_begin);
-					alloc.deallocate(this->_begin, 1);
-					this->_begin = NULL;
-					alloc.destroy(this->_end);
-					alloc.deallocate(this->_end, 1);
-					this->_end = NULL;
-				}
-				else
-				{
-					if (temp->parent->left == temp)
-					{
-						temp->parent->left = NULL;
-					}
-					else
-					{
-						temp->parent->right = NULL;
-					}
-				}
-				// std::cout << "erasing node without a child "  << (*node_to_delete->data).first << std::endl;
-				this->_alloc.destroy(node_to_delete->data);
-				this->_alloc.deallocate(node_to_delete->data, 1);
-				alloc.destroy(node_to_delete);
-				alloc.deallocate(node_to_delete, 1);
-				// std::cout << "erased node" << std::endl;
-			}
-			else if (!node_to_delete->left && node_to_delete->right)
-			{
-				// std::cout << "node to delete LEFT NO RIGHT YES " << (*node_to_delete->data).first << std::endl;
-				if (node_to_delete == this->_root)
-				{
-					this->_root = temp->right;
-					temp->right->parent = NULL;
-				}	
-				else
-				{
-					if (temp->parent->left == temp)
-					{
-						temp->parent->left = temp->right;
-						temp->right->parent = temp->parent;
-					}
-					else
-					{
-						temp->parent->right = temp->right;
-						temp->right->parent = temp->parent;
-					}
-				}
-				// std::cout << "erasing node with left child " << (*node_to_delete->data).first << std::endl;
-				this->_alloc.destroy(node_to_delete->data);
-				this->_alloc.deallocate(node_to_delete->data, 1);
-				alloc.destroy(node_to_delete);
-				alloc.deallocate(node_to_delete, 1);
-				// std::cout << "erased node" << std::endl;
+				this->_delete_node_without_subtree(node_to_delete, alloc);
 			}
 			else if (node_to_delete->left && !node_to_delete->right)
 			{
-				// std::cout << "node to delete LEFT YES RIGHT NO " << (*node_to_delete->data).first << std::endl;
-				if (node_to_delete == this->_root)
-				{
-					// std::cout << "YES" << std::endl;
-					this->_root = temp->left;
-					temp->left->parent = NULL;
-				}
-				else
-				{
-					if (temp->parent->left == temp)
-					{
-						temp->parent->left = temp->right;
-						temp->right->parent = temp->parent;
-					}
-					else
-					{
-						temp->parent->right = temp->right;
-						temp->right->parent = temp->parent;
-					}
-				}
-				// std::cout << "erasing node with right child "  << (*node_to_delete->data).first << std::endl;
-				this->_alloc.destroy(node_to_delete->data);
-				this->_alloc.deallocate(node_to_delete->data, 1);
-				alloc.destroy(node_to_delete);
-				alloc.deallocate(node_to_delete, 1);
-				// std::cout << "erased node" << std::endl;
+				this->_delete_node_with_left_subtree(node_to_delete, alloc);
 			}
-			else if (node_to_delete->left && node_to_delete->right)
+			else if (!node_to_delete->left && node_to_delete->right)
 			{
-				// std::cout << "both" << std::endl;
+				this->_delete_node_with_right_subtree(node_to_delete, alloc);
+			}
+			else	// node has left and rght subtree
+			{
 				temp = temp->right;
 				while (temp->left)
+				{
 					temp = temp->left;
+				}
 				this->_alloc.destroy(node_to_delete->data);
 				this->_alloc.construct(node_to_delete->data, (*temp->data));
-				this->_erase_node(temp);
+				this->_delete_node(temp);
 			}
 		}
 
@@ -628,19 +653,29 @@ class map
 			if (key < node->data->first)
 			{
 				if (node->left)
+				{
 					return (this->_find_node(node->left, key));
+				}
 				else
+				{
 					return (NULL);
+				}
 			}
 			else if (key > node->data->first)
 			{
 				if (node->right && node->right->data != NULL)
+				{
 					return (this->_find_node(node->right, key));
+				}
 				else
+				{
 					return (NULL);
+				}
 			}
-			else // key == node_key
+			else	// key == node_key
+			{
 				return (node);
+			}
 		}
 
 		node*	_find_most_left_node(void) const
@@ -674,31 +709,27 @@ class map
 		}
 
 		// ------------------------------BALANCING------------------------------
-		t_type_of_unbalance	_get_type_of_unbalance(node* unbalanced_node, node* child, node* grandchild)
+		t_type_of_unbalance	_get_type_of_unbalance(node* unbalanced_node, node* child, node* grandchild) const
 		{
 			if (child == unbalanced_node->left && grandchild == child->left)
 			{
-				// std::cout << "left left" << std::endl;
 				return (LEFT_LEFT);
 			}
 			else if (child == unbalanced_node->left && grandchild == child->right)
 			{
-				// std::cout << "left right" << std::endl;
 				return (LEFT_RIGHT);
 			}
 			else if (child == unbalanced_node->right && grandchild == child->left)
 			{
-				// std::cout << "right left" << std::endl;
 				return (RIGHT_LEFT);
 			}
-			else // child == unbalanced_node->right && grandchild == child->right
+			else	// child == unbalanced_node->right && grandchild == child->right
 			{
-				// std::cout << "right right" << std::endl;
 				return (RIGHT_RIGHT);
 			}
 		}
 
-		int	_get_height_subtree(node* n)
+		int	_get_height_subtree(node* n) const
 		{
 			if (n == NULL)
 			{
@@ -712,63 +743,18 @@ class map
 			{
 				return (height_left_subtree + 1);
 			}
-			else // height_left_subtree < height_right_subtree
+			else	// height_left_subtree <= height_right_subtree
 			{
 				return (height_right_subtree + 1);
 			}
 		}
 
-		bool	_check_if_node_is_balanced(node* node)
+		int	_get_balance_factor(node* node) const
 		{
-			int	balance_factor;
-			int	left;
-			int	right;
+			int	left = this->_get_height_subtree(node->left);
+			int	right = this->_get_height_subtree(node->right);
 
-			left = this->_get_height_subtree(node->left);
-			right = this->_get_height_subtree(node->right);
-			balance_factor = left - right;
-			// std::cout << "key = " << (*node->data).first << " balance_factor " << balance_factor << std::endl;
-			if (balance_factor > 1 || balance_factor < -1)
-			{
-				return (false);
-			}
-			else // -1 0 1 means the node is balanced
-			{
-				return (true);
-			}
-		}	
-	
-		void	_check_if_tree_is_balanced(node* inserted_node)
-		{
-			node*				temp = inserted_node;
-			node* 				child = NULL;
-			node* 				grandchild = NULL;
-			node*				unbalanced_node = NULL;
-			size_t				i = 0;
-			t_type_of_unbalance	type_of_unbalance;
-
-			while (temp)
-			{
-				if (this->_check_if_node_is_balanced(temp) == false)
-				{
-					// std::cout << "unbalanced node = " << (*temp->data).first << " child node = " << (*child->data).first <<" grandchild node = " << (*grandchild->data).first << std::endl;
-					unbalanced_node = temp;
-					type_of_unbalance = this->_get_type_of_unbalance(unbalanced_node, child, grandchild);
-					perform_balancing(unbalanced_node, child, grandchild, type_of_unbalance);
-					return ;
-				}
-				i++;
-				if (i == 1)
-				{
-					child = temp;
-				}
-				else if (i >= 2)
-				{
-					grandchild = child;
-					child = temp;
-				}
-				temp = temp->parent;
-			}
+			return (left - right);
 		}
 
 		void	_left_rotation(node* pivot, node* child)
@@ -785,17 +771,17 @@ class map
 				{
 					pivot->parent->left = child;
 				}
-				else // pivot->parent->right == pivot
+				else	// pivot->parent->right == pivot
 				{
 					pivot->parent->right = child;
 				}
 			}
-			if (child->left != NULL) // if child has left subtree, connect it to the right side of pivot_node
+			if (child->left != NULL)	// if child has left subtree, connect it to the right side of pivot_node
 			{
 				pivot->right = child->left;
 				child->left->parent = pivot;
 			}
-			else // child does not have left subtree
+			else	// child does not have left subtree
 			{
 				pivot->right = NULL;
 			}
@@ -817,25 +803,25 @@ class map
 				{
 					pivot->parent->left = child;
 				}
-				else // pivot->parent->right == pivot
+				else	// pivot->parent->right == pivot
 				{
 					pivot->parent->right = child;
 				}
 			}
-			if (child->right != NULL) // if child has right subtree, connect it to the left side of pivot_node
+			if (child->right != NULL)	// if child has right subtree, connect it to the left side of pivot_node
 			{
 				pivot->left = child->right;
 				child->right->parent = pivot;
 			}	
 			else
 			{
-				pivot->left = NULL; // child does not have right subtree
+				pivot->left = NULL;	// child does not have right subtree
 			}
 			child->right = pivot;
 			pivot->parent = child;
 		}
 
-		void	perform_balancing(node* unbalanced_node, node* child, node* grandchild, t_type_of_unbalance type_of_unbalance)
+		void	_balance_node(node* unbalanced_node, node* child, node* grandchild, t_type_of_unbalance type_of_unbalance)
 		{
 			switch (type_of_unbalance)
 			{
@@ -868,6 +854,73 @@ class map
 			}
 		}
 
+		void	_check_balance_after_deletion(node* parent_of_deleted_node)
+		{
+			int		balance_factor;
+			int		height_left_subtree;
+			int		height_right_subtree;
+			node*	unbalanced_node = NULL;
+
+			for (node* temp = parent_of_deleted_node; temp; temp = temp->parent)
+			{
+				balance_factor = this->_get_balance_factor(temp);
+				if (balance_factor < -1)	// node is unbalanced and right tree is bigger than left tree
+				{
+					unbalanced_node = temp;
+					height_left_subtree = this->_get_height_subtree(unbalanced_node->right->left);
+					height_right_subtree = this->_get_height_subtree(unbalanced_node->right->right);
+					if (height_left_subtree < height_right_subtree)
+					{
+						_balance_node(unbalanced_node, unbalanced_node->right, unbalanced_node->right->left, RIGHT_LEFT);
+					}
+					else
+					{
+						_balance_node(unbalanced_node, unbalanced_node->right, NULL, RIGHT_RIGHT);
+					}
+				}
+				else if (balance_factor > 1)	// node is unbalanced and left tree is bigger than right tree
+				{
+					unbalanced_node = temp;
+					height_left_subtree = this->_get_height_subtree(unbalanced_node->left->left);
+					height_right_subtree = this->_get_height_subtree(unbalanced_node->left->right);
+					if (height_left_subtree < height_right_subtree)
+					{
+						_balance_node(unbalanced_node, unbalanced_node->left, unbalanced_node->left->right, LEFT_RIGHT);
+					}
+					else
+					{
+						_balance_node(unbalanced_node, unbalanced_node->left, NULL, LEFT_LEFT);
+					}
+				}
+			}
+		}
+
+		void	_check_balance_after_insertion(node* inserted_node)
+		{
+			int					balance_factor;
+			node* 				child = NULL;
+			node* 				grandchild = NULL;
+			node*				unbalanced_node = NULL;
+			t_type_of_unbalance	type_of_unbalance;
+
+			for (node* temp = inserted_node; temp; temp = temp->parent)
+			{
+				balance_factor = this->_get_balance_factor(temp);
+				if (balance_factor < -1 || balance_factor > 1)
+				{
+					unbalanced_node = temp;
+					type_of_unbalance = this->_get_type_of_unbalance(unbalanced_node, child, grandchild);
+					this->_balance_node(unbalanced_node, child, grandchild, type_of_unbalance);
+					return ;
+				}
+				if (child != NULL)
+				{
+					grandchild = child;
+				}
+				child = temp;
+			}
+		}
+
 	// ~~~~~~~~~~~~~~~~~~~~~~~~~~~PRIVATE MEMBER TYPES~~~~~~~~~~~~~~~~~~~~~~~~~~
 		allocator_type	_alloc;
 		key_compare		_compare;
@@ -877,6 +930,7 @@ class map
 		size_type		_size;
 
 };
-}
+
+}	// end of namespace ft
 
 #endif

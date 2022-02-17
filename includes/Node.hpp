@@ -6,24 +6,23 @@
 /*   By: tevan-de <tevan-de@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/08/20 16:45:32 by tevan-de      #+#    #+#                 */
-/*   Updated: 2021/10/29 15:39:15 by tevan-de      ########   odam.nl         */
+/*   Updated: 2021/11/24 13:54:43 by tevan-de      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef NODE_HPP
 # define NODE_HPP
 
-# include <iostream>	// for output, prob remove later
-
 namespace ft {
+
 template <class T>
 class node
 {
-public:
+	public:
 	// ~~~~~~~~~~~~~~~~~~~~~~~~~~~PUBLIC MEMBER TYPES~~~~~~~~~~~~~~~~~~~~~~~~~~~
-		typedef T				value_type;
-		typedef value_type*		pointer;
-		typedef value_type&		reference;
+		typedef T			value_type;
+		typedef value_type*	pointer;
+		typedef value_type&	reference;
 
 	// ~~~~~~~~~~~~~~~~~~~~~~~~~~PUBLIC MEMBER OBJECTS~~~~~~~~~~~~~~~~~~~~~~~~~~
 		node*	left;
@@ -33,28 +32,16 @@ public:
 
 	// ~~~~~~~~~~~~~~~~~~~~~~~~~PUBLIC MEMBER FUNCTIONS~~~~~~~~~~~~~~~~~~~~~~~~~
 		// ----------------------------CONSTRUCTORS-----------------------------
-		node(void) : left(NULL), parent(NULL), right(NULL), data(NULL)
-		{
-			// std::cout << "Default constructor of node called" << std::endl;
-		}
-		node(pointer ptr) : left(NULL), parent(NULL), right(NULL), data(ptr)
-		{
-			// std::cout << "Parameter constructor root of node called" << std::endl;
-		}
-		node(node* p, pointer ptr) : left(NULL), parent(p), right(NULL), data(ptr)
-		{
-			// std::cout << "Parameter constructor leaf of node called" << std::endl;
-		}
-		node(const node& other) : left(other.left), parent(other.parent), right(other.right), data(other.data)
-		{
-			// std::cout << "Copy constructor of node called" << std::endl;
-		}
+		node(void) : left(NULL), parent(NULL), right(NULL), data(NULL) {}
+
+		node(pointer ptr) : left(NULL), parent(NULL), right(NULL), data(ptr) {}
+
+		node(node* p, pointer ptr) : left(NULL), parent(p), right(NULL), data(ptr) {}
+
+		node(const node& other) : left(other.left), parent(other.parent), right(other.right), data(other.data) {}
 
 		// -----------------------------DESTRUCTOR------------------------------
-		~node(void)
-		{
-			// std::cout << "Destructor of node called" << std::endl;
-		}
+		~node(void) {}
 
 		// -------------------------ASSIGNMENT OPERATOR-------------------------
 		node&	operator=(const node& other)
@@ -66,7 +53,6 @@ public:
 				this->parent = other.parent;
 				this->right = other.right;
 			}
-			// std::cout << "Assigment operator of node called" << std::endl;
 			return (*this);
 		}
 
@@ -75,6 +61,7 @@ public:
 		{
 			return (this->data);
 		}
+
 		reference operator*(void)
 		{
 			return (*this->data);
@@ -107,6 +94,7 @@ public:
 			}
 			return (temp);
 		}
+
 		node*	previous(void)
 		{
 			node*	temp = this;
@@ -134,6 +122,7 @@ public:
 			return (temp);
 		}
 };
-}
+
+}	// end of namespace ft
 
 #endif

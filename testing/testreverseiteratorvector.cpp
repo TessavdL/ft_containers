@@ -6,7 +6,7 @@
 /*   By: tevan-de <tevan-de@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/10/16 22:08:50 by tevan-de      #+#    #+#                 */
-/*   Updated: 2021/11/01 21:27:19 by tevan-de      ########   odam.nl         */
+/*   Updated: 2021/11/23 13:44:34 by tevan-de      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,8 +47,8 @@ int main(void)
 
 	// --------------------------PRINT WITH DEREFERENCED CONST REVERSE ITERATOR------------------------
 	std::cout << "ORIGINAL - * const reverse iterator" << std::endl;
-	for (constrevIter = v.rbegin(); revIter != v.rend(); revIter++)
-		std::cout << *revIter << "\t";
+	for (constrevIter = v.rbegin(); constrevIter != v.rend(); constrevIter++)
+		std::cout << *constrevIter << "\t";
 	std::cout << std::endl;
 
 	// the constiterator does not allow the value to be changed -> compilation error
@@ -78,19 +78,19 @@ int main(void)
 
 	// --------------------------PRINT WITH DEREFERENCED CONST ITERATOR------------------------
 	std::cout << "MINE - * const iterator" << std::endl;
-	for (constmIter = mv.cbegin(); constmIter != mv.cend(); constmIter++)
+	for (constmIter = mv.begin(); constmIter != mv.end(); constmIter++)
 		std::cout << *constmIter << "\t";
 	std::cout << std::endl;
 
 	// --------------------------PRINT WITH DEREFERENCED CONST REVERSE ITERATOR------------------------
 	std::cout << "MINE - * const reverse iterator" << std::endl;
-	for (constrevmIter = mv.crbegin(); constrevmIter != mv.crend(); constrevmIter++)
+	for (constrevmIter = mv.rbegin(); constrevmIter != mv.rend(); constrevmIter++)
 		std::cout << *constrevmIter << "\t";
 	std::cout << std::endl;
 
 
 	// the constiterator does not allow the value to be changed -> compilation error
-	// *constmIter = 4
+	// *constmIter = 4;
 
 	// --------------------------VECTOR OF PAIRS------------------------
 	std::vector<std::pair<int, int> >					vp;

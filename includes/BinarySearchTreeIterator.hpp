@@ -6,18 +6,15 @@
 /*   By: tevan-de <tevan-de@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/08/26 11:30:29 by tevan-de      #+#    #+#                 */
-/*   Updated: 2021/10/30 16:09:06 by tevan-de      ########   odam.nl         */
+/*   Updated: 2021/11/24 14:03:22 by tevan-de      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef BINARY_SEARCH_TREE_ITERATOR_HPP
 # define BINARY_SEARCH_TREE_ITERATOR_HPP
 
-# include <iostream>	// for output, prob remove later
-
 # include "IteratorTraits.hpp"
 # include "Node.hpp"
-# include "ReimplementedFunctions.hpp" // redundant?
 
 namespace ft {
 template<typename>
@@ -38,25 +35,21 @@ class BinarySearchTreeIterator
 
 	// ~~~~~~~~~~~~~~~~~~~~~~~~~PUBLIC MEMBER FUNCTIONS~~~~~~~~~~~~~~~~~~~~~~~~~
 		// ----------------------------CONSTRUCTORS-----------------------------
-		BinarySearchTreeIterator(void) : _ptr(NULL), _node(NULL)
-		{
-			// std::cout << "Default Constructor of BSTI called" << std::endl;
-		}
-		BinarySearchTreeIterator(pointer val, node* n) : _ptr(val), _node(n)
-		{
-			// std::cout << "Parameter Constructor of BSTI called" << std::endl;
-		}
-		BinarySearchTreeIterator(const BinarySearchTreeIterator& other)
-		{
-			*this = other;
-			// std::cout << "Copy Constructor of BSTI called" << std::endl;
-		}
+		BinarySearchTreeIterator(void) :
+			_ptr(NULL), _node(NULL) {}
+
+		BinarySearchTreeIterator(pointer val, node* n) :
+			_ptr(val), _node(n) {}
+
+		BinarySearchTreeIterator(const BinarySearchTreeIterator& other) :
+			_ptr(other._ptr), _node(other._node) {}
+
+		template <class T1, class U1>
+		BinarySearchTreeIterator(const BinarySearchTreeIterator<T1, U1>& other) :
+			_ptr(other.operator->()), _node(other.get_node()) {}
 
 		// -----------------------------DESTRUCTOR------------------------------
-		~BinarySearchTreeIterator(void)
-		{
-			// std::cout << "Destructor of BSTI called" << std::endl;
-		}
+		~BinarySearchTreeIterator(void) {}
 
 		// ------------------------ASSIGNMENT OPERATOR--------------------------
 		BinarySearchTreeIterator&	operator=(const BinarySearchTreeIterator& other)
@@ -66,7 +59,6 @@ class BinarySearchTreeIterator
 				this->_ptr = other._ptr;
 				this->_node = other._node;
 			}
-			// std::cout << "Assignment Operator of BSTI called" << std::endl;
 			return (*this);
 		}
 
@@ -84,9 +76,10 @@ class BinarySearchTreeIterator
 			}
 			return (*this);
 		}
+
 		BinarySearchTreeIterator	operator--(int)
 		{
-			BinarySearchTreeIterator	bsti = (*this);
+			BinarySearchTreeIterator	it = (*this);
 
 			this->_node = this->_node->previous();
 			if (this->_node == NULL)
@@ -97,8 +90,9 @@ class BinarySearchTreeIterator
 			{
 				this->_ptr = this->_node->data;
 			}
-			return (bsti);
+			return (it);
 		}
+
 		BinarySearchTreeIterator&	operator++(void)
 		{
 			this->_node = this->_node->next();
@@ -112,9 +106,10 @@ class BinarySearchTreeIterator
 			}
 			return (*this);
 		}
+
 		BinarySearchTreeIterator	operator++(int)
 		{
-			BinarySearchTreeIterator	bsti = (*this);
+			BinarySearchTreeIterator	it = (*this);
 
 			this->_node = this->_node->next();
 			if (this->_node == NULL)
@@ -125,17 +120,24 @@ class BinarySearchTreeIterator
 			{
 				this->_ptr = this->_node->data;
 			}
-			return (bsti);
+			return (it);
 		}
 
 		// ------------------------MEMBER ACCESS OPERATORS----------------------
-		pointer	operator->(void)
+		pointer	operator->(void) const
 		{
 			return (this->_ptr);
 		}
-		reference	operator*(void)
+
+		reference	operator*(void) const
 		{
 			return (*this->_ptr);
+		}
+
+		// ------------------------MEMBER ACCESS FUNCTION-----------------------
+		node*	get_node(void) const
+		{
+			return (this->_node);
 		}
 
 		// -------------------------RELATIONAL OPERATORS------------------------
@@ -143,6 +145,7 @@ class BinarySearchTreeIterator
 		{
 			return (this->_ptr == other._ptr);
 		}
+
 		bool	operator!=(const BinarySearchTreeIterator& other) const
 		{
 			return (!(*this == other));

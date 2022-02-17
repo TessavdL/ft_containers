@@ -6,14 +6,12 @@
 /*   By: tevan-de <tevan-de@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/10/16 21:09:41 by tevan-de      #+#    #+#                 */
-/*   Updated: 2021/11/01 20:54:35 by tevan-de      ########   odam.nl         */
+/*   Updated: 2021/11/24 13:58:13 by tevan-de      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef	REVERSE_ITERATOR
 # define REVERSE_ITERATOR
-
-# include <iostream>
 
 # include "./IteratorTraits.hpp"
 
@@ -32,25 +30,15 @@ class reverse_iterator
 
 	// ~~~~~~~~~~~~~~~~~~~~~~~~~PUBLIC MEMBER FUNCTIONS~~~~~~~~~~~~~~~~~~~~~~~~~
 		// ----------------------------CONSTRUCTORS-----------------------------
-		reverse_iterator(void) : _base()
-		{
-			// std::cout << "Default constructor of RI called" << std::endl;
-		}
-		explicit reverse_iterator(iterator_type it) : _base(it)
-		{
-			// std::cout << "Parameter constructor of RI called" << std::endl;
-		}
+		reverse_iterator(void) : _base() {}
+
+		explicit reverse_iterator(iterator_type it) : _base(it) {}
+
 		template<class Iter>
-		reverse_iterator(const reverse_iterator<Iter>& rev_it) : _base(rev_it.base())
-		{
-			// std::cout << "Copy constructor 2 of RI called" << std::endl;
-		}
+		reverse_iterator(const reverse_iterator<Iter>& rev_it) : _base(rev_it.base()) {}
 
 		// -----------------------------DESTRUCTOR------------------------------
-		~reverse_iterator(void)
-		{
-			//std::cout << "Destructor of RI called" << std::endl;
-		}
+		~reverse_iterator(void) {}
 
 		// ------------------------ASSIGNMENT OPERATORS-------------------------
 		reverse_iterator&	operator=(const reverse_iterator& other)
@@ -59,21 +47,24 @@ class reverse_iterator
 			{
 				this->_base = other.base();
 			}
-			// std::cout << "Assignment Operator of RI called" << std::endl;
 			return (*this);
 		}
+
 		reverse_iterator	operator+(difference_type n) const
 		{
 			return (reverse_iterator(this->_base - n));
 		}
+
 		reverse_iterator	operator-(difference_type n) const
 		{
 			return (reverse_iterator(this->_base + n));
 		}
+
 		reverse_iterator&	operator+=(difference_type n)
 		{
 			return (*(this->_base -= n));
 		}
+
 		reverse_iterator&	operator-=(difference_type n)
 		{
 			return (*(this->_base += n));
@@ -84,16 +75,19 @@ class reverse_iterator
 		{
 			return (this->_base);
 		}
+
 		reference	operator*(void)
 		{
-			iterator_type		temp = this->_base;
+			iterator_type	temp = this->_base;
 
 			return (*--temp);
 		}
+
 		pointer	operator->(void)
 		{
 			return (&(this->operator*()));
 		}
+
 		reference	operator[](difference_type n)
 		{
 			return (this->base()[-n-1]);
@@ -105,6 +99,7 @@ class reverse_iterator
 			this->_base--;
 			return (*this);
 		}
+
 		reverse_iterator	operator++(int)
 		{
 			reverse_iterator temp = *this;
@@ -112,12 +107,14 @@ class reverse_iterator
 			++(*this);
 			return temp;
 		}
+
 		reverse_iterator	operator--(void)
 		{
 			this->_base++;
 			return (*this);
 		}
-		reverse_iterator operator--(int)
+
+		reverse_iterator	operator--(int)
 		{
 			reverse_iterator temp = *this;
 
@@ -129,10 +126,11 @@ class reverse_iterator
 		{
 			return (this->_base == other._base);
 		}
+
 		bool	operator!=(const reverse_iterator& other)
 		{
 			return (!(*this == other));
-		}		
+		}
 
 	protected:
 	// ~~~~~~~~~~~~~~~~~~~~~~~~~PROTECTED MEMBER OBJECT~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -146,26 +144,31 @@ bool	operator==(const reverse_iterator<Iter>& lhs, const reverse_iterator<Iter>&
 {
 	return (lhs.base() == rhs.base());
 }
+
 template<class Iter>
 bool	operator!=(const reverse_iterator<Iter>& lhs, const reverse_iterator<Iter>& rhs)
 {
 	return (!(lhs == rhs));
 }
+
 template<class Iter>
 bool	operator>(const reverse_iterator<Iter>& lhs, const reverse_iterator<Iter>& rhs)
 {
 	return (lhs.base() > rhs.base());
-}	
+}
+
 template<class Iter>
 bool	operator<(const reverse_iterator<Iter>& lhs, const reverse_iterator<Iter>& rhs)
 {
 	return (lhs.base() < rhs.base());
-}	
+}
+
 template<class Iter>
 bool	operator>=(const reverse_iterator<Iter>& lhs, const reverse_iterator<Iter>& rhs)
 {
 	return (!(lhs < rhs));
 }
+
 template<class Iter>
 bool	operator<=(const reverse_iterator<Iter>& lhs, const reverse_iterator<Iter>& rhs)
 {
@@ -185,6 +188,7 @@ typename reverse_iterator<Iter>::difference_type	operator-(const reverse_iterato
 {
 	return (lhs.base() - rhs.base());
 }
-}
+
+}	// end of namespace ft
 
 #endif

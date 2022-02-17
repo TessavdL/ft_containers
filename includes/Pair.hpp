@@ -6,7 +6,7 @@
 /*   By: tevan-de <tevan-de@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/08/20 17:09:30 by tevan-de      #+#    #+#                 */
-/*   Updated: 2021/10/29 12:27:59 by tevan-de      ########   odam.nl         */
+/*   Updated: 2021/11/27 17:24:05 by tevan-de      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,51 +14,40 @@
 # define PAIR_HPP
 
 namespace ft {
+
 template <class T1, class T2>
-class pair
+struct pair
 {
-	public:
-	// ~~~~~~~~~~~~~~~~~~~~~~~~~~~PUBLIC MEMBER TYPES~~~~~~~~~~~~~~~~~~~~~~~~~~~
-		typedef T1	first_type;
-		typedef T2	second_type;
+	// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~MEMBER TYPES~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+	typedef T1	first_type;
+	typedef T2	second_type;
 
-	// ~~~~~~~~~~~~~~~~~~~~~~~~~~PUBLIC MEMBER OBJECTS~~~~~~~~~~~~~~~~~~~~~~~~~~
-		first_type	first;
-		second_type	second;
+	// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~MEMBER VARIABLES~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+	first_type	first;
+	second_type	second;
 
-	// ~~~~~~~~~~~~~~~~~~~~~~~~~PUBLIC MEMBER FUNCTIONS~~~~~~~~~~~~~~~~~~~~~~~~~
-		// ----------------------------CONSTRUCTORS-----------------------------
-		pair(void) : first(), second()
-		{
-			// std::cout << "Default construtor of pair is called" << std::endl;
-		}
-		pair(const first_type& a, const second_type& b) : first(a), second(b)
-		{
-			// std::cout << "Parameter construtor of pair is called" << std::endl;
-		}
-		template<class U, class V>
-		pair(const pair<U, V>& pr) : first(pr.first), second(pr.second)
-		{
-			// std::cout << "Copy of pair is called" << std::endl;
-		}
+	// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~MEMBER FUNCTIONS~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+	// ------------------------------CONSTRUCTORS-------------------------------
+	pair(void) : first(), second() {}
 
-		// -----------------------------DESTRUCTOR------------------------------
-		~pair(void)
-		{
-			// std::cout << "Destructor of pair is called" << std::endl;
-		}
+	pair(const first_type& a, const second_type& b) : first(a), second(b) {}
 
-		// -------------------------ASSIGNMENT OPERATOR-------------------------
-		pair&	operator=(const pair& pr)
+	template<class U, class V>
+	pair(const pair<U, V>& pr) : first(pr.first), second(pr.second) {}
+
+	// -------------------------------DESTRUCTOR--------------------------------
+	~pair(void) {}
+
+	// ---------------------------ASSIGNMENT OPERATOR---------------------------
+	pair&	operator=(const pair& pr)
+	{
+		if (this != &pr)
 		{
-			if (this != &pr)
-			{
-				this->first = pr.first;
-				this->second = pr.second;
-			}
-			// std::cout << "Assignment operator of pair is called" << std::endl;
-			return (*this);
+			this->first = pr.first;
+			this->second = pr.second;
 		}
+		return (*this);
+	}
 };
 
 // ~~~~~~~~~~~~~~~~~~~~~~~~NON-MEMBER FUNCTION OVERLOADS~~~~~~~~~~~~~~~~~~~~~~~~
@@ -81,22 +70,23 @@ bool	operator<(const pair<T1, T2>& lhs, const pair<T1, T2>& rhs)
 }
 
 template <class T1, class T2>
-bool	operator<=(const pair<T1, T2>& lhs, const pair<T1, T2>& rhs)
+bool	operator>=(const pair<T1, T2>& lhs, const pair<T1, T2>& rhs)
 {
-	return (!(rhs < lhs));
+	return (!(lhs < lhs));
 }
 
 template <class T1, class T2>
 bool	operator>(const pair<T1, T2>& lhs, const pair<T1, T2>& rhs)
 {
-	return (rhs < lhs);
+	return (lhs.first > rhs.first || (!(rhs.first > lhs.first) && lhs.second < rhs.second));
 }
 
 template <class T1, class T2>
-bool	operator>=(const pair<T1, T2>& lhs, const pair<T1, T2>& rhs)
+bool	operator<=(const pair<T1, T2>& lhs, const pair<T1, T2>& rhs)
 {
 	return (!(lhs < rhs));
 }
-}
+
+}	// end of namespace ft
 
 #endif
